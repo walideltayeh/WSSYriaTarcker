@@ -1,0 +1,1248 @@
+<title>WS Tracker Syria</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Tajawal:wght@300;400;500;700&display=swap">
+<style>
+:root{
+  color-scheme: light;
+  --brand:#AB2328; --brand-deep:#8E1B20; --on-brand:#FFFFFF;
+  --ground:#FAF8F6; --surface:#FFFFFF; --sunk:#F4F0EE; --raise:#FFFFFF;
+  --ink:#1F1A1A; --ink-2:#5E5454; --muted:#958B89; --hair:#ECE6E3; --axis:#D8CFCC;
+  --accent:#AB2328; --accent-ink:#FFFFFF; --accent-soft:#F8EDED;
+  --s1:#AB2328; --s2:#AD7F22; --s3:#3D6DA8; --s4:#5B8A45; --other:#C9C1BE;
+  --good:#2F7A35; --warn:#8A6300; --serious:#B4531D; --crit:#AB2328;
+  --good-bg:#EDF5EC; --warn-bg:#FAF2DE; --serious-bg:#FBEDE4; --crit-bg:#F8EDED;
+  --m1:#F7E6E6; --m2:#EABDBF; --m3:#D07C80; --m4:#AB2328; --m5:#6E1217;
+  --m1t:#1F1A1A; --m2t:#1F1A1A; --m3t:#FFFFFF; --m4t:#FFFFFF; --m5t:#FFFFFF;
+  --shadow:0 1px 2px rgba(31,26,26,.05),0 10px 30px rgba(31,26,26,.07);
+  --display:"Jost","Tajawal",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --body:"Jost","Tajawal",system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;
+  --r:4px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --ground:#121010; --surface:#1A1717; --sunk:#151212; --raise:#221E1E;
+    --ink:#F4EFED; --ink-2:#CBC2C0; --muted:#948A88; --hair:#2C2626; --axis:#3B3333;
+    --accent:#E0565B; --accent-ink:#121010; --accent-soft:#34191B;
+    --s1:#D4474D; --s2:#BD8B2C; --s3:#4F86D6; --s4:#6A9B53; --other:#4A4242;
+    --good:#5BBF62; --warn:#E8B64A; --serious:#EE8C5A; --crit:#EE6A6F;
+    --good-bg:#16261A; --warn-bg:#2C2414; --serious-bg:#2E1C13; --crit-bg:#34191B;
+    --m1:#321C1D; --m2:#5E2327; --m3:#9A2F35; --m4:#D4474D; --m5:#F2B3B5;
+    --m1t:#F4EFED; --m2t:#FFFFFF; --m3t:#FFFFFF; --m4t:#121010; --m5t:#121010;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --ground:#121010; --surface:#1A1717; --sunk:#151212; --raise:#221E1E;
+  --ink:#F4EFED; --ink-2:#CBC2C0; --muted:#948A88; --hair:#2C2626; --axis:#3B3333;
+  --accent:#E0565B; --accent-ink:#121010; --accent-soft:#34191B;
+  --s1:#D4474D; --s2:#BD8B2C; --s3:#4F86D6; --s4:#6A9B53; --other:#4A4242;
+  --good:#5BBF62; --warn:#E8B64A; --serious:#EE8C5A; --crit:#EE6A6F;
+  --good-bg:#16261A; --warn-bg:#2C2414; --serious-bg:#2E1C13; --crit-bg:#34191B;
+  --m1:#321C1D; --m2:#5E2327; --m3:#9A2F35; --m4:#D4474D; --m5:#F2B3B5;
+  --m1t:#F4EFED; --m2t:#FFFFFF; --m3t:#FFFFFF; --m4t:#121010; --m5t:#121010;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{background:var(--ground)}
+body{color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.6;font-weight:400;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+h1,h2,h3{font-family:var(--display);font-weight:500;margin:0;text-wrap:balance;letter-spacing:.01em}
+h2{font-size:26px;font-weight:400;line-height:1.25}
+h3{font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.16em;color:var(--ink-2)}
+[lang="ar"] h3,[dir="rtl"] h3{letter-spacing:0;font-size:14px}
+p{margin:0}
+.num{font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)} .ink2{color:var(--ink-2)}
+.small{font-size:13px}
+.ar{unicode-bidi:isolate}
+
+/* header: the logo sits on the exact brand red */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--brand);color:var(--on-brand)}
+.top-in{max-width:1160px;margin:0 auto;padding-inline:16px;display:flex;align-items:center;gap:18px;min-height:68px}
+.logo{height:52px;width:auto;display:block;flex:none}
+.brand{display:flex;flex-direction:column;justify-content:center;gap:1px;min-width:0;padding-inline-start:16px;border-inline-start:1px solid rgba(255,255,255,.35)}
+.brand h1{font-size:14px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;white-space:nowrap}
+.brand span{font-size:11px;letter-spacing:.18em;text-transform:uppercase;opacity:.75;white-space:nowrap}
+[dir="rtl"] .brand h1,[dir="rtl"] .brand span{letter-spacing:0}
+.tabs{display:flex;gap:4px;margin-inline-start:auto;align-self:stretch}
+.tabs a{display:flex;align-items:center;padding:0 12px;color:rgba(255,255,255,.72);text-decoration:none;font-size:12.5px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;border-bottom:2px solid transparent}
+[dir="rtl"] .tabs a{letter-spacing:0;font-size:14px}
+.tabs a:hover{color:#fff}
+.tabs a[aria-current="page"]{color:#fff;border-bottom-color:#fff}
+.tabs a:focus-visible,.lang:focus-visible{outline:2px solid #fff;outline-offset:-4px}
+.btn:focus-visible,.row-link:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tools{display:flex;align-items:center;gap:10px}
+.lang{border:1px solid rgba(255,255,255,.5);background:transparent;color:#fff;border-radius:var(--r);padding:4px 10px;font-size:13px;font-weight:500;cursor:pointer}
+.lang:hover{background:rgba(255,255,255,.12)}
+.me{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,.85);max-width:170px}
+.me img{width:28px;height:28px;border-radius:50%;box-shadow:0 0 0 1.5px rgba(255,255,255,.6)}
+.me span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+main{max-width:1160px;margin:0 auto;padding-inline:16px;padding-block:34px 120px;display:grid;gap:30px}
+.bottom{display:none}
+@media (max-width:860px){
+  .tabs{display:none}
+  .brand span{display:none}
+  .me span{display:none}
+  .logo{height:46px}
+  .top-in{min-height:60px}
+  .bottom{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--surface);border-top:1px solid var(--hair);padding-bottom:env(safe-area-inset-bottom,0px)}
+  .bottom a{display:grid;justify-items:center;gap:3px;padding:10px 0 11px;text-decoration:none;color:var(--muted);font-size:10.5px;font-weight:500;letter-spacing:.06em;text-transform:uppercase}
+  [dir="rtl"] .bottom a{letter-spacing:0;font-size:11.5px}
+  .bottom a svg{width:21px;height:21px;stroke-width:1.5}
+  .bottom a[aria-current="page"]{color:var(--brand)}
+}
+
+/* generic */
+.panel{background:var(--surface);border:1px solid var(--hair);border-radius:var(--r);padding:20px}
+.panel.flush{padding:0;overflow:hidden}
+.head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 20px}
+.head .sub{color:var(--muted);font-size:14px;margin-top:4px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--axis);background:var(--surface);border-radius:var(--r);padding:9px 16px;font-size:12.5px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;text-decoration:none;color:var(--ink);white-space:nowrap}
+[dir="rtl"] .btn{letter-spacing:0;font-size:14px}
+.btn:hover{border-color:var(--ink-2)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.pri:hover{background:var(--brand-deep);border-color:var(--brand-deep)}
+.btn.big{padding:13px 22px;font-size:13px}
+.btn.danger{color:var(--crit)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn.ghost{background:transparent;border-color:transparent;color:var(--accent);padding-inline:8px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:500;padding:1px 9px 1px 7px;border-radius:999px;white-space:nowrap;line-height:1.7;letter-spacing:.02em}
+.chip::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.c-good{color:var(--good);background:var(--good-bg)} .c-warn{color:var(--warn);background:var(--warn-bg)}
+.c-serious{color:var(--serious);background:var(--serious-bg)} .c-crit{color:var(--crit);background:var(--crit-bg)}
+.c-acc{color:var(--accent);background:var(--accent-soft)} .c-mute{color:var(--muted);background:var(--sunk)}
+.notice{padding:13px 16px;border-radius:var(--r);background:var(--accent-soft);font-size:14px;border-inline-start:2px solid var(--accent)}
+.notice.warn{background:var(--warn-bg);border-color:var(--warn)}
+.notice.crit{background:var(--crit-bg);border-color:var(--crit)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0;background:var(--surface);border:1px solid var(--hair);border-radius:var(--r)}
+.kpi{padding:18px 20px;display:grid;gap:4px;border-inline-end:1px solid var(--hair)}
+.kpi:last-child{border-inline-end:0}
+.kpi b{font-family:var(--display);font-size:32px;font-weight:300;line-height:1.1;letter-spacing:-.01em}
+.kpi span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
+[dir="rtl"] .kpi span{letter-spacing:0;font-size:12.5px}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th{font-size:11px;font-weight:500;color:var(--muted);text-align:start;padding:12px 14px;border-bottom:1px solid var(--axis);white-space:nowrap;vertical-align:bottom;text-transform:uppercase;letter-spacing:.1em}
+[dir="rtl"] th{letter-spacing:0;font-size:12px}
+td{padding:12px 14px;border-bottom:1px solid var(--hair);vertical-align:middle}
+tbody tr:last-child td{border-bottom:0}
+tfoot td{border-top:1px solid var(--ink-2);border-bottom:0;font-weight:500}
+.r{text-align:end}
+tr.click{cursor:pointer} tr.click:hover td{background:var(--sunk)}
+.name{font-weight:500}
+.sub2{display:block;font-size:12.5px;color:var(--muted);font-weight:400}
+.inbar{display:flex;align-items:center;gap:8px;justify-content:flex-end}
+.inbar i{display:block;height:4px;border-radius:2px;background:var(--brand);min-width:2px}
+.field{display:grid;gap:5px}
+.field label{font-size:11px;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.12em}
+[dir="rtl"] .field label{letter-spacing:0;font-size:12.5px}
+.inp{border:1px solid var(--axis);background:var(--surface);border-radius:var(--r);padding:10px 12px;width:100%}
+.inp:focus{border-color:var(--accent)}
+.search{max-width:360px}
+.seg{display:inline-flex;border:1px solid var(--axis);border-radius:var(--r);overflow:hidden;background:var(--surface)}
+.seg button{border:0;background:transparent;padding:7px 14px;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;color:var(--ink-2)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
+
+/* wholesaler list */
+.wslist{display:grid}
+.row-link{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center;padding:16px 20px;border-bottom:1px solid var(--hair);text-decoration:none;color:inherit}
+.row-link:last-child{border-bottom:0}
+.row-link:hover{background:var(--sunk)}
+.row-link .n{font-weight:500;font-size:16px}
+.row-link .m{font-size:12.5px;color:var(--muted);grid-column:1}
+.row-link .x{grid-row:1/span 2;grid-column:2;display:grid;justify-items:end;gap:5px}
+
+/* count form */
+.crumbs{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
+[dir="rtl"] .crumbs{letter-spacing:0;font-size:13px}
+.crumbs a{color:var(--accent);text-decoration:none}
+.wshead{display:flex;flex-wrap:wrap;gap:14px 24px;align-items:center;justify-content:space-between}
+.wshead h2{font-size:30px;font-weight:400}
+.form-top{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
+.lines{display:grid}
+.line{display:grid;grid-template-columns:1fr 116px;gap:6px 16px;align-items:center;padding:14px 20px;border-bottom:1px solid var(--hair)}
+.line:last-child{border-bottom:0}
+.line .pn{font-weight:500}
+.line .pa{font-size:12.5px;color:var(--muted)}
+.line .meta{grid-column:1;font-size:12.5px;color:var(--ink-2);display:flex;flex-wrap:wrap;gap:2px 14px}
+.line .qty{grid-row:1/span 2;grid-column:2;display:grid;gap:4px}
+.line .qty input{text-align:center;font-size:20px;font-weight:400;padding:10px 6px;border-radius:var(--r);border:1px solid var(--axis);background:var(--surface);width:100%}
+.line .qty input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.line .pv{font-size:12px;text-align:center;min-height:18px}
+.line .pv.neg{color:var(--crit);font-weight:500}
+.sticky-save{position:sticky;bottom:calc(66px + env(safe-area-inset-bottom,0px));z-index:4;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:12px 18px;background:var(--surface);border:1px solid var(--hair);border-radius:var(--r);box-shadow:var(--shadow)}
+@media (min-width:861px){.sticky-save{bottom:14px}}
+.hist details{border-bottom:1px solid var(--hair)}
+.hist details:last-child{border-bottom:0}
+.hist summary{display:flex;flex-wrap:wrap;gap:4px 16px;align-items:center;padding:14px 20px;cursor:pointer;list-style:none}
+.hist summary::-webkit-details-marker{display:none}
+.hist summary .d{font-weight:500;min-width:100px}
+.hist summary .who{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-2)}
+.hist summary .who img{width:20px;height:20px;border-radius:50%}
+.hist .acts{display:flex;gap:6px;margin-inline-start:auto}
+.hist .body{padding:0 10px 14px}
+
+/* charts */
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart text{font-family:var(--body);fill:var(--muted);font-size:12px}
+.chart .val{fill:var(--ink-2);font-weight:500}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:12.5px;color:var(--ink-2);list-style:none;margin:0;padding:0}
+.legend li{display:flex;align-items:center;gap:7px}
+.sw{width:10px;height:10px;border-radius:2px;flex:none;display:inline-block}
+.hbars{display:grid;gap:10px}
+.hbar{display:grid;grid-template-columns:minmax(120px,200px) 1fr;gap:14px;align-items:center;font-size:14px}
+.hbar .lab{text-align:end;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hbar .track{display:flex;align-items:center;gap:10px;min-width:0}
+.hbar .bar{height:10px;border-radius:0 2px 2px 0;background:var(--brand);flex:none}
+[dir="rtl"] .hbar .bar{border-radius:2px 0 0 2px}
+.hbar.other .bar{background:var(--other)}
+.hbar .v{font-size:12.5px;color:var(--ink-2);white-space:nowrap}
+.matrix{border-collapse:separate;border-spacing:2px;font-size:12px;width:auto}
+.matrix th{border:0;padding:4px 2px;font-size:10.5px;text-align:center;white-space:normal;line-height:1.3;width:54px;vertical-align:bottom;color:var(--ink-2);text-transform:none;letter-spacing:0}
+.matrix th.grp{color:var(--ink);font-size:12px;font-weight:500;letter-spacing:.12em;border-bottom:1px solid var(--axis)}
+.matrix th.rowh{text-align:end;width:auto;padding-inline-end:12px;font-size:13px;color:var(--ink);font-weight:500;white-space:nowrap;vertical-align:middle}
+.matrix td{border:0;padding:0;width:54px;height:28px;text-align:center;border-radius:2px;background:var(--sunk);color:var(--muted)}
+.matrix td.b1{background:var(--m1);color:var(--m1t)} .matrix td.b2{background:var(--m2);color:var(--m2t)} .matrix td.b3{background:var(--m3);color:var(--m3t)} .matrix td.b4{background:var(--m4);color:var(--m4t)} .matrix td.b5{background:var(--m5);color:var(--m5t)}
+.dot{display:block;margin:4px auto 0;width:6px;height:6px;border-radius:50%}
+.dot.in{background:var(--good)} .dot.out{border:1.5px solid var(--muted)}
+.meter{position:relative;height:4px;border-radius:2px;background:var(--sunk);min-width:90px}
+.meter i{position:absolute;inset-block:0;inset-inline-start:0;border-radius:2px;background:var(--ink-2)}
+.meter.low i{background:var(--crit)}
+#tip{position:fixed;z-index:20;pointer-events:none;background:var(--raise);color:var(--ink);border:1px solid var(--hair);box-shadow:var(--shadow);border-radius:var(--r);padding:9px 12px;font-size:12.5px;line-height:1.55;min-width:160px}
+#tip .t{font-weight:500;margin-bottom:3px}
+#tip .rw{display:flex;justify-content:space-between;gap:14px;align-items:center}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(86px + env(safe-area-inset-bottom,0px));z-index:30;background:var(--ink);color:var(--ground);padding:11px 18px;border-radius:var(--r);font-size:14px;box-shadow:var(--shadow);max-width:calc(100% - 32px)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px}
+.stack{display:grid;gap:14px}
+.pushcard{display:grid;gap:7px;padding:16px 20px;border-bottom:1px solid var(--hair)}
+.pushcard:last-child{border-bottom:0}
+.pushcard .top1{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center}
+.pushcard .rs{font-size:13.5px;color:var(--ink-2)}
+.pushcard .sg{font-size:13px;padding:7px 12px;border-inline-start:2px solid var(--brand);background:var(--accent-soft)}
+.mlegend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12.5px;color:var(--ink-2);align-items:center}
+.mlegend>span{display:inline-flex;align-items:center;gap:6px}
+.mkt tr.grp td{background:var(--sunk);font-weight:500}
+.mkt .ind{display:block;padding-inline-start:18px}
+.skel{height:12px;border-radius:2px;background:var(--sunk);margin:10px 0}
+@media (prefers-reduced-motion: no-preference){.row-link,.btn,.tabs a{transition:background .15s,color .15s,border-color .15s}}
+.nt{text-transform:none;letter-spacing:0}
+.mkt td:first-child{min-width:230px}
+.mkt td .muted.small,.mkt td.muted{white-space:nowrap}
+.pushcard a.name{text-decoration:none;font-size:16px}
+.pushcard a.name:hover{color:var(--accent)!important}
+</style>
+
+<header class="top"><div class="top-in">
+  <div class="logo" style="display:grid;place-items:center;width:52px;height:52px;border:1px solid rgba(255,255,255,.55);border-radius:4px;font-size:15px;font-weight:500;letter-spacing:.08em">WS</div><div class="brand"><h1 id="brand">WS Tracker</h1><span id="brandsub">Syria</span></div>
+  <nav class="tabs" id="tabs" aria-label="Sections"></nav>
+  <div class="tools"><button class="lang" id="langBtn" type="button" aria-label="Switch language">ع</button></div>
+</div></header>
+<main id="main" aria-live="polite"></main>
+<nav class="bottom" id="bottom" aria-label="Sections"></nav>
+<div id="tip" hidden></div>
+<div id="toast" hidden role="status"></div>
+
+<script>
+/* ============================== i18n ============================== */
+const T = {
+  en: {
+    brand:"WS Tracker", brandsub:"Syria · Wholesale", t_ws:"Wholesalers", t_off:"Offtake", t_an:"Sales", t_data:"Data",
+    loading:"Loading…", noLedger:"No data yet. Import the Excel workbook to get started.", goData:"Data & settings", noClaude:"Open this app from its claude.ai link to load the data and log counts.",
+    search:"Search wholesaler", wsTitle:"Wholesalers", wsSub:"Tap a wholesaler to count their stock. Due and never-counted come first.",
+    never:"Never counted", lastCount:"Last count", daysAgo:d=>d===0?"today":d===1?"1 day ago":`${d} days ago`,
+    due:"Count due", ok:"Up to date", delSince:"Delivered since", delToDate:"Delivered to date", countNow:"Count stock now",
+    back:"Wholesalers", countTitle:"Stock count", date:"Count date", note:"Note (optional)", showAll:"Show all products",
+    showMine:"Only products delivered to this wholesaler", last:"Last", none:"—", offPreview:"Offtake", checkNeg:"Higher than delivered — check",
+    save:"Save count", saving:"Saving…", saved:"Count saved", cancel:"Cancel", blankWarn:n=>`${n} delivered product${n>1?"s have":" has"} no count. Enter 0 if none is left.`,
+    overwrite:"A count for this date exists — saving replaces it.", readOnly:"You can view but not save counts. Ask the owner for \"Can interact\" access.",
+    byProduct:"Offtake by product", history:"Count history", noHistory:"No counts yet. Tap “Count stock now” to record the first one.",
+    edit:"Edit", del:"Delete", delConfirm:"Tap again to delete", deleted:"Count deleted", by:"by", someone:"Someone", supName:"Supervisor name (saved on this device)",
+    product:"Product", stock:"Stock", delivered:"Delivered", offtake:"Offtake", sellThrough:"Sell-through", perDay:"Per day", daysLeft:"Days left",
+    suggested:"Suggested order", prevCount:"Previous", received:"Delivered", counted:"Counted", period:"Period",
+    offTitle:"Offtake", offSub:"Offtake = stock at previous count + delivered since − stock counted now. At a wholesaler's first count, previous stock is taken as 0 (before their first delivery).",
+    allProducts:"All products", counted_n:(a,b)=>`${a} of ${b}`, kWs:"Wholesalers counted", kDel:"Delivered MC (to count dates)", kStock:"Stock at wholesalers (MC)", kOff:"Offtake (MC)", kST:"Sell-through",
+    wholesaler:"Wholesaler", allWs:"All wholesalers", notCounted:"Not counted yet", flags:"Checks", estNote:"Days left = estimated stock today ÷ offtake per day (from the latest period).",
+    bySku:"By product — all wholesalers", anTitle:"Deliveries analysis", anSub:r=>`From the warehouse ledger: ${r}.`, monthly:"Deliveries per month by product family",
+    push:"Push list", pushSub:"Who to call now: low stock from counts, and wholesalers overdue against their own ordering rhythm.",
+    wh:"Stock at the warehouse", whSub:"Cover = on hand ÷ average monthly sales over the last 60 days of the ledger.",
+    conc:"Share of deliveries", cover:"Who carries what: mastercases delivered per wholesaler and product", received_:"Received", shipped:"Shipped", onHand:"On hand", perMonth:"Per month", months:"Months of cover",
+    reorder:"Reorder now", reorderSoon:"Reorder soon", watch:"Watch", push_:"Push", okS:"OK", out:"Sold out",
+    fam_old:"Two Apples · old packs", fam_lb:"Two Apples · Lebanon pack", fam_red:"Red Cruz", fam_grape:"Grape, Love & Blueberry",
+    lowStock:(s,d)=>`${s}: about ${d} days of stock left`, overdue:(d,g)=>`No delivery for ${d} days (usually every ~${g})`, lapsed:d=>`No delivery for ${d} days`,
+    countDue:"Stock count due", offer:"Offer", usual:"their usual", neverBought:"never bought, in stock",
+    dataTitle:"Data & settings", ledger:"Deliveries ledger", ledgerInfo:(r,f,a,b)=>`${r} movements from “${f}”, ${a} → ${b}.`,
+    importBtn:"Update from Excel", importHelp:"Upload the workbook with the “All Movements” sheet. It replaces the deliveries ledger; stock counts are kept.",
+    importPreview:(r,s,u,w,a,b)=>`Found ${r} movements (${s} sales lines, ${u} units, ${w} wholesalers), ${a} → ${b}.`, importConfirm:"Replace ledger", imported:"Ledger updated",
+    importErr:"Couldn't find an “All Movements” sheet with the expected columns (SKU (EN), Date, Transaction Type (EN), WS (grouped), Inbound, Outbound).",
+    exportBtn:"Export to Excel", exported:"Export ready", settings:"Settings", visitDays:"Count every (days)", lowDays:"Low-stock warning (days left)", targetDays:"Suggested order covers (days)",
+    saveSettings:"Save settings", settingsSaved:"Settings saved", adminOnly:"Only people who can edit this app change the ledger and settings.",
+    addWs:"Add a wholesaler not in the ledger", addWsBtn:"Add", wsAdded:"Wholesaler added", method:"How offtake is calculated",
+    methodTxt:"For each wholesaler and product: offtake between two counts = previous count + deliveries in between (sales invoices from the ledger) − the new count. The first count uses 0 as the previous stock, so it shows offtake since that wholesaler's first delivery. A negative result is flagged “Check”: a counting mistake, or stock that came from somewhere the ledger doesn't show. All quantities are mastercases (MC), so totals across products and formats add up correctly.",
+    err:"Something went wrong: ", noWrite:"Your access can't save here.", units:"MC", wa:"Send on WhatsApp",
+    countHint:"Count in mastercases (MC). Use decimals for opened cases, e.g. 2.5.",
+    nothingPush:"Nothing urgent right now.", lastDel:"Last delivery", neverDel:"No deliveries in the ledger", enterOne:"Enter at least one stock count.",
+    partial:n=>`Totals cover the products counted. ${n} other product${n>1?"s were":" was"} delivered to this wholesaler but ${n>1?"haven't":"hasn't"} been counted yet.`,
+    f_cruz:"50g", f_kf:"250g", f_kilo:"Kg", format:"Format", show:"Show", allOf:"all flavours", total:"Total", marketTotal:"Market total",
+    byFormat:"Market offtake by format and product", byWs:"Offtake by wholesaler", wsByFormat:"Offtake per wholesaler by format",
+    cols_format:"By format", cols_sku:"By product", noCountsYet:"No stock counts yet. Offtake fills in here as soon as supervisors save their first counts.",
+    formatNote:"Market = all wholesalers counted so far. Two Apple Black is grouped under 50g (it was replaced by Two Apple Blk 50g – Lebanon pack).",
+    mixUnits:"All quantities are mastercases (MC), both deliveries from the ledger and stock counts, so totals across products and formats add up correctly.",
+    mxHelp:"Each row is a wholesaler and each column a product, grouped by pack size (50g, 250g, Kg). The number in a cell is the total mastercases delivered to that wholesaler since February (1.5k = 1,500 MC); the darker the cell, the more they took. A “·” means that wholesaler has never received that product: a gap you can sell into. The dot under each product name is today's warehouse stock: filled green = in stock, empty circle = sold out. “LB” = Lebanon-warning pack.",
+    mxIn:"in stock at warehouse", mxOut:"sold out", mxNever:"never delivered", mcDel:"MC delivered",
+    byFmtWs:"Offtake by format",
+    merged:"Merged wholesalers",
+    salesTitle:"Sales Analysis", salesSub:(a,b)=>`Every sales invoice in the ledger, ${a} – ${b}. All quantities in mastercases.`,
+    kSales:"Sales (MC)", kPerMonth:"Average month", kBest:"Best month", kMom:"Last month vs previous", kTop:"Biggest",
+    byMonth:"Sales per month", dim_flavour:"Flavour", dim_format:"Format", dim_sku:"Product", dim_ws:"Wholesaler",
+    pivotTitle:"Month by month", pivotNote:"Rows add up to the market total; a dot means nothing sold that month.",
+    league:"Wholesaler league", cumulative:"Cumulative", biggest:"Biggest product", otherN:(n)=>`${n} others`, mergedNote:"These ledger names are counted as one wholesaler, including after a new Excel import.", purchases:"Purchase history", purchasesSub:"Every sales invoice line delivered to this wholesaler, from the ledger", byDate:"By date", byProductT:"By product",
+    linesN:"lines", orderDays:"order days", everyDays:d=>`about every ${d} days`, firstOrder:"First", lastOrder:"Last", shareOfWs:"Share", monthlyBuy:"Purchases per month by format (MC)",
+    t_wh:"Warehouse", whTitle:"Warehouse: inbound & stock", whSub2:"Everything received into the warehouse according to the ledger (transfers from Lattakia, goods receipts, purchase invoices, adjustments) and what is left.",
+    kIn:"Inbound (MC)", kOut:"Outbound (MC)", kOnHand:"On hand (MC)", kInMoves:"Inbound movements", lastIn:"last", inMonthly:"Inbound per month by format (MC)", inLog:"Inbound log", type:"Type", ref:"Ref"
+  },
+  ar: {
+    brand:"متتبع تجار الجملة", brandsub:"سوريا · الجملة", t_ws:"تجار الجملة", t_off:"التصريف", t_an:"المبيعات", t_data:"البيانات",
+    loading:"جارٍ التحميل…", noLedger:"لا توجد بيانات بعد. استورد ملف الإكسل للبدء.", goData:"البيانات والإعدادات", noClaude:"افتح التطبيق من رابط claude.ai لتحميل البيانات وتسجيل الجرد.",
+    search:"ابحث عن تاجر", wsTitle:"تجار الجملة", wsSub:"اضغط على التاجر لجرد مخزونه. يظهر المستحق ومن لم يُجرد أولاً.",
+    never:"لم يُجرد بعد", lastCount:"آخر جرد", daysAgo:d=>d===0?"اليوم":d===1?"منذ يوم":`منذ ${d} يوم`,
+    due:"الجرد مستحق", ok:"محدّث", delSince:"المورَّد منذ آخر جرد", delToDate:"المورَّد حتى الآن", countNow:"جرد المخزون الآن",
+    back:"تجار الجملة", countTitle:"جرد المخزون", date:"تاريخ الجرد", note:"ملاحظة (اختياري)", showAll:"عرض كل الأصناف",
+    showMine:"الأصناف المورَّدة لهذا التاجر فقط", last:"آخر جرد", none:"—", offPreview:"التصريف", checkNeg:"أعلى من المورَّد — تحقق",
+    save:"حفظ الجرد", saving:"جارٍ الحفظ…", saved:"تم حفظ الجرد", cancel:"إلغاء", blankWarn:n=>`${n} من الأصناف المورَّدة بدون جرد. أدخل 0 إن لم يبقَ شيء.`,
+    overwrite:"يوجد جرد بهذا التاريخ — الحفظ سيستبدله.", readOnly:"يمكنك العرض فقط. اطلب من المالك صلاحية \"Can interact\".",
+    byProduct:"التصريف حسب الصنف", history:"سجل الجرد", noHistory:"لا يوجد جرد بعد. اضغط «جرد المخزون الآن» لتسجيل أول جرد.",
+    edit:"تعديل", del:"حذف", delConfirm:"اضغط مرة أخرى للحذف", deleted:"تم حذف الجرد", by:"بواسطة", someone:"مستخدم", supName:"اسم المشرف (يُحفظ على هذا الجهاز)",
+    product:"الصنف", stock:"المخزون", delivered:"المورَّد", offtake:"التصريف", sellThrough:"نسبة التصريف", perDay:"يومياً", daysLeft:"أيام متبقية",
+    suggested:"طلبية مقترحة", prevCount:"السابق", received:"المورَّد", counted:"المجرود", period:"الفترة",
+    offTitle:"التصريف", offSub:"التصريف = مخزون الجرد السابق + المورَّد منذه − المخزون المجرود الآن. في أول جرد للتاجر يُعتبر المخزون السابق صفراً (قبل أول توريد).",
+    allProducts:"كل الأصناف", counted_n:(a,b)=>`${a} من ${b}`, kWs:"التجار المجرودون", kDel:"المورَّد بالكرتونة (حتى تواريخ الجرد)", kStock:"المخزون لدى التجار (كرتونة)", kOff:"التصريف (كرتونة)", kST:"نسبة التصريف",
+    wholesaler:"التاجر", allWs:"كل التجار", notCounted:"لم يُجرد بعد", flags:"للتحقق", estNote:"الأيام المتبقية = المخزون المقدّر اليوم ÷ التصريف اليومي (من آخر فترة).",
+    bySku:"حسب الصنف — كل التجار", anTitle:"تحليل التوريدات", anSub:r=>`من دفتر المستودع: ${r}.`, monthly:"التوريدات الشهرية حسب عائلة المنتج",
+    push:"قائمة الدفع", pushSub:"من يجب الاتصال به الآن: مخزون منخفض من الجرد، وتجار متأخرون عن وتيرة طلبهم المعتادة.",
+    wh:"المخزون في المستودع", whSub:"التغطية = المتوفر ÷ متوسط المبيعات الشهرية لآخر 60 يوماً في الدفتر.",
+    conc:"حصة التوريدات", cover:"من يحمل ماذا: الكراتين المورَّدة لكل تاجر وصنف", received_:"المستلم", shipped:"المشحون", onHand:"المتوفر", perMonth:"شهرياً", months:"أشهر التغطية",
+    reorder:"اطلب الآن", reorderSoon:"اطلب قريباً", watch:"راقب", push_:"ادفع", okS:"جيد", out:"نفد",
+    fam_old:"تفاحتين · العبوات القديمة", fam_lb:"تفاحتين · عبوة لبنان", fam_red:"كروز أحمر", fam_grape:"عنب ولوف وبلوبيري",
+    lowStock:(s,d)=>`${s}: تقريباً ${d} يوم مخزون متبقٍ`, overdue:(d,g)=>`لا توريد منذ ${d} يوم (عادة كل ~${g})`, lapsed:d=>`لا توريد منذ ${d} يوم`,
+    countDue:"الجرد مستحق", offer:"اعرض", usual:"الكمية المعتادة", neverBought:"لم يشترِه، متوفر",
+    dataTitle:"البيانات والإعدادات", ledger:"دفتر التوريدات", ledgerInfo:(r,f,a,b)=>`${r} حركة من «${f}»، ${a} ← ${b}.`,
+    importBtn:"تحديث من Excel", importHelp:"ارفع الملف الذي يحتوي ورقة «All Movements». يستبدل دفتر التوريدات؛ الجرد يبقى محفوظاً.",
+    importPreview:(r,s,u,w,a,b)=>`وُجدت ${r} حركة (${s} فاتورة بيع، ${u} وحدة، ${w} تاجر)، ${a} ← ${b}.`, importConfirm:"استبدال الدفتر", imported:"تم تحديث الدفتر",
+    importErr:"لم يتم العثور على ورقة «All Movements» بالأعمدة المطلوبة.",
+    exportBtn:"تصدير إلى Excel", exported:"الملف جاهز", settings:"الإعدادات", visitDays:"الجرد كل (يوم)", lowDays:"تنبيه المخزون المنخفض (أيام)", targetDays:"الطلبية المقترحة تغطي (يوم)",
+    saveSettings:"حفظ الإعدادات", settingsSaved:"تم حفظ الإعدادات", adminOnly:"فقط من لديه صلاحية التعديل يغيّر الدفتر والإعدادات.",
+    addWs:"إضافة تاجر غير موجود في الدفتر", addWsBtn:"إضافة", wsAdded:"تمت إضافة التاجر", method:"طريقة حساب التصريف",
+    methodTxt:"لكل تاجر وصنف: التصريف بين جردين = الجرد السابق + التوريدات بينهما (فواتير البيع من الدفتر) − الجرد الجديد. أول جرد يعتبر المخزون السابق صفراً، فيظهر التصريف منذ أول توريد للتاجر. النتيجة السالبة تُعلَّم «تحقق»: خطأ في العد أو بضاعة من مصدر غير موجود في الدفتر. كل الكميات بالكرتونة الماستر (MC)، لذلك المجاميع بين الأصناف والعبوات صحيحة.",
+    err:"حدث خطأ: ", noWrite:"صلاحيتك لا تسمح بالحفظ هنا.", units:"كرتونة", wa:"إرسال عبر واتساب",
+    countHint:"العدّ بالكرتونة الماستر (MC). استخدم الكسور للكراتين المفتوحة، مثل 2.5.",
+    nothingPush:"لا شيء عاجل الآن.", lastDel:"آخر توريد", neverDel:"لا توريدات في الدفتر", enterOne:"أدخل جرد صنف واحد على الأقل.",
+    partial:n=>`المجاميع تشمل الأصناف المجرودة فقط. ${n} صنف آخر ورِّد لهذا التاجر ولم يُجرد بعد.`,
+    f_cruz:"50غ", f_kf:"250غ", f_kilo:"كغ", format:"العبوة", show:"عرض", allOf:"كل النكهات", total:"المجموع", marketTotal:"إجمالي السوق",
+    byFormat:"التصريف في السوق حسب العبوة والصنف", byWs:"التصريف حسب التاجر", wsByFormat:"تصريف كل تاجر حسب العبوة",
+    cols_format:"حسب العبوة", cols_sku:"حسب الصنف", noCountsYet:"لا يوجد جرد بعد. يظهر التصريف هنا فور حفظ المشرفين لأول جرد.",
+    formatNote:"السوق = كل التجار المجرودين حتى الآن. تفاحتين أسود ضمن عبوة 50غ (استُبدل بتفاحتين كروز أسود – عبوة لبنان).",
+    mixUnits:"كل الكميات بالكرتونة الماستر (MC)، سواء التوريدات من الدفتر أو الجرد، لذلك المجاميع بين الأصناف والعبوات صحيحة.",
+    mxHelp:"كل سطر تاجر وكل عمود صنف، مجمّعة حسب حجم العبوة (50غ، 250غ، كغ). الرقم في الخانة هو مجموع الكراتين الماستر المورَّدة لهذا التاجر منذ شباط (1.5k = 1,500 كرتونة)؛ كلما كانت الخانة أغمق كانت الكمية أكبر. الرمز «·» يعني أن التاجر لم يستلم هذا الصنف أبداً: فرصة للبيع. النقطة تحت اسم الصنف تبيّن مخزون المستودع اليوم: أخضر ممتلئ = متوفر، دائرة فارغة = نفد. «لبنان» = عبوة التحذير اللبناني.",
+    mxIn:"متوفر في المستودع", mxOut:"نفد", mxNever:"لم يُورَّد", mcDel:"كرتونة مورَّدة",
+    byFmtWs:"التصريف حسب العبوة",
+    merged:"تجار مدمجون",
+    salesTitle:"تحليل المبيعات", salesSub:(a,b)=>`كل فواتير البيع في الدفتر، ${a} – ${b}. كل الكميات بالكرتونة.`,
+    kSales:"المبيعات (كرتونة)", kPerMonth:"متوسط الشهر", kBest:"أفضل شهر", kMom:"الشهر الأخير مقارنة بسابقه", kTop:"الأكبر",
+    byMonth:"المبيعات الشهرية", dim_flavour:"النكهة", dim_format:"العبوة", dim_sku:"الصنف", dim_ws:"التاجر",
+    pivotTitle:"شهراً بشهر", pivotNote:"مجموع الأسطر يساوي إجمالي السوق؛ النقطة تعني لا مبيعات في ذلك الشهر.",
+    league:"ترتيب التجار", cumulative:"التراكمي", biggest:"أكبر صنف", otherN:(n)=>`${n} أخرى`, mergedNote:"هذه الأسماء في الدفتر تُحسب كتاجر واحد، وتبقى مدمجة بعد أي استيراد جديد.", purchases:"سجل المشتريات", purchasesSub:"كل أسطر فواتير البيع المورَّدة لهذا التاجر من الدفتر", byDate:"حسب التاريخ", byProductT:"حسب الصنف",
+    linesN:"سطر", orderDays:"يوم طلب", everyDays:d=>`كل ${d} يوم تقريباً`, firstOrder:"الأول", lastOrder:"الأخير", shareOfWs:"الحصة", monthlyBuy:"المشتريات الشهرية حسب العبوة (كرتونة)",
+    t_wh:"المستودع", whTitle:"المستودع: الوارد والمخزون", whSub2:"كل ما دخل المستودع حسب الدفتر (تحويلات من اللاذقية، استلامات، فواتير شراء، تعديلات) وما تبقى منه.",
+    kIn:"الوارد (كرتونة)", kOut:"الصادر (كرتونة)", kOnHand:"المتوفر (كرتونة)", kInMoves:"حركات الوارد", lastIn:"آخرها", inMonthly:"الوارد الشهري حسب العبوة (كرتونة)", inLog:"سجل الوارد", type:"النوع", ref:"المرجع"
+  }
+};
+let LANG = "en";
+try { LANG = localStorage.getItem("wst_lang") || (navigator.language || "").startsWith("ar") && "ar" || "en"; } catch (e) {}
+const t = (k, ...a) => { const v = T[LANG][k] ?? T.en[k]; return typeof v === "function" ? v(...a) : v; };
+
+/* ============================== helpers ============================== */
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const fmt = (n) => (n == null || !isFinite(n)) ? "—" : ((Math.round(n * 10) / 10) || 0).toLocaleString("en-US", { maximumFractionDigits: 1 });
+const fmt1 = (n) => (n == null || !isFinite(n)) ? "—" : (Math.abs(n) >= 10 ? Math.round(n).toLocaleString("en-US") : (Math.round(n * 10) / 10).toLocaleString("en-US"));
+const pct = (n) => (n == null || !isFinite(n)) ? "—" : Math.round(n * 100) + "%";
+const todayISO = () => new Date().toLocaleDateString("en-CA");
+const dayDiff = (a, b) => Math.round((Date.parse(b) - Date.parse(a)) / 864e5);
+const fmtDate = (iso) => { if (!iso) return "—"; const d = new Date(iso + "T00:00:00Z"); return new Intl.DateTimeFormat(LANG === "ar" ? "ar-SY-u-nu-latn" : "en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }).format(d); };
+const fmtShort = (iso) => { if (!iso) return "—"; const d = new Date(iso + "T00:00:00Z"); return new Intl.DateTimeFormat(LANG === "ar" ? "ar-SY-u-nu-latn" : "en-GB", { day: "numeric", month: "short", timeZone: "UTC" }).format(d); };
+const monthLabel = (ym) => new Intl.DateTimeFormat(LANG === "ar" ? "ar-SY-u-nu-latn" : "en-GB", { month: "short", timeZone: "UTC" }).format(new Date(ym + "-01T00:00:00Z"));
+const fnv = (s) => { let h = 0x811c9dc5; for (const ch of s) { h ^= ch.codePointAt(0); h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(16).padStart(8, "0"); };
+const wsIdOf = (name) => "w" + fnv(name.trim());
+// Two ledger names can be the same person; merges live in config/aliases.
+const aliasOf = (n) => (n && S.aliases[n.trim()]) || n;
+const ceil5 = (n) => Math.ceil(n / 5) * 5;
+const skuName = (s) => LANG === "ar" ? s.ar : s.en;
+const skuAlt = (s) => LANG === "ar" ? s.en : s.ar;
+const famOf = (s) => /LB Warn/i.test(s.en) ? "lb" : /Two Apple/i.test(s.en) ? "old" : /Red/i.test(s.en) ? "red" : "grape";
+const FAMS = [["old", "--s1"], ["lb", "--s2"], ["red", "--s3"], ["grape", "--s4"]];
+// Pack format. "Two Apple Black" has no size in its name; it was replaced by "Two Apple Blk 50g (LB Warn)", so it is 50g.
+const FORMATS = ["cruz", "kf", "kilo"];
+const fmtOf = (s) => (/\bKg\b|Kilo/i.test(s.en) ? "kilo" : /\b250g\b|\bKF\b/i.test(s.en) ? "kf" : "cruz");
+// Old ledger names (Cruz/KF/Kilo) and new ones (50g/250g/Kg) are the same product.
+const canonSku = (en) => en.trim().replace(/\bCruz\b/gi, "50g").replace(/\bKF\b/g, "250g").replace(/\bKilo\b/gi, "Kg").replace(/\s+/g, " ");
+function toast(msg) { const el = document.getElementById("toast"); el.textContent = msg; el.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(() => (el.hidden = true), 2600); }
+const tip = document.getElementById("tip");
+function showTip(html, x, y) { tip.innerHTML = html; tip.hidden = false; const r = tip.getBoundingClientRect(); let L = x + 14, Tp = y + 14; if (L + r.width > innerWidth - 8) L = x - r.width - 14; if (Tp + r.height > innerHeight - 8) Tp = y - r.height - 14; tip.style.left = Math.max(8, L) + "px"; tip.style.top = Math.max(8, Tp) + "px"; }
+function hideTip() { tip.hidden = true; }
+const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} } };
+
+/* ============================== state ============================== */
+const DEFAULTS = { visitDays: 7, lowDays: 10, targetDays: 21 };
+const S = { db: null, user: null, dl: null, aliases: {}, sup: store.get("wst_sup") || "", admin: false, canWrite: null, noClaude: false, loaded: false, meta: null, ledger: null, counts: [], settings: { ...DEFAULTS }, extraWs: [], loadErr: null, sku: "all", showAllSkus: false, form: null, dirty: false, pendingDelete: null, profiles: {} };
+let E = null; // derived model
+
+/* ============================== engine ============================== */
+function recompute() {
+  if (!S.ledger) { E = null; return; }
+  const { skus, rows } = S.ledger;
+  const today = todayISO();
+  const ledgerEnd = rows.reduce((m, r) => (r[1] > m ? r[1] : m), "");
+  const ledgerStart = rows.reduce((m, r) => (!m || r[1] < m ? r[1] : m), "");
+  const del = new Map(); // wsId -> Map(skuId -> [[date, qty]])
+  const wsMap = new Map();
+  for (const r of rows) {
+    const [si, date, type, ws, , , out] = r;
+    if (type !== "Sales Invoice" || !ws || !out) continue;
+    const name = aliasOf(ws);
+    const id = wsIdOf(name);
+    if (!wsMap.has(id)) wsMap.set(id, { id, name: name.trim(), extra: false });
+    const sid = skus[si].id;
+    if (!del.has(id)) del.set(id, new Map());
+    const m = del.get(id);
+    if (!m.has(sid)) m.set(sid, []);
+    m.get(sid).push([date, out]);
+  }
+  for (const w of S.extraWs) { const id = wsIdOf(w); if (!wsMap.has(id)) wsMap.set(id, { id, name: w.trim(), extra: true }); }
+  for (const m of del.values()) for (const a of m.values()) a.sort((x, y) => (x[0] < y[0] ? -1 : x[0] > y[0] ? 1 : 0));
+  const cum = (wsId, sid, date) => { const a = del.get(wsId)?.get(sid); if (!a) return 0; let n = 0; for (const [d, q] of a) { if (d <= date) n += q; else break; } return n; };
+  const firstDel = (wsId, sid) => del.get(wsId)?.get(sid)?.[0]?.[0] ?? null;
+
+  const countsByWs = new Map();
+  for (const c of S.counts) { if (!c.ws || !c.date) continue; if (!countsByWs.has(c.ws)) countsByWs.set(c.ws, []); countsByWs.get(c.ws).push(c); if (!wsMap.has(c.ws) && c.wsName) wsMap.set(c.ws, { id: c.ws, name: c.wsName, extra: true }); }
+  for (const a of countsByWs.values()) a.sort((x, y) => (x.date < y.date ? -1 : x.date > y.date ? 1 : String(x.savedAt || "").localeCompare(String(y.savedAt || ""))));
+
+  const series = (wsId, sid) => {
+    const out = []; let prev = null;
+    for (const c of countsByWs.get(wsId) || []) {
+      const v = c.stock?.[sid];
+      if (typeof v !== "number" || !isFinite(v)) continue;
+      const delTo = cum(wsId, sid, c.date);
+      if (prev) {
+        const rec = delTo - prev.delTo, off = prev.v + rec - v, days = dayDiff(prev.date, c.date);
+        out.push({ id: c.id, date: c.date, v, prevV: prev.v, prevDate: prev.date, rec, off, days, base: false });
+      } else {
+        const f = firstDel(wsId, sid);
+        const days = f && f <= c.date ? dayDiff(f, c.date) : null;
+        out.push({ id: c.id, date: c.date, v, prevV: 0, prevDate: null, rec: delTo, off: delTo - v, days, base: true });
+      }
+      prev = { date: c.date, v, delTo };
+    }
+    return out;
+  };
+
+  // warehouse (needed before wholesalers: suggestions only for products the warehouse can ship)
+  const wh = skus.map((s, i) => {
+    let inb = 0, out = 0, recent = 0;
+    for (const r of rows) if (r[0] === i) { inb += r[5]; out += r[6]; if (r[2] === "Sales Invoice" && dayDiff(r[1], ledgerEnd) < 60) recent += r[6]; }
+    const onHand = inb - out, perMonth = recent / 2, cover = perMonth > 0 ? onHand / perMonth : null;
+    const status = onHand <= 0 ? "out" : cover == null ? "push_" : cover < 0.75 ? "reorder" : cover < 1.25 ? "reorderSoon" : cover <= 3 ? "okS" : "push_";
+    return { sku: s, inb, out, onHand, perMonth, cover, status };
+  });
+  const whById = new Map(wh.map((x) => [x.sku.id, x]));
+  // one product order everywhere: in stock at the warehouse first, then biggest sellers
+  const skuOrder = [...skus].sort((a, b) => (whById.get(b.id).onHand > 0) - (whById.get(a.id).onHand > 0) || whById.get(b.id).out - whById.get(a.id).out);
+
+  const st = settings();
+  const wsList = [...wsMap.values()].map((w) => {
+    const counts = countsByWs.get(w.id) || [];
+    const lastCount = counts.at(-1) || null;
+    const dm = del.get(w.id) || new Map();
+    const skuRows = skuOrder.map((s) => {
+      const ser = series(w.id, s.id);
+      const everDel = cum(w.id, s.id, "9999-12-31");
+      const last = ser.at(-1) || null;
+      const r = { sku: s, series: ser, everDel, counted: !!last };
+      if (last) {
+        r.stock = last.v; r.lastDate = last.date; r.delTo = cum(w.id, s.id, last.date);
+        r.offToDate = r.delTo - last.v;
+        r.lastOff = last.off; r.lastDays = last.days; r.base = last.base;
+        r.rate = last.days > 0 && last.off >= 0 ? last.off / last.days : null;
+        r.delSince = everDel - r.delTo;
+        const since = Math.max(0, dayDiff(last.date, today));
+        r.estNow = r.rate != null ? Math.max(0, last.v + r.delSince - r.rate * since) : last.v + r.delSince;
+        r.daysLeft = r.rate > 0 ? r.estNow / r.rate : null;
+        r.suggest = r.rate > 0 && whById.get(s.id).onHand > 0 ? ceil5(Math.max(0, st.targetDays * r.rate - r.estNow)) : 0;
+        r.flag = last.off < 0;
+      }
+      return r;
+    });
+    const dates = [...new Set([...dm.values()].flatMap((a) => a.map((x) => x[0])))].sort();
+    const gaps = dates.slice(1).map((d, i) => dayDiff(dates[i], d));
+    const avgGap = gaps.length ? gaps.reduce((a, b) => a + b, 0) / gaps.length : null;
+    const lastDel = dates.at(-1) || null;
+    const totalDel = skuRows.reduce((a, r) => a + r.everDel, 0);
+    const c = skuRows.filter((r) => r.counted);
+    const daysSinceCount = lastCount ? dayDiff(lastCount.date, today) : null;
+    return {
+      ...w, counts, lastCount, daysSinceCount, due: !lastCount || daysSinceCount > st.visitDays, skuRows, totalDel, orderDays: dates.length, avgGap, lastDel,
+      daysSinceDel: lastDel ? dayDiff(lastDel, today) : null,
+      delTo: c.reduce((a, r) => a + r.delTo, 0), stock: c.reduce((a, r) => a + r.stock, 0), offToDate: c.reduce((a, r) => a + r.offToDate, 0),
+      rate: c.some((r) => r.rate != null) ? c.reduce((a, r) => a + (r.rate || 0), 0) : null,
+      estNow: c.reduce((a, r) => a + (r.estNow || 0), 0), flags: c.filter((r) => r.flag).length,
+      uncounted: skuRows.filter((r) => !r.counted && r.everDel > 0).length,
+    };
+  });
+  wsList.sort((a, b) => b.totalDel - a.totalDel);
+  const totalDel = wsList.reduce((a, w) => a + w.totalDel, 0);
+
+  // monthly by family (sales)
+  const months = [];
+  if (ledgerStart) { let d = new Date(ledgerStart.slice(0, 7) + "-01T00:00:00Z"); const end = ledgerEnd.slice(0, 7); while (d.toISOString().slice(0, 7) <= end) { months.push(d.toISOString().slice(0, 7)); d.setUTCMonth(d.getUTCMonth() + 1); } }
+  const monthly = Object.fromEntries(FAMS.map(([f]) => [f, months.map(() => 0)]));
+  const buyers = months.map(() => new Set());
+  for (const r of rows) { if (r[2] !== "Sales Invoice" || !r[6]) continue; const mi = months.indexOf(r[1].slice(0, 7)); if (mi < 0) continue; monthly[famOf(skus[r[0]])][mi] += r[6]; if (r[3]) buyers[mi].add(aliasOf(r[3])); }
+
+  E = { skus: skuOrder, wsList, wsById: new Map(wsList.map((w) => [w.id, w])), cum, firstDel, del, wh, whById, months, monthly, buyers: buyers.map((b) => b.size), totalDel, ledgerStart, ledgerEnd, salesLines: rows.filter((r) => r[2] === "Sales Invoice").length };
+}
+function settings() {
+  const s = { ...DEFAULTS, ...S.settings };
+  for (const k of Object.keys(DEFAULTS)) s[k] = Number(s[k]) > 0 ? Number(s[k]) : DEFAULTS[k];
+  return s;
+}
+
+/* ============================== routing ============================== */
+const route = () => { const h = decodeURIComponent(location.hash.replace(/^#\/?/, "")); const p = h.split("/"); if (p[0] === "ws" && p[1]) return { view: p[2] === "count" ? "count" : "ws", id: p[1], edit: p[3] || null }; if (["offtake", "warehouse", "analysis", "data"].includes(p[0])) return { view: p[0] }; return { view: "list" }; };
+const go = (h) => { if (location.hash === h) render(); else location.hash = h; };
+window.addEventListener("hashchange", () => { S.form = null; S.dirty = false; S.pendingDelete = null; render(); window.scrollTo(0, 0); });
+
+/* ============================== shell ============================== */
+const ICONS = {
+  list: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg>',
+  offtake: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
+  analysis: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg>',
+  warehouse: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5v8l9 5 9-5V8z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg>',
+  data: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg>',
+};
+function renderShell(view) {
+  document.documentElement.lang = LANG; document.documentElement.dir = LANG === "ar" ? "rtl" : "ltr";
+  document.getElementById("brand").textContent = t("brand");
+  document.getElementById("brandsub").textContent = t("brandsub");
+  document.getElementById("langBtn").textContent = LANG === "ar" ? "EN" : "ع";
+  const cur = view === "ws" || view === "count" ? "list" : view;
+  const items = [["list", "#", t("t_ws")], ["offtake", "#offtake", t("t_off")], ["warehouse", "#warehouse", t("t_wh")], ["analysis", "#analysis", t("t_an")], ["data", "#data", t("t_data")]];
+  document.getElementById("tabs").innerHTML = items.map(([k, h, l]) => `<a href="${h}" ${k === cur ? 'aria-current="page"' : ""}>${esc(l)}</a>`).join("");
+  document.getElementById("bottom").innerHTML = items.map(([k, h, l]) => `<a href="${h}" ${k === cur ? 'aria-current="page"' : ""}>${ICONS[k]}<span>${esc(l)}</span></a>`).join("");
+}
+document.getElementById("langBtn").addEventListener("click", () => { LANG = LANG === "ar" ? "en" : "ar"; store.set("wst_lang", LANG); render(); });
+
+/* ============================== render ============================== */
+function render() {
+  const r = route();
+  renderShell(r.view);
+  const main = document.getElementById("main");
+  if (r.view === "count" && S.dirty) return; // don't wipe a form being typed into
+  if (S.noClaude) { main.innerHTML = `<div class="notice">${esc(t("noClaude"))}</div>`; return; }
+  if (S.loadErr) { main.innerHTML = `<div class="notice crit">${esc(t("err") + S.loadErr)}</div>`; return; }
+  if (!E && !S.loaded) { main.innerHTML = `<div class="panel"><p class="muted">${esc(t("loading"))}</p><div class="skel" style="width:60%"></div><div class="skel" style="width:80%"></div><div class="skel" style="width:40%"></div></div>`; return; }
+  if (!E) { if (r.view !== "data") { main.innerHTML = `<div class="notice">${esc(t("noLedger"))} <a href="#data">${esc(t("goData"))}</a></div>`; return; } return viewData(main); }
+  if (r.view === "list") return viewList(main);
+  if (r.view === "ws") return viewWs(main, r.id);
+  if (r.view === "count") return viewCount(main, r.id, r.edit);
+  if (r.view === "offtake") return viewOfftake(main);
+  if (r.view === "warehouse") return viewWarehouse(main);
+  if (r.view === "analysis") return viewAnalysis(main);
+  if (r.view === "data") return viewData(main);
+}
+
+/* ---------- wholesaler list ---------- */
+function statusChip(w) {
+  if (!w.lastCount) return `<span class="chip c-serious">${esc(t("never"))}</span>`;
+  return w.due ? `<span class="chip c-warn">${esc(t("due"))}</span>` : `<span class="chip c-good">${esc(t("ok"))}</span>`;
+}
+function viewList(main) {
+  const q = store.get("wst_q") || "";
+  main.innerHTML = `
+    <div class="head"><div><h2>${esc(t("wsTitle"))}</h2><p class="sub">${esc(t("wsSub"))}</p></div>
+      <input class="inp search" id="q" type="search" placeholder="${esc(t("search"))}" value="${esc(q)}" autocomplete="off"></div>
+    <div class="panel flush"><div class="wslist" id="wslist"></div></div>`;
+  const draw = () => {
+    const qq = document.getElementById("q").value.trim().toLowerCase();
+    const list = E.wsList.filter((w) => !qq || w.name.toLowerCase().includes(qq)).sort((a, b) => (b.due - a.due) || ((b.daysSinceCount ?? 1e9) - (a.daysSinceCount ?? 1e9)) || (b.totalDel - a.totalDel));
+    document.getElementById("wslist").innerHTML = list.map((w) => {
+      const since = w.lastCount ? `${t("lastCount")}: ${fmtShort(w.lastCount.date)} · ${t("daysAgo", w.daysSinceCount)}` : t("never");
+      const delSince = w.lastCount ? w.skuRows.reduce((a, r) => a + (r.counted ? r.delSince : 0), 0) : w.totalDel;
+      return `<a class="row-link" href="#ws/${w.id}"><span class="n ar" dir="auto">${esc(w.name)}</span>
+        <span class="x">${statusChip(w)}<span class="small muted num">${esc(w.lastCount ? t("delSince") : t("delToDate"))}: ${fmt(delSince)}</span></span>
+        <span class="m">${esc(since)}</span></a>`;
+    }).join("");
+  };
+  draw();
+  document.getElementById("q").addEventListener("input", (e) => { store.set("wst_q", e.target.value); draw(); });
+}
+
+/* ---------- wholesaler page (log) ---------- */
+function viewWs(main, id) {
+  const w = E.wsById.get(id);
+  if (!w) { main.innerHTML = `<div class="notice">${esc(t("notCounted"))}</div>`; return; }
+  const counted = w.skuRows.filter((r) => r.counted || r.everDel > 0).sort((a, b) => FORMATS.indexOf(fmtOf(a.sku)) - FORMATS.indexOf(fmtOf(b.sku)) || b.counted - a.counted);
+  const fmtTiles = FORMATS.map((f) => ({ f, a: agg(w.skuRows.filter((r) => fmtOf(r.sku) === f)) })).filter((x) => x.a.counted);
+  main.innerHTML = `
+    <div class="crumbs"><a href="#">${esc(t("back"))}</a><span>/</span></div>
+    <div class="wshead"><div class="stack" style="gap:4px"><h2><span dir="auto">${esc(w.name)}</span></h2>
+      <p class="small muted">${w.lastCount ? `${esc(t("lastCount"))}: ${fmtDate(w.lastCount.date)} · ${esc(t("daysAgo", w.daysSinceCount))}` : esc(t("never"))} · ${esc(t("lastDel"))}: ${w.lastDel ? fmtDate(w.lastDel) : esc(t("neverDel"))}</p></div>
+      <a class="btn pri big" href="#ws/${w.id}/count">${esc(t("countNow"))}</a></div>
+    ${w.lastCount ? `<div class="kpis">
+      <div class="kpi"><b class="num">${fmt(w.delTo)}</b><span>${esc(t("delToDate"))}</span></div>
+      <div class="kpi"><b class="num">${fmt(w.stock)}</b><span>${esc(t("stock"))}</span></div>
+      <div class="kpi"><b class="num">${fmt(w.offToDate)}</b><span>${esc(t("offtake"))}</span></div>
+      <div class="kpi"><b class="num">${pct(w.delTo ? w.offToDate / w.delTo : null)}</b><span>${esc(t("sellThrough"))}</span></div>
+      <div class="kpi"><b class="num">${fmt1(w.rate)}</b><span>${esc(t("perDay"))}</span></div></div>` : ""}
+    ${w.lastCount && w.uncounted ? `<p class="small muted">${esc(t("partial", w.uncounted))}</p>` : ""}
+    ${w.flags ? `<div class="notice warn">${esc(t("flags"))}: ${w.flags} — ${esc(t("checkNeg"))}</div>` : ""}
+    ${fmtTiles.length ? `<section class="stack"><h3>${esc(t("byFmtWs"))}</h3><div class="kpis">${fmtTiles.map((x) => `<div class="kpi"><b class="num">${fmt(x.a.off)}</b><span><span class="nt">${esc(t("f_" + x.f))}</span> · ${esc(t("stock"))} ${fmt(x.a.stock)} · ${pct(x.a.delTo ? x.a.off / x.a.delTo : null)}</span></div>`).join("")}</div></section>` : ""}
+    ${w.lastCount ? `<section class="stack"><h3>${esc(t("byProduct"))}</h3><div class="panel flush scroll">${skuTable(w, counted)}</div><p class="small muted">${esc(t("estNote"))}</p></section>` : ""}
+    ${suggestBlock(w)}
+    ${purchaseSection(w)}
+    <section class="stack"><h3>${esc(t("history"))}</h3><div class="panel flush hist" id="hist">${histHTML(w)}</div></section>`;
+  bindPurchases(w);
+  bindHistory(w);
+}
+function skuTable(w, rows) {
+  const body = rows.map((r) => {
+    if (!r.counted) return `<tr><td><span class="name">${esc(skuName(r.sku))}</span><span class="sub2">${esc(skuAlt(r.sku))}</span></td><td class="small">${esc(t("f_" + fmtOf(r.sku)))}</td><td class="r num">${fmt(r.everDel)}</td><td class="r muted" colspan="5">${esc(t("notCounted"))}</td></tr>`;
+    const low = r.daysLeft != null && r.daysLeft < settings().lowDays;
+    return `<tr><td><span class="name">${esc(skuName(r.sku))}</span><span class="sub2">${esc(skuAlt(r.sku))}</span></td><td class="small">${esc(t("f_" + fmtOf(r.sku)))}</td>
+      <td class="r num">${fmt(r.delTo)}</td><td class="r num"><b>${fmt(r.stock)}</b></td>
+      <td class="r num">${r.flag ? `<span class="chip c-crit">${fmt(r.offToDate)}</span>` : fmt(r.offToDate)}</td>
+      <td class="r num">${pct(r.delTo ? r.offToDate / r.delTo : null)}</td><td class="r num">${fmt1(r.rate)}</td>
+      <td class="r num">${r.daysLeft == null ? "—" : low ? `<span class="chip c-crit">${fmt(r.daysLeft)}</span>` : fmt(r.daysLeft)}</td></tr>`;
+  }).join("");
+  return `<table><thead><tr><th>${esc(t("product"))}</th><th>${esc(t("format"))}</th><th class="r">${esc(t("delToDate"))}</th><th class="r">${esc(t("stock"))}</th><th class="r">${esc(t("offtake"))}</th><th class="r">${esc(t("sellThrough"))}</th><th class="r">${esc(t("perDay"))}</th><th class="r">${esc(t("daysLeft"))}</th></tr></thead><tbody>${body}</tbody></table>`;
+}
+// Every sales-invoice line delivered to this wholesaler, by date or by product.
+function purchaseLines(w) {
+  if (!S.ledger) return [];
+  const ls = S.ledger.skus;
+  return S.ledger.rows.filter((r) => r[2] === "Sales Invoice" && aliasOf(r[3]) === w.name && r[6] > 0)
+    .map((r) => ({ date: r[1], sku: ls[r[0]], ref: r[4], qty: r[6] }))
+    .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
+}
+function purchaseSection(w) {
+  const rows = purchaseLines(w);
+  if (!rows.length) return "";
+  const mode = S.phMode || "date";
+  const total = rows.reduce((a, r) => a + r.qty, 0);
+  const days = [...new Set(rows.map((r) => r.date))];
+  const gaps = days.slice().sort().slice(1).map((d, i) => dayDiff(days.slice().sort()[i], d));
+  const avgGap = gaps.length ? Math.round(gaps.reduce((a, b) => a + b, 0) / gaps.length) : null;
+  let body;
+  if (mode === "date") {
+    body = `<table><thead><tr><th>${esc(t("date"))}</th><th>${esc(t("product"))}</th><th>${esc(t("format"))}</th><th>${esc(t("ref"))}</th><th class="r">${esc(t("units"))}</th></tr></thead><tbody>`;
+    let last = null;
+    for (const r of rows) {
+      const first = r.date !== last; last = r.date;
+      const dayTotal = first ? rows.filter((x) => x.date === r.date).reduce((a, x) => a + x.qty, 0) : 0;
+      body += `<tr${first ? ' style="border-top:1px solid var(--axis)"' : ""}><td class="small num" style="white-space:nowrap">${first ? fmtDate(r.date) + (dayTotal ? ` <span class="muted">· ${fmt(dayTotal)}</span>` : "") : ""}</td>
+        <td><span class="name">${esc(skuName(r.sku))}</span><span class="sub2">${esc(skuAlt(r.sku))}</span></td>
+        <td class="small nt">${esc(t("f_" + fmtOf(r.sku)))}</td><td class="small muted">${esc(r.ref || "—")}</td><td class="r num"><b>${fmt(r.qty)}</b></td></tr>`;
+    }
+    body += `</tbody><tfoot><tr><td colspan="4">${esc(t("total"))} · ${rows.length} ${esc(t("linesN"))}</td><td class="r num">${fmt(total)}</td></tr></tfoot></table>`;
+  } else {
+    const per = new Map();
+    for (const r of rows) { const k = r.sku.id; const p = per.get(k) || { sku: r.sku, qty: 0, n: 0, first: r.date, last: r.date }; p.qty += r.qty; p.n++; p.first = p.first < r.date ? p.first : r.date; p.last = p.last > r.date ? p.last : r.date; per.set(k, p); }
+    const list = [...per.values()].sort((a, b) => b.qty - a.qty);
+    body = `<table><thead><tr><th>${esc(t("product"))}</th><th>${esc(t("format"))}</th><th class="r">${esc(t("linesN"))}</th><th>${esc(t("firstOrder"))}</th><th>${esc(t("lastOrder"))}</th><th class="r">${esc(t("units"))}</th><th class="r">${esc(t("shareOfWs"))}</th></tr></thead><tbody>`
+      + list.map((p) => `<tr><td><span class="name">${esc(skuName(p.sku))}</span><span class="sub2">${esc(skuAlt(p.sku))}</span></td><td class="small nt">${esc(t("f_" + fmtOf(p.sku)))}</td>
+        <td class="r num">${p.n}</td><td class="small num">${fmtShort(p.first)}</td><td class="small num">${fmtShort(p.last)}</td><td class="r num"><b>${fmt(p.qty)}</b></td><td class="r num">${pct(p.qty / total)}</td></tr>`).join("")
+      + `</tbody><tfoot><tr><td colspan="5">${esc(t("total"))}</td><td class="r num">${fmt(total)}</td><td></td></tr></tfoot></table>`;
+  }
+  return `<section class="stack"><div class="head"><h3>${esc(t("purchases"))}</h3>
+      <div class="seg" role="group"><button type="button" data-ph="date" aria-pressed="${mode === "date"}">${esc(t("byDate"))}</button><button type="button" data-ph="sku" aria-pressed="${mode === "sku"}">${esc(t("byProductT"))}</button></div></div>
+    <p class="small muted">${esc(t("purchasesSub"))} · ${rows.length} ${esc(t("linesN"))} · ${days.length} ${esc(t("orderDays"))}${avgGap ? " · " + esc(t("everyDays", avgGap)) : ""} · ${fmt(total)} ${esc(t("units"))}</p>
+    <div class="panel chart stack"><h3>${esc(t("monthlyBuy"))}</h3><div id="cBuy"></div></div>
+    <div class="panel flush scroll">${body}</div></section>`;
+}
+function bindPurchases(w) {
+  document.querySelectorAll("[data-ph]").forEach((b) => b.addEventListener("click", () => { S.phMode = b.dataset.ph; render(); }));
+  const host = document.getElementById("cBuy");
+  if (!host) return;
+  const rows = purchaseLines(w), M = E.months;
+  const byF = Object.fromEntries(FORMATS.map((x) => [x, M.map(() => 0)]));
+  for (const r of rows) { const i = M.indexOf(r.date.slice(0, 7)); if (i >= 0) byF[fmtOf(r.sku)][i] += r.qty; }
+  drawStacked(host, M, FORMATS.map((x, i) => ({ label: t("f_" + x), color: `--s${i + 1}`, values: byF[x] })), t("monthlyBuy"));
+}
+function suggestBlock(w) {
+  const s = w.skuRows.filter((r) => r.counted && r.suggest > 0);
+  if (!s.length) return "";
+  const lines = s.map((r) => `${r.sku.ar}: ${r.suggest}`).join("\n");
+  const msg = `طلبية مقترحة — ${w.name}\n${lines}`;
+  return `<section class="panel stack"><div class="head"><h3>${esc(t("suggested"))}</h3><a class="btn" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(msg)}">${esc(t("wa"))}</a></div>
+    <div class="small">${s.map((r) => `<div style="display:flex;justify-content:space-between;gap:12px;padding:4px 0;border-bottom:1px solid var(--hair)"><span>${esc(skuName(r.sku))}</span><b class="num">${fmt(r.suggest)}</b></div>`).join("")}</div>
+    <p class="small muted">${esc(t("targetDays"))}: ${settings().targetDays}</p></section>`;
+}
+function histHTML(w) {
+  if (!w.counts.length) return `<p style="padding:16px" class="muted">${esc(t("noHistory"))}</p>`;
+  const bySku = new Map(w.skuRows.map((r) => [r.sku.id, r]));
+  return [...w.counts].reverse().map((c) => {
+    const lines = E.skus.map((s) => {
+      const p = bySku.get(s.id).series.find((x) => x.id === c.id);
+      return p ? { s, p } : null;
+    }).filter(Boolean);
+    const offSum = lines.reduce((a, l) => a + l.p.off, 0), stockSum = lines.reduce((a, l) => a + l.p.v, 0);
+    const canDel = S.canWrite !== false;
+    return `<details><summary><span class="d">${fmtDate(c.date)}</span>
+      <span class="small ink2 num">${esc(t("stock"))} ${fmt(stockSum)} · ${esc(t("offtake"))} ${fmt(offSum)}</span>
+      <span class="who">${c.supervisorName ? esc(t("by")) + " " + esc(c.supervisorName) : ""}</span>
+      <span class="acts">${S.canWrite !== false ? `<a class="btn ghost" href="#ws/${w.id}/count/${esc(c.id)}">${esc(t("edit"))}</a>` : ""}${canDel && S.canWrite !== false ? `<button class="btn ghost danger" type="button" data-del="${esc(c.id)}">${esc(S.pendingDelete === c.id ? t("delConfirm") : t("del"))}</button>` : ""}</span></summary>
+      <div class="body scroll"><table><thead><tr><th>${esc(t("product"))}</th><th class="r">${esc(t("prevCount"))}</th><th class="r">${esc(t("received"))}</th><th class="r">${esc(t("counted"))}</th><th class="r">${esc(t("offtake"))}</th><th class="r">${esc(t("period"))}</th></tr></thead><tbody>
+      ${lines.map(({ s, p }) => `<tr><td>${esc(skuName(s))}</td><td class="r num">${p.base ? "0" : fmt(p.prevV)}</td><td class="r num">${fmt(p.rec)}</td><td class="r num"><b>${fmt(p.v)}</b></td><td class="r num">${p.off < 0 ? `<span class="chip c-crit">${fmt(p.off)}</span>` : fmt(p.off)}</td><td class="r num small muted">${p.days == null ? "—" : p.days + "d"}</td></tr>`).join("")}
+      </tbody></table>${c.note ? `<p class="small ink2" style="padding:8px 4px 0" dir="auto"></p>` : ""}</div></details>`;
+  }).join("");
+}
+function bindHistory(w) {
+  const host = document.getElementById("hist");
+  // notes via textContent (shared, untrusted)
+  const notes = host.querySelectorAll("details p[dir=auto]");
+  let i = 0; for (const c of [...w.counts].reverse()) if (c.note) { if (notes[i]) notes[i].textContent = c.note; i++; }
+  host.querySelectorAll("[data-del]").forEach((b) => b.addEventListener("click", async (e) => {
+    e.preventDefault(); e.stopPropagation();
+    const id = b.dataset.del;
+    if (S.pendingDelete !== id) { S.pendingDelete = id; b.textContent = t("delConfirm"); return; }
+    S.pendingDelete = null;
+    try { await S.db.doc("counts/" + id).delete(); toast(t("deleted")); } catch (err) { toast(t("err") + (err.code || err.message)); }
+  }));
+}
+/* ---------- count form ---------- */
+function viewCount(main, id, editId) {
+  const w = E.wsById.get(id);
+  if (!w) { main.innerHTML = ""; return; }
+  const editing = editId ? w.counts.find((c) => c.id === editId) : null;
+  if (!S.form || S.form.ws !== id || S.form.editId !== (editId || null)) {
+    let draft = null; try { draft = JSON.parse(store.get("wst_draft_" + id + (editId ? "_" + editId : "")) || "null"); } catch (e) {}
+    S.form = draft || { ws: id, editId: editId || null, date: editing ? editing.date : todayISO(), note: editing?.note || "", stock: editing ? { ...editing.stock } : {} };
+    S.form.ws = id; S.form.editId = editId || null;
+  }
+  const f = S.form;
+  const skus = E.skus.filter((s) => S.showAllSkus || (w.skuRows.find((r) => r.sku.id === s.id).everDel > 0) || f.stock[s.id] != null || w.skuRows.find((r) => r.sku.id === s.id).counted);
+  main.innerHTML = `
+    <div class="crumbs"><a href="#">${esc(t("back"))}</a><span>/</span><a href="#ws/${w.id}" class="ar" dir="auto"></a></div>
+    <div class="head"><h2>${esc(t("countTitle"))}</h2>
+      <div class="form-top"><div class="field"><label for="fdate">${esc(t("date"))}</label><input class="inp" type="date" id="fdate" value="${esc(f.date)}" max="${todayISO()}"></div></div></div>
+    ${S.canWrite === false ? `<div class="notice warn">${esc(t("readOnly"))}</div>` : ""}
+    <p class="small ink2">${esc(t("countHint"))}</p>
+    <div id="fwarn"></div>
+    <div class="panel flush"><div class="lines" id="lines">${skus.map((s) => `
+      <div class="line" data-sku="${s.id}"><div><div class="pn">${esc(skuName(s))}</div><div class="pa">${esc(skuAlt(s))}</div></div>
+        <div class="meta" data-meta></div>
+        <div class="qty"><input inputmode="decimal" type="number" min="0" step="any" aria-label="${esc(skuName(s))}" data-in="${s.id}" value="${f.stock[s.id] ?? ""}"><div class="pv" data-pv></div></div>
+      </div>`).join("")}</div></div>
+    <button class="btn ghost" type="button" id="toggleAll">${esc(S.showAllSkus ? t("showMine") : t("showAll"))}</button>
+    <div class="grid2" style="gap:12px"><div class="field"><label for="fsup">${esc(t("supName"))}</label><input class="inp" id="fsup" dir="auto" autocomplete="name" value="${esc(S.sup || "")}"></div>
+    <div class="field"><label for="fnote">${esc(t("note"))}</label><textarea class="inp" id="fnote" rows="2" dir="auto"></textarea></div></div>
+    <div class="sticky-save"><span class="small ink2" id="fsum"></span><div style="display:flex;gap:8px"><a class="btn" href="#ws/${w.id}">${esc(t("cancel"))}</a><button class="btn pri big" type="button" id="fsave" ${S.canWrite === false ? "disabled" : ""}>${esc(t("save"))}</button></div></div>`;
+  main.querySelector(".crumbs a.ar").textContent = w.name;
+  document.getElementById("fnote").value = f.note || "";
+  const persist = () => { S.dirty = true; store.set("wst_draft_" + id + (editId ? "_" + editId : ""), JSON.stringify(f)); };
+  const update = () => {
+    let off = 0, blanks = 0;
+    for (const s of skus) {
+      const line = main.querySelector(`.line[data-sku="${s.id}"]`);
+      const prev = [...(w.skuRows.find((r) => r.sku.id === s.id).series)].filter((p) => p.date < f.date && p.id !== (editId || "")).at(-1);
+      const delTo = E.cum(id, s.id, f.date), prevDel = prev ? E.cum(id, s.id, prev.date) : 0;
+      const rec = delTo - prevDel;
+      line.querySelector("[data-meta]").innerHTML = prev
+        ? `<span>${esc(t("last"))}: <b class="num">${fmt(prev.v)}</b> · ${fmtShort(prev.date)}</span><span>${esc(t("delSince"))}: <b class="num">${fmt(rec)}</b></span>`
+        : `<span>${esc(t("delToDate"))}: <b class="num">${fmt(rec)}</b></span>`;
+      const v = f.stock[s.id];
+      const pv = line.querySelector("[data-pv]");
+      if (v == null) { pv.textContent = ""; pv.className = "pv"; if (rec > 0 || (prev && prev.v > 0)) blanks++; continue; }
+      const o = (prev ? prev.v : 0) + rec - v;
+      off += Math.max(0, o);
+      pv.textContent = o < 0 ? t("checkNeg") : `${t("offPreview")}: ${fmt(o)}`;
+      pv.className = "pv" + (o < 0 ? " neg" : " muted");
+    }
+    const exists = w.counts.find((c) => c.date === f.date && c.id !== editId);
+    document.getElementById("fwarn").innerHTML = (exists ? `<div class="notice warn">${esc(t("overwrite"))}</div>` : "") + (blanks ? `<div class="notice warn" style="margin-top:8px">${esc(t("blankWarn", blanks))}</div>` : "");
+    document.getElementById("fsum").textContent = `${t("offtake")}: ${fmt(off)}`;
+  };
+  update();
+  main.querySelectorAll("[data-in]").forEach((inp) => inp.addEventListener("input", () => {
+    const v = inp.value.trim(); const n = Number(v);
+    if (v === "" || !isFinite(n) || n < 0) delete f.stock[inp.dataset.in]; else f.stock[inp.dataset.in] = Math.round(n * 100) / 100;
+    persist(); update();
+  }));
+  document.getElementById("fdate").addEventListener("change", (e) => { if (e.target.value) { f.date = e.target.value; persist(); update(); } });
+  document.getElementById("fnote").addEventListener("input", (e) => { f.note = e.target.value; persist(); });
+  document.getElementById("fsup").addEventListener("input", (e) => { S.sup = e.target.value.slice(0, 60); store.set("wst_sup", S.sup); });
+  main.querySelector(".sticky-save a.btn").addEventListener("click", () => { store.set("wst_draft_" + id + (editId ? "_" + editId : ""), null); S.dirty = false; S.form = null; });
+  document.getElementById("toggleAll").addEventListener("click", () => { S.showAllSkus = !S.showAllSkus; const d = S.dirty; S.dirty = false; render(); S.dirty = d; });
+  document.getElementById("fsave").addEventListener("click", async (e) => {
+    const btn = e.currentTarget; if (btn.disabled) return;
+    const stock = Object.fromEntries(Object.entries(f.stock).filter(([, v]) => typeof v === "number" && isFinite(v)));
+    if (!Object.keys(stock).length) { toast(t("enterOne")); return; }
+    btn.disabled = true; btn.textContent = t("saving");
+    const docId = `${id}_${f.date}`;
+    const body = { ws: id, wsName: w.name, date: f.date, stock, note: (f.note || "").slice(0, 500), supervisorName: (S.sup || "").slice(0, 60), savedAt: new Date().toISOString() };
+    try {
+      await S.db.doc("counts/" + docId).set(body);
+      if (editId && editId !== docId) await S.db.doc("counts/" + editId).delete();
+      store.set("wst_draft_" + id + (editId ? "_" + editId : ""), null);
+      S.dirty = false; S.form = null; toast(t("saved")); go("#ws/" + id);
+    } catch (err) {
+      btn.disabled = false; btn.textContent = t("save");
+      if (err && err.code === "invalid_argument") { S.canWrite = false; toast(t("noWrite")); } else toast(t("err") + (err?.code || err?.message || err));
+    }
+  });
+}
+
+/* ---------- offtake ---------- */
+// Sum a set of wholesaler×SKU rows into one offtake figure (only rows that have a count).
+function agg(rows) {
+  const c = rows.filter((r) => r.counted);
+  return {
+    counted: c.length > 0, n: c.length,
+    delTo: c.reduce((a, r) => a + r.delTo, 0), stock: c.reduce((a, r) => a + r.stock, 0), off: c.reduce((a, r) => a + r.offToDate, 0),
+    rate: c.some((r) => r.rate != null) ? c.reduce((a, r) => a + (r.rate || 0), 0) : null, est: c.reduce((a, r) => a + (r.estNow || 0), 0),
+    flags: c.filter((r) => r.flag).length, everDel: rows.reduce((a, r) => a + r.everDel, 0),
+    last: c.reduce((m, r) => (r.lastDate > m ? r.lastDate : m), ""),
+  };
+}
+const predOf = (sel) => (sel === "all" ? () => true : sel.startsWith("fmt:") ? (r) => fmtOf(r.sku) === sel.slice(4) : (r) => r.sku.id === sel);
+const selName = (sel) => (sel === "all" ? t("allProducts") : sel.startsWith("fmt:") ? t("f_" + sel.slice(4)) : skuName(E.skus.find((s) => s.id === sel)));
+const allRows = (pred) => E.wsList.flatMap((w) => w.skuRows.filter(pred));
+const wsCountFor = (pred) => E.wsList.filter((w) => w.skuRows.some((r) => r.counted && pred(r))).length;
+
+function viewOfftake(main) {
+  const sel = S.sku, pred = predOf(sel), lowD = settings().lowDays;
+  const list = E.wsList.map((w) => ({ w, v: agg(w.skuRows.filter(pred)) })).filter((x) => x.v.counted || x.v.everDel > 0);
+  const c = list.filter((x) => x.v.counted).sort((a, b) => b.v.off - a.v.off);
+  const nc = list.filter((x) => !x.v.counted).sort((a, b) => b.v.everDel - a.v.everDel);
+  const tot = agg(allRows(pred));
+  const max = Math.max(1, ...c.map((x) => x.v.off));
+  main.innerHTML = `
+    <div class="head"><div><h2>${esc(t("offTitle"))}</h2><p class="sub" style="max-width:70ch">${esc(t("offSub"))}</p></div>
+      <div class="field"><label for="skuSel">${esc(t("show"))}</label><select class="inp" id="skuSel" style="min-width:240px">
+        <option value="all">${esc(t("allProducts"))}</option>
+        <optgroup label="${esc(t("format"))}">${FORMATS.map((f) => `<option value="fmt:${f}" ${sel === "fmt:" + f ? "selected" : ""}>${esc(t("f_" + f))}</option>`).join("")}</optgroup>
+        <optgroup label="${esc(t("product"))}">${E.skus.map((s) => `<option value="${s.id}" ${sel === s.id ? "selected" : ""}>${esc(skuName(s))}</option>`).join("")}</optgroup>
+      </select></div></div>
+    <div class="kpis">
+      <div class="kpi"><b class="num">${esc(t("counted_n", c.length, list.length))}</b><span>${esc(t("kWs"))}</span></div>
+      <div class="kpi"><b class="num">${fmt(tot.delTo)}</b><span>${esc(t("kDel"))}</span></div>
+      <div class="kpi"><b class="num">${fmt(tot.stock)}</b><span>${esc(t("kStock"))}</span></div>
+      <div class="kpi"><b class="num">${fmt(tot.off)}</b><span>${esc(t("kOff"))} · <span class="nt">${esc(selName(sel))}</span></span></div>
+      <div class="kpi"><b class="num">${pct(tot.delTo ? tot.off / tot.delTo : null)}</b><span>${esc(t("kST"))}</span></div>
+      </div>
+    ${!c.length ? `<div class="notice">${esc(t("noCountsYet"))}</div>` : ""}
+    ${marketTable()}
+    <section class="stack"><h3>${esc(t("byWs"))} · <span class="nt">${esc(selName(sel))}</span></h3>
+    <div class="panel flush scroll"><table>
+      <thead><tr><th>${esc(t("wholesaler"))}</th><th>${esc(t("lastCount"))}</th><th class="r">${esc(t("delivered"))}</th><th class="r">${esc(t("stock"))}</th><th class="r">${esc(t("offtake"))}</th><th class="r">${esc(t("sellThrough"))}</th><th class="r">${esc(t("perDay"))}</th><th class="r">${esc(t("daysLeft"))}</th></tr></thead>
+      <tbody>${c.map(({ w, v }) => { const dl = v.rate > 0 ? v.est / v.rate : null; return `<tr class="click" data-go="#ws/${w.id}">
+        <td><span class="name" dir="auto">${esc(w.name)}</span>${v.flags ? ` <span class="chip c-crit">${esc(t("flags"))} ${v.flags}</span>` : ""}</td>
+        <td class="small">${fmtShort(v.last)}</td>
+        <td class="r num">${fmt(v.delTo)}</td><td class="r num">${fmt(v.stock)}</td>
+        <td class="r num"><span class="inbar"><i style="width:${Math.max(2, (Math.max(0, v.off) / max) * 90)}px"></i><b>${fmt(v.off)}</b></span></td>
+        <td class="r num">${pct(v.delTo ? v.off / v.delTo : null)}</td><td class="r num">${fmt1(v.rate)}</td>
+        <td class="r num">${dl == null ? "—" : dl < lowD ? `<span class="chip c-crit">${fmt(dl)}</span>` : fmt(dl)}</td></tr>`; }).join("")}
+      ${nc.map(({ w, v }) => `<tr class="click" data-go="#ws/${w.id}"><td><span class="name" dir="auto">${esc(w.name)}</span></td><td class="small muted">${esc(t("notCounted"))}</td><td class="r num muted">${fmt(v.everDel)}</td><td colspan="5"></td></tr>`).join("")}</tbody>
+      ${c.length ? `<tfoot><tr><td>${esc(t("marketTotal"))}</td><td></td><td class="r num">${fmt(tot.delTo)}</td><td class="r num">${fmt(tot.stock)}</td><td class="r num">${fmt(tot.off)}</td><td class="r num">${pct(tot.delTo ? tot.off / tot.delTo : null)}</td><td class="r num">${fmt1(tot.rate)}</td><td class="r num">${tot.rate > 0 ? fmt(tot.est / tot.rate) : "—"}</td></tr></tfoot>` : ""}
+    </table></div><p class="small muted">${esc(t("estNote"))}</p></section>
+    ${wsMatrix()}
+    <p class="small muted" style="max-width:80ch">${esc(t("mixUnits"))}</p>`;
+  document.getElementById("skuSel").addEventListener("change", (e) => { S.sku = e.target.value; render(); });
+  main.querySelectorAll("tr[data-go]").forEach((tr) => tr.addEventListener("click", () => go(tr.dataset.go)));
+  main.querySelectorAll("[data-mx]").forEach((b) => b.addEventListener("click", () => { S.mxMode = b.dataset.mx; render(); }));
+}
+
+// Market (all wholesalers): one row per format with its SKUs under it, then the market total.
+function marketTable() {
+  const line = (label, a, n, cls) => `<tr class="${cls}"><td>${label}</td><td class="r num">${n || "—"}</td>
+    <td class="r num">${a.counted ? fmt(a.delTo) : "—"}</td><td class="r num">${a.counted ? fmt(a.stock) : "—"}</td>
+    <td class="r num">${a.counted ? `<b>${fmt(a.off)}</b>` : `<span class="muted small">${esc(t("notCounted"))}</span>`}</td>
+    <td class="r num">${a.counted ? pct(a.delTo ? a.off / a.delTo : null) : "—"}</td><td class="r num">${a.counted ? fmt1(a.rate) : "—"}</td>
+    </tr>`;
+  let body = "";
+  for (const f of FORMATS) {
+    const skus = E.skus.filter((s) => fmtOf(s) === f && allRows((r) => r.sku.id === s.id).some((r) => r.everDel > 0 || r.counted));
+    if (!skus.length) continue;
+    const fp = (r) => fmtOf(r.sku) === f;
+    body += line(`<span class="name">${esc(t("f_" + f))}</span> <span class="small muted">${esc(t("allOf"))}</span>`, agg(allRows(fp)), wsCountFor(fp), "grp");
+    for (const s of skus) { const sp = (r) => r.sku.id === s.id; body += line(`<span class="ind">${esc(skuName(s))}<span class="sub2">${esc(skuAlt(s))}</span></span>`, agg(allRows(sp)), wsCountFor(sp), ""); }
+  }
+  const all = agg(allRows(() => true));
+  return `<section class="stack"><h3>${esc(t("byFormat"))}</h3><div class="panel flush scroll"><table class="mkt">
+    <thead><tr><th>${esc(t("format"))} / ${esc(t("product"))}</th><th class="r">${esc(t("kWs"))}</th><th class="r">${esc(t("delivered"))}</th><th class="r">${esc(t("kStock"))}</th><th class="r">${esc(t("offtake"))}</th><th class="r">${esc(t("sellThrough"))}</th><th class="r">${esc(t("perDay"))}</th></tr></thead>
+    <tbody>${body}</tbody><tfoot>${line(esc(t("marketTotal")), all, wsCountFor(() => true), "")}</tfoot></table></div>
+    <p class="small muted">${esc(t("formatNote"))}</p></section>`;
+}
+
+// Offtake per wholesaler split by format (or by SKU), with market totals underneath.
+function wsMatrix() {
+  const mode = S.mxMode || "fmt";
+  const ws = E.wsList.filter((w) => w.skuRows.some((r) => r.counted)).map((w) => ({ w, a: agg(w.skuRows) })).sort((a, b) => b.a.off - a.a.off);
+  if (!ws.length) return "";
+  const cols = mode === "fmt"
+    ? FORMATS.filter((f) => allRows((r) => fmtOf(r.sku) === f).some((r) => r.counted)).map((f) => ({ label: t("f_" + f), pred: (r) => fmtOf(r.sku) === f }))
+    : E.skus.filter((s) => allRows((r) => r.sku.id === s.id).some((r) => r.counted)).sort((a, b) => FORMATS.indexOf(fmtOf(a)) - FORMATS.indexOf(fmtOf(b))).map((s) => ({ label: skuName(s), sub: t("f_" + fmtOf(s)), pred: (r) => r.sku.id === s.id }));
+  const cell = (a, strong) => (a.counted ? `<td class="r num">${strong ? `<b>${fmt(a.off)}</b>` : fmt(a.off)}</td>` : `<td class="r muted">—</td>`);
+  return `<section class="stack"><div class="head"><h3>${esc(t("wsByFormat"))}</h3>
+      <div class="seg" role="group"><button type="button" data-mx="fmt" aria-pressed="${mode === "fmt"}">${esc(t("cols_format"))}</button><button type="button" data-mx="sku" aria-pressed="${mode === "sku"}">${esc(t("cols_sku"))}</button></div></div>
+    <div class="panel flush scroll"><table>
+      <thead><tr><th>${esc(t("wholesaler"))}</th>${cols.map((c) => `<th class="r" style="white-space:normal;min-width:84px"><span class="nt">${esc(c.label)}</span>${c.sub ? `<span class="sub2 nt">${esc(c.sub)}</span>` : ""}</th>`).join("")}<th class="r">${esc(t("total"))}</th></tr></thead>
+      <tbody>${ws.map(({ w, a }) => `<tr class="click" data-go="#ws/${w.id}"><td><span class="name" dir="auto">${esc(w.name)}</span></td>${cols.map((c) => cell(agg(w.skuRows.filter(c.pred)))).join("")}${cell(a, true)}</tr>`).join("")}</tbody>
+      <tfoot><tr><td>${esc(t("marketTotal"))}</td>${cols.map((c) => cell(agg(allRows(c.pred)))).join("")}${cell(agg(allRows(() => true)), true)}</tr></tfoot>
+    </table></div></section>`;
+}
+
+/* ---------- sales analysis ---------- */
+// Flavour is the marketing line, format the pack size; both are read from the product name.
+const flavourOf = (s) => (/Two Apple/i.test(s.en) ? "Two Apples" : /Red/i.test(s.en) ? "Red" : /Grape & Mint/i.test(s.en) ? "Grape & Mint" : /Grape/i.test(s.en) ? "Grape" : /Love/i.test(s.en) ? "Love" : "Blueberry");
+const DIMS = ["flavour", "format", "sku", "ws"];
+// Sales per month for one dimension, biggest first.
+function salesBy(dim) {
+  const M = E.months, ls = S.ledger.skus, map = new Map();
+  for (const r of S.ledger.rows) {
+    if (r[2] !== "Sales Invoice" || !r[6]) continue;
+    const sku = ls[r[0]];
+    const key = dim === "flavour" ? flavourOf(sku) : dim === "format" ? t("f_" + fmtOf(sku)) : dim === "sku" ? skuName(sku) : aliasOf(r[3]);
+    if (!key) continue;
+    if (!map.has(key)) map.set(key, { key, total: 0, lines: 0, values: M.map(() => 0), buyers: new Set() });
+    const row = map.get(key), i = M.indexOf(r[1].slice(0, 7));
+    row.total += r[6]; row.lines += 1; row.buyers.add(aliasOf(r[3]));
+    if (i >= 0) row.values[i] += r[6];
+  }
+  return [...map.values()].sort((a, b) => b.total - a.total);
+}
+function viewAnalysis(main) {
+  const dim = DIMS.includes(S.dim) ? S.dim : "flavour";
+  const M = E.months, rows = salesBy(dim);
+  const monthTot = M.map((_, i) => rows.reduce((a, r) => a + r.values[i], 0));
+  const total = monthTot.reduce((a, b) => a + b, 0);
+  const best = monthTot.indexOf(Math.max(...monthTot));
+  const lastIdx = M.length - 1, prev = monthTot[lastIdx - 1] || 0;
+  const mom = prev ? (monthTot[lastIdx] - prev) / prev : null;
+  const top = rows[0];
+  main.innerHTML = `
+    <div class="head"><div><h2>${esc(t("salesTitle"))}</h2><p class="sub">${esc(t("salesSub", fmtDate(E.ledgerStart), fmtDate(E.ledgerEnd)))}</p></div></div>
+    <div class="kpis">
+      <div class="kpi"><b class="num">${fmt(total)}</b><span>${esc(t("kSales"))}</span></div>
+      <div class="kpi"><b class="num">${fmt(Math.round(total / M.length))}</b><span>${esc(t("kPerMonth"))}</span></div>
+      <div class="kpi"><b class="num">${fmt(monthTot[best])}</b><span>${esc(t("kBest"))} · <span class="nt">${esc(monthLabel(M[best]))}</span></span></div>
+      <div class="kpi"><b class="num">${mom == null ? "—" : (mom > 0 ? "+" : "") + Math.round(mom * 100) + "%"}</b><span>${esc(t("kMom"))} · <span class="nt">${esc(monthLabel(M[lastIdx]))}</span></span></div>
+      <div class="kpi"><b class="num" dir="auto">${esc(top ? top.key : "—")}</b><span>${esc(t("kTop"))} · ${pct(top ? top.total / total : null)}</span></div>
+    </div>
+    <section class="stack"><div class="head"><h3>${esc(t("byMonth"))}</h3>
+      <div class="seg" role="group">${DIMS.map((d) => `<button type="button" data-dim="${d}" aria-pressed="${d === dim}">${esc(t("dim_" + d))}</button>`).join("")}</div></div>
+      <div class="panel chart stack"><ul class="legend" id="lgSales"></ul><div id="cSales"></div></div></section>
+    <section class="stack"><h3>${esc(t("pivotTitle"))} · <span class="nt">${esc(t("dim_" + dim))}</span></h3>
+      <div class="panel flush scroll"><table class="mkt">
+        <thead><tr><th>${esc(t("dim_" + dim))}</th>${M.map((m) => `<th class="r">${esc(monthLabel(m))}</th>`).join("")}<th class="r">${esc(t("total"))}</th><th class="r">${esc(t("shareOfWs"))}</th></tr></thead>
+        <tbody>${rows.map((r) => `<tr><td><span class="name" dir="auto">${esc(r.key)}</span></td>${r.values.map((v) => `<td class="r num">${v ? fmt(v) : '<span class="muted">·</span>'}</td>`).join("")}<td class="r num"><b>${fmt(r.total)}</b></td><td class="r num">${pct(r.total / total)}</td></tr>`).join("")}</tbody>
+        <tfoot><tr><td>${esc(t("total"))}</td>${monthTot.map((v) => `<td class="r num">${fmt(v)}</td>`).join("")}<td class="r num">${fmt(total)}</td><td class="r num">100%</td></tr></tfoot>
+      </table></div><p class="small muted">${esc(t("pivotNote"))}</p></section>
+    <section class="stack"><h3>${esc(t("league"))}</h3><div class="panel flush scroll">${leagueTable()}</div></section>
+    <section class="stack"><div class="head"><h3>${esc(t("push"))}</h3></div><p class="small muted">${esc(t("pushSub"))}</p><div class="panel flush" id="push"></div></section>
+    <section class="panel stack"><h3>${esc(t("cover"))}</h3><p class="small ink2" style="max-width:85ch">${esc(t("mxHelp"))}</p><div class="mlegend" id="mxLeg"></div><div class="scroll"><table class="matrix" id="mx"></table></div></section>`;
+  // chart: the four biggest, everything else folded into one neutral band
+  const shown = rows.slice(0, 4), rest = rows.slice(4);
+  const series = shown.map((r, i) => ({ label: r.key, color: `--s${i + 1}`, values: r.values }));
+  if (rest.length) series.push({ label: t("otherN", rest.length), color: "--other", values: M.map((_, i) => rest.reduce((a, r) => a + r.values[i], 0)) });
+  document.getElementById("lgSales").innerHTML = series.map((s) => `<li><span class="sw" style="background:var(${s.color})"></span><span dir="auto">${esc(s.label)}</span></li>`).join("");
+  drawStacked(document.getElementById("cSales"), M, series, t("byMonth"));
+  main.querySelectorAll("[data-dim]").forEach((b) => b.addEventListener("click", () => { S.dim = b.dataset.dim; render(); }));
+  main.querySelectorAll("tr[data-go]").forEach((tr) => tr.addEventListener("click", () => go(tr.dataset.go)));
+  drawPush(); drawMatrix();
+}
+// Wholesalers ranked, with a share bar and the running concentration.
+function leagueTable() {
+  const list = E.wsList.filter((w) => w.totalDel > 0);
+  const total = list.reduce((a, w) => a + w.totalDel, 0);
+  const max = Math.max(1, ...list.map((w) => w.totalDel));
+  let cum = 0;
+  return `<table><thead><tr><th>#</th><th>${esc(t("wholesaler"))}</th><th class="r">${esc(t("units"))}</th><th>${esc(t("shareOfWs"))}</th><th class="r">${esc(t("cumulative"))}</th><th class="r">${esc(t("linesN"))}</th><th class="r">${esc(t("orderDays"))}</th><th>${esc(t("biggest"))}</th><th>${esc(t("lastOrder"))}</th></tr></thead><tbody>
+    ${list.map((w, i) => {
+      cum += w.totalDel;
+      const bigs = [...w.skuRows].sort((a, b) => b.everDel - a.everDel)[0];
+      const lines = E.del.get(w.id) ? [...E.del.get(w.id).values()].reduce((a, arr) => a + arr.length, 0) : 0;
+      return `<tr class="click" data-go="#ws/${w.id}"><td class="num muted">${i + 1}</td>
+        <td><span class="name" dir="auto">${esc(w.name)}</span></td>
+        <td class="r num"><b>${fmt(w.totalDel)}</b></td>
+        <td><span class="inbar" style="justify-content:flex-start"><i style="width:${Math.max(2, (w.totalDel / max) * 90)}px"></i><span class="small muted num">${pct(w.totalDel / total)}</span></span></td>
+        <td class="r num small">${pct(cum / total)}</td><td class="r num">${lines}</td><td class="r num">${w.orderDays}</td>
+        <td class="small">${bigs && bigs.everDel ? esc(skuName(bigs.sku)) : "—"}</td>
+        <td class="small num">${w.lastDel ? fmtShort(w.lastDel) : "—"}</td></tr>`;
+    }).join("")}</tbody>
+    <tfoot><tr><td></td><td>${esc(t("marketTotal"))}</td><td class="r num">${fmt(total)}</td><td colspan="6"></td></tr></tfoot></table>`;
+}
+function drawPush() {
+  const st = settings();
+  const items = [];
+  for (const w of E.wsList) {
+    const low = w.skuRows.filter((r) => r.counted && r.daysLeft != null && r.daysLeft < st.lowDays).sort((a, b) => a.daysLeft - b.daysLeft);
+    const reasons = []; let kind = null, score = 0;
+    if (low.length) { kind = "low"; score = 1e6 - low[0].daysLeft * 1000; low.slice(0, 2).forEach((r) => reasons.push(t("lowStock", skuName(r.sku), Math.max(0, Math.round(r.daysLeft))))); }
+    if (w.daysSinceDel != null && w.totalDel > 0) {
+      if (w.daysSinceDel > 90) { kind = kind || "lapsed"; reasons.push(t("lapsed", w.daysSinceDel)); score = Math.max(score, w.totalDel); }
+      else if (w.avgGap && w.orderDays >= 3 && w.daysSinceDel > 1.5 * w.avgGap) { kind = kind || "overdue"; reasons.push(t("overdue", w.daysSinceDel, Math.round(w.avgGap))); score = Math.max(score, w.totalDel * (w.daysSinceDel / w.avgGap)); }
+    }
+    if (!kind) continue;
+    if (w.due) reasons.push(t("countDue"));
+    let offer;
+    const lowOffer = low.filter((r) => r.suggest > 0);
+    if (lowOffer.length) offer = lowOffer.map((r) => `${skuName(r.sku)} ${fmt(r.suggest)}`).join(" · ");
+    else {
+      const bought = w.skuRows.filter((r) => r.everDel > 0 && E.whById.get(r.sku.id).onHand > 0).sort((a, b) => b.everDel - a.everDel)[0];
+      const gap = w.skuRows.filter((r) => r.everDel === 0 && E.whById.get(r.sku.id).status === "push_").sort((a, b) => E.whById.get(b.sku.id).onHand - E.whById.get(a.sku.id).onHand)[0];
+      const avg = bought ? ceil5(bought.everDel / Math.max(1, new Set((E.del.get(w.id)?.get(bought.sku.id) || []).map((x) => x[0])).size)) : 0;
+      offer = [bought ? `${skuName(bought.sku)} ${fmt(avg)} (${t("usual")})` : null, gap ? `${skuName(gap.sku)} (${t("neverBought")})` : null].filter(Boolean).join(" · ");
+    }
+    items.push({ w, kind, reasons, offer, score });
+  }
+  items.sort((a, b) => b.score - a.score);
+  const chip = { low: ["c-crit", t("daysLeft")], overdue: ["c-serious", "Overdue"], lapsed: ["c-crit", "Lapsed"] };
+  const chipTxt = { low: LANG === "ar" ? "مخزون منخفض" : "Low stock", overdue: LANG === "ar" ? "متأخر" : "Overdue", lapsed: LANG === "ar" ? "منقطع" : "Lapsed" };
+  document.getElementById("push").innerHTML = items.length ? items.slice(0, 14).map((i) => `<div class="pushcard">
+    <div class="top1"><a class="name ar" dir="auto" href="#ws/${i.w.id}" style="color:inherit"></a><span class="chip ${chip[i.kind][0]}">${esc(chipTxt[i.kind])}</span><span class="small muted num">${fmt(i.w.totalDel)} ${esc(t("units"))}</span></div>
+    <div class="rs">${i.reasons.map(esc).join(" · ")}</div>${i.offer ? `<div class="sg">${esc(t("offer"))}: ${esc(i.offer)}</div>` : ""}</div>`).join("") : `<p style="padding:16px" class="muted">${esc(t("nothingPush"))}</p>`;
+  document.querySelectorAll("#push .pushcard a.name").forEach((a, k) => (a.textContent = items[k].w.name));
+}
+/* ---------- warehouse: inbound & stock ---------- */
+const TYPE_AR = { "Transfer from Lattakia": "تحويل من اللاذقية", "Goods Receipt": "استلام", "Purchase Invoice": "فاتورة شراء", "Stock Adjustment": "تعديل مخزون", "Inventory Adjustment": "تعديل جرد", "Other": "أخرى", "Sales Invoice": "فاتورة بيع" };
+const typeName = (x) => (LANG === "ar" ? TYPE_AR[x] || x : x);
+function selOptions(sel) {
+  return `<option value="all">${esc(t("allProducts"))}</option>
+    <optgroup label="${esc(t("format"))}">${FORMATS.map((f) => `<option value="fmt:${f}" ${sel === "fmt:" + f ? "selected" : ""}>${esc(t("f_" + f))}</option>`).join("")}</optgroup>
+    <optgroup label="${esc(t("product"))}">${E.skus.map((s) => `<option value="${s.id}" ${sel === s.id ? "selected" : ""}>${esc(skuName(s))}</option>`).join("")}</optgroup>`;
+}
+function viewWarehouse(main) {
+  const sel = S.whSel || "all";
+  const sp = sel === "all" ? () => true : sel.startsWith("fmt:") ? (s) => fmtOf(s) === sel.slice(4) : (s) => s.id === sel;
+  const ls = S.ledger.skus;
+  const inRows = S.ledger.rows.filter((r) => r[5] > 0 && sp(ls[r[0]])).sort((a, b) => (a[1] < b[1] ? 1 : a[1] > b[1] ? -1 : 0));
+  const wh = E.wh.filter((x) => sp(x.sku));
+  const tot = wh.reduce((a, x) => ({ inb: a.inb + x.inb, out: a.out + x.out, on: a.on + x.onHand, pm: a.pm + x.perMonth }), { inb: 0, out: 0, on: 0, pm: 0 });
+  const M = E.months, byF = Object.fromEntries(FORMATS.map((f) => [f, M.map(() => 0)]));
+  for (const r of inRows) { const i = M.indexOf(r[1].slice(0, 7)); if (i >= 0) byF[fmtOf(ls[r[0]])][i] += r[5]; }
+  main.innerHTML = `
+    <div class="head"><div><h2>${esc(t("whTitle"))}</h2><p class="sub" style="max-width:70ch">${esc(t("whSub2"))}</p></div>
+      <div class="field"><label for="whSel">${esc(t("show"))}</label><select class="inp" id="whSel" style="min-width:240px">${selOptions(sel)}</select></div></div>
+    <div class="kpis">
+      <div class="kpi"><b class="num">${fmt(tot.inb)}</b><span>${esc(t("kIn"))}</span></div>
+      <div class="kpi"><b class="num">${fmt(tot.out)}</b><span>${esc(t("kOut"))}</span></div>
+      <div class="kpi"><b class="num">${fmt(tot.on)}</b><span>${esc(t("kOnHand"))}</span></div>
+      <div class="kpi"><b class="num">${tot.pm > 0 && tot.on > 0 ? fmt1(tot.on / tot.pm) : "—"}</b><span>${esc(t("months"))}</span></div>
+      <div class="kpi"><b class="num">${inRows.length}</b><span>${esc(t("kInMoves"))}${inRows[0] ? ` · ${esc(t("lastIn"))} ${fmtShort(inRows[0][1])}` : ""}</span></div></div>
+    <section class="panel chart stack"><div class="head"><h3>${esc(t("inMonthly"))}</h3><ul class="legend">${FORMATS.map((f, i) => `<li><span class="sw" style="background:var(--s${i + 1})"></span>${esc(t("f_" + f))}</li>`).join("")}</ul></div><div id="cIn"></div></section>
+    <section class="stack"><h3>${esc(t("wh"))}</h3><p class="small muted">${esc(t("whSub"))}</p><div class="panel flush scroll">${whTable(wh)}</div></section>
+    <section class="stack"><h3>${esc(t("inLog"))}</h3><div class="panel flush scroll"><table>
+      <thead><tr><th>${esc(t("date"))}</th><th>${esc(t("product"))}</th><th>${esc(t("format"))}</th><th>${esc(t("type"))}</th><th>${esc(t("ref"))}</th><th class="r">${esc(t("received_"))} (MC)</th></tr></thead>
+      <tbody>${inRows.map((r) => `<tr><td class="num small" style="white-space:nowrap">${fmtDate(r[1])}</td><td><span class="name">${esc(skuName(ls[r[0]]))}</span><span class="sub2">${esc(skuAlt(ls[r[0]]))}</span></td><td class="small">${esc(t("f_" + fmtOf(ls[r[0]])))}</td><td class="small">${esc(typeName(r[2]))}</td><td class="small muted">${esc(r[4] || "—")}</td><td class="r num"><b>${fmt(r[5])}</b></td></tr>`).join("") || `<tr><td colspan="6" class="muted">—</td></tr>`}</tbody>
+      <tfoot><tr><td colspan="5">${esc(t("total"))}</td><td class="r num">${fmt(inRows.reduce((a, r) => a + r[5], 0))}</td></tr></tfoot></table></div></section>`;
+  drawStacked(document.getElementById("cIn"), M, FORMATS.map((f, i) => ({ label: t("f_" + f), color: `--s${i + 1}`, values: byF[f] })), t("inMonthly"));
+  document.getElementById("whSel").addEventListener("change", (e) => { S.whSel = e.target.value; render(); });
+}
+// Warehouse stock grouped by format: received, shipped, on hand, cover.
+function whTable(list) {
+  const cls = { reorder: "c-crit", reorderSoon: "c-serious", watch: "c-warn", okS: "c-mute", push_: "c-good", out: "c-mute" };
+  const meter = (x) => (x.onHand > 0 && x.cover != null ? `<div style="display:flex;align-items:center;gap:8px"><div class="meter ${x.cover < 1.25 ? "low" : ""}" style="flex:1"><i style="width:${Math.max(3, Math.min(100, (x.cover / 12) * 100))}%"></i></div><span class="num small">${fmt1(x.cover)}</span></div>` : "");
+  const sum = (items) => { const s = items.reduce((a, x) => ({ inb: a.inb + x.inb, out: a.out + x.out, onHand: a.onHand + x.onHand, perMonth: a.perMonth + x.perMonth }), { inb: 0, out: 0, onHand: 0, perMonth: 0 }); s.cover = s.perMonth > 0 ? s.onHand / s.perMonth : null; return s; };
+  const line = (label, x, grp) => `<tr class="${grp ? "grp" : ""}"><td>${label}</td><td class="r num">${fmt(x.inb)}</td><td class="r num">${fmt(x.out)}</td><td class="r num"><b>${fmt(x.onHand)}</b></td><td class="r num">${fmt(x.perMonth)}</td><td>${meter(x)}</td><td>${x.status ? `<span class="chip ${cls[x.status]}">${esc(t(x.status))}</span>` : ""}</td></tr>`;
+  let body = "";
+  for (const f of FORMATS) {
+    const items = list.filter((x) => fmtOf(x.sku) === f); if (!items.length) continue;
+    body += line(`<span class="name">${esc(t("f_" + f))}</span> <span class="small muted">${esc(t("allOf"))}</span>`, sum(items), true);
+    body += [...items].sort((a, b) => (a.onHand <= 0) - (b.onHand <= 0) || b.out - a.out).map((x) => line(`<span class="ind">${esc(skuName(x.sku))}<span class="sub2">${esc(skuAlt(x.sku))}</span></span>`, x, false)).join("");
+  }
+  return `<table class="mkt"><thead><tr><th>${esc(t("format"))} / ${esc(t("product"))}</th><th class="r">${esc(t("received_"))}</th><th class="r">${esc(t("shipped"))}</th><th class="r">${esc(t("onHand"))}</th><th class="r">${esc(t("perMonth"))}</th><th>${esc(t("months"))}</th><th></th></tr></thead><tbody>${body}</tbody><tfoot>${line(esc(t("total")), sum(list), false)}</tfoot></table>`;
+}
+// Generic stacked monthly columns with hover tooltip.
+function drawStacked(host, M, series, title) {
+  if (!host || !M.length) return;
+  const tot = M.map((_, i) => series.reduce((a, s) => a + s.values[i], 0));
+  const maxV = Math.max(1, ...tot), step = maxV > 16000 ? 5000 : maxV > 8000 ? 4000 : maxV > 4000 ? 2000 : maxV > 1000 ? 500 : 100, top = Math.ceil((maxV * 1.08) / step) * step || step;
+  const W = 720, H = 290, m = { l: 56, r: 12, t: 22, b: 30 }, pw = W - m.l - m.r, ph = H - m.t - m.b, band = pw / M.length, bw = Math.min(26, band * 0.6);
+  const y = (v) => m.t + ph - (v / top) * ph;
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(title)}">`;
+  for (let v = 0; v <= top; v += step) s += `<line x1="${m.l}" x2="${W - m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(${v ? "--hair" : "--axis"})"/><text x="${m.l - 8}" y="${y(v) + 4}" text-anchor="end">${fmt(v)}</text>`;
+  M.forEach((mo, i) => {
+    const cx = m.l + band * i + band / 2, x = cx - bw / 2; let acc = 0;
+    const segs = series.map((se) => ({ c: se.color, v: se.values[i] })).filter((d) => d.v > 0);
+    segs.forEach((d, j) => { const y0 = y(acc) - (j ? 2 : 0), y1 = y(acc + d.v); acc += d.v; const h = y0 - y1; if (h <= 0) return; const r = j === segs.length - 1 ? Math.min(4, h) : 0; s += `<path d="M${x} ${y0} V${y1 + r} Q${x} ${y1} ${x + r} ${y1} H${x + bw - r} Q${x + bw} ${y1} ${x + bw} ${y1 + r} V${y0} Z" fill="var(${d.c})"/>`; });
+    if (tot[i]) s += `<text x="${cx}" y="${y(tot[i]) - 7}" text-anchor="middle" class="val">${fmt(tot[i])}</text>`;
+    s += `<text x="${cx}" y="${H - m.b + 18}" text-anchor="middle">${esc(monthLabel(mo))}</text><rect x="${m.l + band * i}" y="${m.t}" width="${band}" height="${ph}" fill="transparent" data-i="${i}" tabindex="0"/>`;
+  });
+  host.innerHTML = s + "</svg>";
+  host.querySelectorAll("rect[data-i]").forEach((r) => {
+    const i = +r.dataset.i;
+    const html = () => `<div class="t">${esc(monthLabel(M[i]))} ${M[i].slice(0, 4)}</div>` + series.map((se) => `<div class="rw"><span><span class="sw" style="background:var(${se.color});width:9px;height:9px"></span> ${esc(se.label)}</span><span class="num">${fmt(se.values[i])}</span></div>`).join("") + `<div class="rw" style="border-top:1px solid var(--hair);margin-top:4px;padding-top:4px;font-weight:600"><span>${esc(t("total"))}</span><span class="num">${fmt(tot[i])}</span></div>`;
+    r.addEventListener("mousemove", (e) => showTip(html(), e.clientX, e.clientY)); r.addEventListener("mouseleave", hideTip);
+    r.addEventListener("focus", () => { const b = r.getBoundingClientRect(); showTip(html(), b.right, b.top + 30); }); r.addEventListener("blur", hideTip);
+  });
+}
+// Short flavour label for a column that already sits under its pack-size group.
+function flavourLabel(s) {
+  const lb = /LB Warn/i.test(s.en);
+  if (LANG === "ar") return s.ar.replace(/^فاخر\s*/, "").replace(/تحذير\s*لبن?ان/, "").replace(/(^|\s)(كروز|كف|كيلو)(?=\s|$)/g, " ").replace(/\s+/g, " ").trim() + (lb ? " · لبنان" : "");
+  return s.en.replace(/\(LB Warn\)/i, "").replace(/\b(Cruz|KF|Kilo|Kg|50g|250g)\b/gi, "").replace(/\s+/g, " ").trim() + (lb ? " · LB" : "");
+}
+function drawMatrix() {
+  const groups = FORMATS.map((f) => ({ f, items: E.skus.filter((s) => fmtOf(s) === f) })).filter((g) => g.items.length);
+  const flat = groups.flatMap((g) => g.items);
+  const bin = (v) => (v >= 1000 ? 5 : v >= 500 ? 4 : v >= 200 ? 3 : v >= 50 ? 2 : 1);
+  const short = (v) => (v >= 1000 ? (v / 1000).toFixed(1).replace(/\.0$/, "") + "k" : fmt(v));
+  const list = E.wsList.filter((w) => w.totalDel > 0);
+  let h = `<thead><tr><th></th>${groups.map((g) => `<th class="grp" colspan="${g.items.length}">${esc(t("f_" + g.f))}</th>`).join("")}</tr><tr><th></th>${flat.map((s) => `<th title="${esc(skuName(s))}">${esc(flavourLabel(s))}<span class="dot ${E.whById.get(s.id).onHand > 0 ? "in" : "out"}"></span></th>`).join("")}</tr></thead><tbody>`;
+  h += list.map((w) => `<tr><th class="rowh ar" dir="auto" scope="row" data-n="${w.id}"></th>${flat.map((s) => { const v = w.skuRows.find((r) => r.sku.id === s.id).everDel; return v ? `<td class="b${bin(v)} num" title="${esc(skuName(s))}: ${fmt(v)} MC">${short(v)}</td>` : `<td title="${esc(t("mxNever"))}">·</td>`; }).join("")}</tr>`).join("") + "</tbody>";
+  const tb = document.getElementById("mx"); tb.innerHTML = h;
+  tb.querySelectorAll("th[data-n]").forEach((th) => (th.textContent = E.wsById.get(th.dataset.n).name));
+  document.getElementById("mxLeg").innerHTML = ["1–49", "50–199", "200–499", "500–999", "1,000+"].map((l, i) => `<span><span class="sw" style="background:var(--m${i + 1})"></span>${l}</span>`).join("") + ` <span class="muted">${esc(t("mcDel"))}</span>`
+    + `<span><span class="sw" style="background:var(--sunk);text-align:center;line-height:12px;font-size:11px">·</span>${esc(t("mxNever"))}</span><span><span class="dot in" style="margin:0"></span>${esc(t("mxIn"))}</span><span><span class="dot out" style="margin:0"></span>${esc(t("mxOut"))}</span>`;
+}
+
+/* ---------- data ---------- */
+function viewData(main) {
+  const m = S.meta, st = settings();
+  main.innerHTML = `
+    <div class="head"><h2>${esc(t("dataTitle"))}</h2></div>
+    <section class="panel stack"><h3>${esc(t("ledger"))}</h3>
+      <p class="ink2" id="ledInfo"></p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn pri" type="button" id="exportBtn">${esc(t("exportBtn"))}</button>${S.admin ? `<label class="btn" for="imp">${esc(t("importBtn"))}</label><input id="imp" type="file" accept=".xlsx,.xls" hidden>` : ""}</div>
+      ${S.admin ? `<p class="small muted">${esc(t("importHelp"))}</p>` : `<p class="small muted">${esc(t("adminOnly"))}</p>`}
+      <div id="impOut"></div></section>
+    <section class="panel stack"><h3>${esc(t("settings"))}</h3>
+      <div class="grid2" style="gap:12px">
+        <div class="field"><label for="s1">${esc(t("visitDays"))}</label><input class="inp" id="s1" type="number" min="1" value="${st.visitDays}" ${S.admin ? "" : "disabled"}></div>
+        <div class="field"><label for="s2">${esc(t("lowDays"))}</label><input class="inp" id="s2" type="number" min="1" value="${st.lowDays}" ${S.admin ? "" : "disabled"}></div>
+        <div class="field"><label for="s3">${esc(t("targetDays"))}</label><input class="inp" id="s3" type="number" min="1" value="${st.targetDays}" ${S.admin ? "" : "disabled"}></div></div>
+      ${S.admin ? `<div><button class="btn" type="button" id="saveSet">${esc(t("saveSettings"))}</button></div>` : ""}</section>
+    ${S.admin ? `<section class="panel stack"><h3>${esc(t("addWs"))}</h3><div style="display:flex;gap:8px;flex-wrap:wrap"><input class="inp" id="newWs" dir="auto" style="max-width:320px"><button class="btn" type="button" id="addWs">${esc(t("addWsBtn"))}</button></div></section>` : ""}
+    ${Object.keys(S.aliases).length ? `<section class="panel stack"><h3>${esc(t("merged"))}</h3><div class="small ink2">${Object.entries(S.aliases).map(([from, to]) => `<div style="padding:4px 0;border-bottom:1px solid var(--hair)"><span dir="auto">${esc(from)}</span> → <b dir="auto">${esc(to)}</b></div>`).join("")}</div><p class="small muted">${esc(t("mergedNote"))}</p></section>` : ""}
+    <section class="panel stack"><h3>${esc(t("method"))}</h3><p class="ink2" style="max-width:75ch">${esc(t("methodTxt"))}</p></section>`;
+  document.getElementById("ledInfo").textContent = m && E ? t("ledgerInfo", fmt(m.rowCount), m.source || "Excel", fmtDate(E.ledgerStart), fmtDate(E.ledgerEnd)) : "";
+  document.getElementById("exportBtn").addEventListener("click", exportXlsx);
+  if (S.admin) {
+    document.getElementById("imp").addEventListener("change", onImportFile);
+    document.getElementById("saveSet").addEventListener("click", async () => {
+      const v = { visitDays: +document.getElementById("s1").value, lowDays: +document.getElementById("s2").value, targetDays: +document.getElementById("s3").value };
+      try { await S.db.doc("config/settings").set(v); toast(t("settingsSaved")); } catch (err) { toast(t("err") + (err.code || err.message)); }
+    });
+    document.getElementById("addWs").addEventListener("click", async () => {
+      const n = document.getElementById("newWs").value.trim(); if (!n) return;
+      const list = [...new Set([...S.extraWs, n])];
+      try { await S.db.doc("config/wholesalers").set({ extra: list }); toast(t("wsAdded")); } catch (err) { toast(t("err") + (err.code || err.message)); }
+    });
+  }
+}
+function loadXLSX() {
+  if (window.XLSX) return Promise.resolve(window.XLSX);
+  return new Promise((res, rej) => { const s = document.createElement("script"); s.src = "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"; s.onload = () => res(window.XLSX); s.onerror = () => rej(new Error("xlsx library failed to load")); document.head.appendChild(s); });
+}
+async function onImportFile(e) {
+  const file = e.target.files?.[0]; if (!file) return;
+  const out = document.getElementById("impOut"); out.innerHTML = `<p class="muted">${esc(t("loading"))}</p>`;
+  try {
+    const XLSX = await loadXLSX();
+    const wb = XLSX.read(await file.arrayBuffer(), { type: "array" });
+    const ws = wb.Sheets["All Movements"]; if (!ws) throw new Error("sheet");
+    const aoa = XLSX.utils.sheet_to_json(ws, { header: 1, raw: true, defval: null });
+    const hi = aoa.findIndex((r) => r && r[0] === "SKU (EN)"); if (hi < 0) throw new Error("header");
+    const H = aoa[hi], col = (n) => H.indexOf(n);
+    for (const need of ["SKU (EN)", "SKU (AR)", "Date", "Transaction Type (EN)", "WS (grouped)", "Inbound", "Outbound"]) if (col(need) < 0) throw new Error("col");
+    const toISO = (v) => typeof v === "number" ? new Date(Date.UTC(1899, 11, 30) + v * 864e5).toISOString().slice(0, 10) : v instanceof Date ? v.toISOString().slice(0, 10) : /^\d{4}-\d{2}-\d{2}/.test(String(v)) ? String(v).slice(0, 10) : null;
+    const slug = (s) => s.toLowerCase().replace(/[()]/g, "").replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    const skus = [], idx = new Map(), rows = [];
+    for (const r of aoa.slice(hi + 1)) {
+      if (!r || !r[col("SKU (EN)")]) continue; const d = toISO(r[col("Date")]); if (!d) continue;
+      const en = canonSku(String(r[col("SKU (EN)")]));
+      if (!idx.has(en)) { idx.set(en, skus.length); skus.push({ id: slug(en), en, ar: String(r[col("SKU (AR)")] ?? "").trim(), src: String(r[col("Source")] ?? "") }); }
+      rows.push([idx.get(en), d, String(r[col("Transaction Type (EN)")] ?? "").trim(), r[col("WS (grouped)")] ? String(r[col("WS (grouped)")]).trim() : "", r[col("Ref")] == null ? "" : String(r[col("Ref")]), +r[col("Inbound")] || 0, +r[col("Outbound")] || 0]);
+    }
+    if (!rows.length) throw new Error("rows");
+    const sales = rows.filter((r) => r[2] === "Sales Invoice"), dates = rows.map((r) => r[1]).sort();
+    out.innerHTML = `<div class="notice">${esc(t("importPreview", fmt(rows.length), fmt(sales.length), fmt(sales.reduce((a, r) => a + r[6], 0)), new Set(sales.map((r) => r[3]).filter(Boolean)).size, fmtDate(dates[0]), fmtDate(dates.at(-1))))}</div><div style="margin-top:10px"><button class="btn pri" type="button" id="impGo">${esc(t("importConfirm"))}</button></div>`;
+    document.getElementById("impGo").addEventListener("click", async (ev) => {
+      ev.currentTarget.disabled = true;
+      try {
+        const CH = 1500, chunks = Math.ceil(rows.length / CH), old = S.meta?.chunks || 0;
+        for (let i = 0; i < chunks; i++) await S.db.doc("ledger/rows-" + i).set({ rows: rows.slice(i * CH, (i + 1) * CH) });
+        await S.db.doc("ledger/meta").set({ v: 1, source: file.name, importedAt: new Date().toISOString(), rowCount: rows.length, chunks, skus, cols: ["sku", "date", "type", "ws", "ref", "in", "out"] });
+        for (let i = chunks; i < old; i++) await S.db.doc("ledger/rows-" + i).delete();
+        out.innerHTML = ""; toast(t("imported"));
+      } catch (err) { out.innerHTML = `<div class="notice crit">${esc(t("err") + (err.code || err.message))}</div>`; }
+    });
+  } catch (err) { out.innerHTML = `<div class="notice crit">${esc(err.message === "xlsx library failed to load" ? t("err") + err.message : t("importErr"))}</div>`; }
+  e.target.value = "";
+}
+async function exportXlsx() {
+  if (!S.dl) { toast(t("err") + "downloads unavailable"); return; }
+  try {
+    const XLSX = await loadXLSX();
+    const wb = XLSX.utils.book_new();
+    const byWs = [["Wholesaler", "Last count", "Delivered to count dates (MC)", "Stock at last count (MC)", "Offtake to date (MC)", "Sell-through", "Offtake per day (MC)", "Est. days left", "Checks"]];
+    for (const w of E.wsList) if (w.lastCount) byWs.push([w.name, w.lastCount.date, w.delTo, w.stock, w.offToDate, w.delTo ? w.offToDate / w.delTo : null, w.rate, w.rate > 0 ? w.estNow / w.rate : null, w.flags]);
+    const fmtEn = { cruz: "50g", kf: "250g", kilo: "Kg" };
+    const byFmt = [["Wholesaler", ...FORMATS.map((f) => fmtEn[f] + " offtake (MC)"), "Total offtake (MC)"]];
+    for (const w of E.wsList) if (w.lastCount) byFmt.push([w.name, ...FORMATS.map((f) => { const a = agg(w.skuRows.filter((r) => fmtOf(r.sku) === f)); return a.counted ? a.off : null; }), agg(w.skuRows).off]);
+    byFmt.push(["MARKET TOTAL", ...FORMATS.map((f) => { const a = agg(allRows((r) => fmtOf(r.sku) === f)); return a.counted ? a.off : null; }), agg(allRows(() => true)).off]);
+    const market = [["Format", "SKU (EN)", "SKU (AR)", "Wholesalers counted", "Delivered to count dates (MC)", "Stock at wholesalers (MC)", "Offtake to date (MC)", "Sell-through", "Offtake per day (MC)"]];
+    for (const f of FORMATS) {
+      const fa = agg(allRows((r) => fmtOf(r.sku) === f)); if (!fa.counted) continue;
+      market.push([fmtEn[f], "All " + fmtEn[f], "", wsCountFor((r) => fmtOf(r.sku) === f), fa.delTo, fa.stock, fa.off, fa.delTo ? fa.off / fa.delTo : null, fa.rate]);
+      for (const s of E.skus.filter((x) => fmtOf(x) === f)) { const a = agg(allRows((r) => r.sku.id === s.id)); if (a.counted) market.push([fmtEn[f], s.en, s.ar, wsCountFor((r) => r.sku.id === s.id), a.delTo, a.stock, a.off, a.delTo ? a.off / a.delTo : null, a.rate]); }
+    }
+    const bySku = [["Wholesaler", "Format", "SKU (EN)", "SKU (AR)", "Last count", "Delivered to count date (MC)", "Stock (MC)", "Offtake to date (MC)", "Offtake last period (MC)", "Days in period", "Per day (MC)", "Est. days left", "Suggested order (MC)", "Check"]];
+    for (const w of E.wsList) for (const r of w.skuRows) if (r.counted) bySku.push([w.name, fmtEn[fmtOf(r.sku)], r.sku.en, r.sku.ar, r.lastDate, r.delTo, r.stock, r.offToDate, r.lastOff, r.lastDays, r.rate, r.daysLeft, r.suggest, r.flag ? "CHECK" : ""]);
+    const log = [["Wholesaler", "Count date", "SKU (EN)", "SKU (AR)", "Previous count (MC)", "Delivered in period (MC)", "Counted (MC)", "Offtake (MC)", "Days", "Note", "Supervisor"]];
+    for (const w of E.wsList) for (const c of w.counts) for (const r of w.skuRows) { const p = r.series.find((x) => x.id === c.id); if (p) log.push([w.name, c.date, r.sku.en, r.sku.ar, p.base ? 0 : p.prevV, p.rec, p.v, p.off, p.days, c.note || "", c.supervisorName || ""]); }
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(market), "Market by format & SKU");
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(byWs), "Offtake by WS");
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(byFmt), "WS by format");
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(bySku), "Offtake WS x SKU");
+    const purch = [["Wholesaler", "Date", "SKU (EN)", "SKU (AR)", "Format", "Ref", "Quantity (MC)"]];
+    for (const w of E.wsList) for (const r of purchaseLines(w)) purch.push([w.name, r.date, r.sku.en, r.sku.ar, fmtEn[fmtOf(r.sku)], r.ref || "", r.qty]);
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(log), "Stock count log");
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(purch), "Purchase history");
+    const buf = XLSX.write(wb, { type: "array", bookType: "xlsx" });
+    await S.dl.save({ filename: `WS Tracker ${todayISO()}.xlsx`, data: new Blob([buf]) });
+    toast(t("exported"));
+  } catch (err) { if (err?.code !== "declined") toast(t("err") + (err?.code || err?.message || err)); }
+}
+
+/* ============================== boot ============================== */
+async function boot() {
+  render();
+  if (!window.claude || typeof window.claude.use !== "function") { S.noClaude = true; render(); return; }
+  const [db, user, dl] = await Promise.all([claude.use("db"), claude.use("user"), claude.use("downloads")]);
+  S.db = db; S.user = user; S.dl = dl;
+  if (!db) { S.noClaude = true; render(); return; }
+  if (user) {
+    const [admin, cw] = await Promise.all([user.canEdit(), user.can("data.write")]);
+    S.admin = !!admin; S.canWrite = cw; render();
+  }
+  let chunkVer = null;
+  db.doc("ledger/meta").onSnapshot(async (snap) => {
+    S.loaded = true;
+    if (!snap.exists) { S.meta = null; S.ledger = null; S.loadErr = null; recompute(); render(); return; }
+    const m = snap.data(); S.meta = m;
+    const ver = m.importedAt + "|" + m.chunks; if (ver === chunkVer) return; chunkVer = ver;
+    try {
+      const parts = await Promise.all(Array.from({ length: m.chunks || 1 }, (_, i) => db.doc("ledger/rows-" + i).get()));
+      S.ledger = { skus: m.skus, rows: parts.flatMap((p) => (p.exists ? p.data().rows || [] : [])) };
+      recompute(); render();
+    } catch (err) { S.loadErr = err.code || err.message; render(); }
+  }, (err) => { S.loadErr = err.code; render(); });
+  db.collection("counts").onSnapshot((snap) => { S.counts = snap.docs.map((d) => ({ id: d.id, ...d.data() })); recompute(); render(); }, (err) => { S.loadErr = err.code; render(); });
+  db.doc("config/settings").onSnapshot((snap) => { S.settings = snap.exists ? snap.data() : {}; recompute(); render(); });
+  db.doc("config/aliases").onSnapshot((snap) => { S.aliases = snap.exists && snap.data().map && typeof snap.data().map === "object" ? snap.data().map : {}; recompute(); render(); });
+  db.doc("config/wholesalers").onSnapshot((snap) => { S.extraWs = snap.exists && Array.isArray(snap.data().extra) ? snap.data().extra : []; recompute(); render(); });
+}
+boot();
+</script>

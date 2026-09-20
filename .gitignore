@@ -1,0 +1,11 @@
+node_modules/
+*.xlsx
+*.zip
+ws.json
+seed*.json
+merge_x/
+ws_x/
+xlsxlib/
+*.b64
+chunk_*
+*.log
