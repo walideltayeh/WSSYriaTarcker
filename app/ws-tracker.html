@@ -232,17 +232,20 @@ tr.click{cursor:pointer} tr.click:hover td{background:var(--sunk)}
 .mkt td:first-child{min-width:230px}
 .mkt td .muted.small,.mkt td.muted{white-space:nowrap}
 .pushcard a.name{text-decoration:none;font-size:16px}
-.nextgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr))}
-.nextcard{display:grid;gap:8px;align-content:start;padding:16px 20px;border-bottom:1px solid var(--hair);border-inline-end:1px solid var(--hair)}
+.nextgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,440px),1fr))}
+.nextcard{display:grid;gap:8px;align-content:start;padding:18px 20px;border-bottom:1px solid var(--hair);border-inline-end:1px solid var(--hair)}
 .nextcard .top1{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center}
 .nextcard a.name{text-decoration:none;color:inherit;font-size:16px}
 .nextcard .rs{font-size:13px;color:var(--ink-2)}
-.nextcard .tot{font-size:13.5px;padding-top:7px;border-top:1px solid var(--hair)}
-.ln{display:inline-flex;align-items:baseline;gap:6px;padding:3px 8px;margin:0 4px 5px 0;border:1px solid var(--hair);border-radius:3px;font-size:13px}
-.ln b{font-weight:500}
-.ln.new{border-color:var(--brand);background:var(--accent-soft)}
-.ln .tag{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--brand)}
-.ln .tag.c{color:var(--ink-2)}
+.nextcard .cmp{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px 24px;margin-top:4px}
+.nextcard .colh{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:11px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding-bottom:5px;border-bottom:1px solid var(--axis)}
+[dir="rtl"] .nextcard .colh{letter-spacing:0;font-size:12px}
+.nextcard .colh b{color:var(--ink);font-size:13px;letter-spacing:0}
+.nextcard .colh.sub{margin-top:10px}
+.nextcard .when{font-size:12.5px;color:var(--ink-2);padding:5px 0 3px}
+.nextcard .pl{display:flex;justify-content:space-between;gap:10px;padding:4px 0;border-bottom:1px solid var(--hair);font-size:13px}
+.nextcard .pl b{font-weight:500}
+.nextcard .pn2{display:block;color:var(--muted);font-size:12px}
 .pushcard a.name:hover{color:var(--accent)!important}
 </style>
 
@@ -306,15 +309,15 @@ const T = {
     byFmtWs:"Offtake by format",
     merged:"Merged wholesalers",
     salesTitle:"Analysis", an_next:"Next orders", an_sales:"Sales",
-    nextSub:"Every wholesaler: when they last ordered, how often they order, and what the next order should hold — their usual products plus a trial of every flavour they have not taken yet. In mastercases, and only products the warehouse can ship.",
+    nextSub:"Every wholesaler, most urgent first. Each card puts their last order next to the order we suggest for next time: their usual products, then new flavours to try. All quantities in mastercases; only products the warehouse can ship.", nextOrderH:"Suggested next order", dueOn:(d)=>`Due ${d}`, wasDue:(d)=>`Was due ${d}`, newTry:"New flavours to try", boughtTotal:(n)=>`${n} MC bought in total`,
     st_low:"Low stock", st_overdue:"Overdue", st_due:"Due now", st_ok:"On track", st_lapsed:"Lapsed", st_none:"No orders yet",
     kCallNow:"To call now", kOnTrack:"On track", kLapsed:"Lapsed", kNextMc:"Next orders (MC)", kTrials:"New-flavour trials",
     lastOrd:"Last order", everyN:(d)=>`every ~${d} days`, oneOrder:"one order so far", nextDue:(d)=>`next due ${d}`,
-    trend60:"Last 60 days vs previous 60", trendNew:"new", tagNew:"New flavour", tagCount:"from count", nextOrder:"Next order",
+    trend60:"Last 60 days vs previous 60", trendNew:"new", tagNew:"New flavour", tagCount:"from stock count", nextOrder:"Next order",
     soldOutNote:(x)=>`Usually buys, sold out at the warehouse: ${x}`,
     freshOutNote:(x)=>`Not offered as new flavours because the warehouse has none: ${x}.`,
     whShort:"Next orders add up to more than the warehouse holds:", whShortItem:(n,a,b)=>`${n} ${a} vs ${b} on hand`,
-    nothingToOrder:"Nothing to order: their counted stock covers the target.", onlySoldOut:"What they need is sold out at the warehouse.",
+    nothingToOrder:"Their counted stock still covers their usual products.", onlySoldOut:"What they need is sold out at the warehouse.",
     lowOn:(x)=>`Running low: ${x}`, lowItem:(n,d)=>`${n}, ${d} days left`,
     nextMethod:(d)=>`How it works: the order size is the median of their last three orders, split by what they bought over the last 90 days and rounded to 5 MC. A sold-out product moves to its in-stock pack (the LB-warning pack of the same product). Where a supervisor has counted their stock, that product's quantity comes from the count instead: ${d} days of their offtake minus the stock they hold. Every flavour they have never taken is added as a trial of 5% of the order (5–50 MC). Status: due once their usual gap between orders has passed, overdue at 1.5 times that gap, lapsed after 90 days, low stock when a count shows fewer days left than the warning level.`, salesSub:(a,b)=>`Every sales invoice in the ledger, ${a} – ${b}. All quantities in mastercases.`,
     kSales:"Sales (MC)", kPerMonth:"Average month", kBest:"Best month", kMom:"Last month vs previous", kTop:"Biggest",
@@ -372,7 +375,7 @@ const T = {
     byFmtWs:"التصريف حسب العبوة",
     merged:"تجار مدمجون",
     salesTitle:"التحليل", an_next:"الطلبيات القادمة", an_sales:"المبيعات",
-    nextSub:"لكل تاجر: متى طلب آخر مرة، وكل كم يطلب، وماذا يجب أن تتضمن طلبيته القادمة — أصنافه المعتادة مع تجربة لكل نكهة لم يأخذها بعد. بالكرتونة، وفقط الأصناف المتوفرة في المستودع.",
+    nextSub:"كل التجار، الأكثر إلحاحاً أولاً. كل بطاقة تضع آخر طلبية للتاجر بجانب الطلبية التي نقترحها للمرة القادمة: أصنافه المعتادة، ثم نكهات جديدة للتجربة. كل الكميات بالكرتونة، وفقط الأصناف المتوفرة في المستودع.", nextOrderH:"الطلبية القادمة المقترحة", dueOn:(d)=>`موعدها ${d}`, wasDue:(d)=>`كان موعدها ${d}`, newTry:"نكهات جديدة للتجربة", boughtTotal:(n)=>`اشترى ${n} كرتونة إجمالاً`,
     st_low:"مخزون منخفض", st_overdue:"متأخر", st_due:"حان موعده", st_ok:"في موعده", st_lapsed:"منقطع", st_none:"لا طلبيات بعد",
     kCallNow:"للاتصال الآن", kOnTrack:"في موعده", kLapsed:"منقطع", kNextMc:"الطلبيات القادمة (كرتونة)", kTrials:"تجارب نكهات جديدة",
     lastOrd:"آخر طلبية", everyN:(d)=>`كل ~${d} يوم`, oneOrder:"طلبية واحدة حتى الآن", nextDue:(d)=>`الموعد التالي ${d}`,
@@ -380,7 +383,7 @@ const T = {
     soldOutNote:(x)=>`يشتريه عادةً ونفد من المستودع: ${x}`,
     freshOutNote:(x)=>`لم تُقترح كنكهات جديدة لأنها غير متوفرة في المستودع: ${x}.`,
     whShort:"مجموع الطلبيات القادمة أكبر مما في المستودع:", whShortItem:(n,a,b)=>`${n} ${a} مقابل ${b} متوفر`,
-    nothingToOrder:"لا حاجة لطلبية: مخزونه المجرود يغطي الهدف.", onlySoldOut:"ما يحتاجه نفد من المستودع.",
+    nothingToOrder:"مخزونه المجرود ما زال يغطي أصنافه المعتادة.", onlySoldOut:"ما يحتاجه نفد من المستودع.",
     lowOn:(x)=>`ينفد قريباً: ${x}`, lowItem:(n,d)=>`${n}، ${d} يوم متبقٍ`,
     nextMethod:(d)=>`طريقة الحساب: حجم الطلبية هو وسيط آخر ثلاث طلبيات، موزعاً حسب ما اشتراه في آخر 90 يوماً ومقرباً إلى 5 كراتين. الصنف النافد ينتقل إلى عبوته المتوفرة (عبوة تحذير لبنان من الصنف نفسه). إذا جرد المشرف مخزونه تُحسب كمية ذلك الصنف من الجرد: تصريف ${d} يوماً ناقص المخزون الموجود لديه. كل نكهة لم يأخذها من قبل تُضاف كتجربة بنسبة 5% من الطلبية (5–50 كرتونة). الحالة: حان موعده بعد مرور فترته المعتادة بين الطلبيات، متأخر عند 1.5 ضعفها، منقطع بعد 90 يوماً، مخزون منخفض عندما يُظهر الجرد أياماً متبقية أقل من حد التنبيه.`, salesSub:(a,b)=>`كل فواتير البيع في الدفتر، ${a} – ${b}. كل الكميات بالكرتونة.`,
     kSales:"المبيعات (كرتونة)", kPerMonth:"متوسط الشهر", kBest:"أفضل شهر", kMom:"الشهر الأخير مقارنة بسابقه", kTop:"الأكبر",
@@ -992,12 +995,13 @@ function nextOrders() {
       if (c.length) lines.push({ sku: c[0], qty: Math.min(trial, Math.floor(onHand(c[0]) / 5) * 5), src: "new", flavour: f });
     }
     const last = days.at(-1) || null, since = last ? dayDiff(last, today) : null;
+    const lastLines = last ? [...dm].map(([sid, arr]) => ({ sku: skuById.get(sid), qty: arr.filter((x) => x[0] === last).reduce((a, x) => a + x[1], 0) })).filter((x) => x.qty > 0).sort((a, b) => b.qty - a.qty) : [];
     const gap = w.avgGap ? Math.round(w.avgGap) : null, g = gap || marketGap;
     const lows = [...cnt.values()].filter((c) => c.need > 0).flatMap((c) => c.lows).sort((x, y) => x.days - y.days);
     const status = !last ? "none" : lows.length ? "low" : since > 90 ? "lapsed" : since > 1.5 * g ? "overdue" : since >= g ? "due" : "ok";
     let a = 0, b = 0; const c1 = addDays(end, -60), c2 = addDays(end, -120);
     for (const arr of dm.values()) for (const [d, q] of arr) { if (d > c1) a += q; else if (d > c2) b += q; }
-    return { w, status, last, since, gap, nextDue: last ? addDays(last, g) : null, typical, lines, soldOut, lows, total: lines.reduce((s, l) => s + l.qty, 0), trend: { a, b }, counted: cnt.size > 0 };
+    return { w, status, last, since, gap, nextDue: last ? addDays(last, g) : null, typical, lines, soldOut, lows, lastLines, lastTotal: lastLines.reduce((a, x) => a + x.qty, 0), total: lines.reduce((s, l) => s + l.qty, 0), trend: { a, b }, counted: cnt.size > 0 };
   });
   list.sort((x, y) => STATUS_RANK[x.status] - STATUS_RANK[y.status] || y.w.totalDel - x.w.totalDel);
   // can the warehouse cover all of it?
@@ -1015,14 +1019,21 @@ const rhythm = (o) => [
 ].filter(Boolean).join(" · ");
 const lowsTxt = (o) => (o.lows.length ? t("lowOn", o.lows.map((x) => t("lowItem", skuName(x.sku), x.days)).join(" · ")) : "");
 const emptyTxt = (o) => t(o.soldOut.length ? "onlySoldOut" : "nothingToOrder");
-const lineChip = (l) => `<span class="ln${l.src === "new" ? " new" : ""}">${l.src === "new" ? `<span class="tag">${esc(t("tagNew"))}</span>` : l.src === "count" ? `<span class="tag c">${esc(t("tagCount"))}</span>` : ""}<span dir="auto">${esc(skuName(l.sku))}</span><b class="num">${fmt(l.qty)}</b></span>`;
+const plRow = (name, qty, note) => `<div class="pl"><span><span dir="auto">${esc(name)}</span>${note ? `<span class="pn2">${esc(note)}</span>` : ""}</span><b class="num">${fmt(qty)}</b></div>`;
 function nextCard(o) {
+  const usual = o.lines.filter((l) => l.src !== "new"), fresh = o.lines.filter((l) => l.src === "new");
+  const facts = [o.gap ? t("everyN", o.gap) : o.last ? t("oneOrder") : null, o.last ? `${t("trend60")}: ${trendTxt(o)}` : null, o.w.totalDel ? t("boughtTotal", fmt(o.w.totalDel)) : null].filter(Boolean).join(" · ");
   return `<div class="nextcard">
     <div class="top1"><a class="name" dir="auto" href="#ws/${o.w.id}">${esc(o.w.name)}</a><span class="chip ${STATUS_CHIP[o.status]}">${esc(t("st_" + o.status))}</span></div>
-    ${o.last ? `<div class="rs">${esc(rhythm(o))}</div><div class="rs small">${esc(t("trend60"))}: <b class="num">${esc(trendTxt(o))}</b> · ${fmt(o.w.totalDel)} ${esc(t("units"))}</div>` : ""}
-    ${o.lows.length ? `<div class="rs small" style="color:var(--crit)">${esc(lowsTxt(o))}</div>` : ""}
-    <div>${o.lines.length ? o.lines.map(lineChip).join("") : `<span class="small muted">${esc(emptyTxt(o))}</span>`}</div>
-    ${o.lines.length ? `<div class="tot">${esc(t("nextOrder"))}: <b class="num">${fmt(o.total)}</b> ${esc(t("units"))}</div>` : ""}
+    ${facts ? `<div class="rs">${esc(facts)}</div>` : ""}
+    ${o.lows.length ? `<div class="rs" style="color:var(--crit)">${esc(lowsTxt(o))}</div>` : ""}
+    <div class="cmp">
+      <div><div class="colh"><span>${esc(t("lastOrd"))}</span>${o.last ? `<b class="num">${fmt(o.lastTotal)}</b>` : ""}</div>${o.last ? `<div class="when">${esc(fmtDate(o.last))} · ${esc(t("daysAgo", o.since))}</div>` : ""}
+        ${o.last ? o.lastLines.map((l) => plRow(skuName(l.sku), l.qty)).join("") : `<div class="small muted">${esc(t("st_none"))}</div>`}</div>
+      <div><div class="colh"><span>${esc(t("nextOrderH"))}</span><b class="num">${fmt(o.total)}</b></div>${o.nextDue && o.status !== "lapsed" ? `<div class="when">${esc(t(o.nextDue < todayISO() ? "wasDue" : "dueOn", fmtDate(o.nextDue)))}</div>` : ""}
+        ${usual.length ? usual.map((l) => plRow(skuName(l.sku), l.qty, l.src === "count" ? t("tagCount") : "")).join("") : `<div class="small muted" style="padding:4px 0">${esc(emptyTxt(o))}</div>`}
+        ${fresh.length ? `<div class="colh sub"><span>${esc(t("newTry"))}</span></div>${fresh.map((l) => plRow(skuName(l.sku), l.qty)).join("")}` : ""}</div>
+    </div>
     ${o.soldOut.length ? `<div class="small muted">${esc(t("soldOutNote", o.soldOut.map(skuName).join(" · ")))}</div>` : ""}
   </div>`;
 }
