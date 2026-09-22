@@ -5,7 +5,7 @@
   let code = ""; try { code = localStorage.getItem(KEY) || ""; } catch (e) {}
   const state = { docs: {} };
   const listeners = [];
-  let gateOpen = false;
+  let gateOpen = false, ready = false;
   async function api(path, opts, extra) {
     const o = opts || {};
     const r = await fetch(path, Object.assign({}, o, { headers: Object.assign({ "content-type": "application/json", "x-ws-code": code }, extra || {}) }));
@@ -14,10 +14,10 @@
     if (!r.ok) throw { code: "unavailable", message: await r.text() };
     return r.json();
   }
-  async function refresh() { const s = await api("/api/state"); state.docs = s.docs || {}; for (const f of listeners.slice()) f(); }
+  async function refresh() { const s = await api("/api/state"); state.docs = s.docs || {}; ready = true; for (const f of listeners.slice()) f(); }
   const snap = (p) => ({ id: p.split("/").pop(), exists: state.docs[p] != null, data: () => state.docs[p], metadata: { fromCache: false, hasPendingWrites: false } });
   const collSnap = (c) => { const n = c.split("/").length + 1; const docs = Object.keys(state.docs).filter((k) => k.startsWith(c + "/") && k.split("/").length === n).sort().map(snap); return { docs, size: docs.length, empty: !docs.length, docChanges: () => [] }; };
-  const sub = (fn) => { listeners.push(fn); fn(); return () => { const i = listeners.indexOf(fn); if (i >= 0) listeners.splice(i, 1); }; };
+  const sub = (fn) => { listeners.push(fn); if (ready) fn(); return () => { const i = listeners.indexOf(fn); if (i >= 0) listeners.splice(i, 1); }; };
   let adminPw = "";
   const isLedger = (p) => p === "ledger" || p.indexOf("ledger/") === 0;
   async function writeDoc(p, payload, tries) {
