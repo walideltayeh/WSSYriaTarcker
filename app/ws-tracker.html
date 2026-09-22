@@ -88,8 +88,9 @@ main{max-width:1160px;margin:0 auto;padding-inline:16px;padding-block:34px 120px
   .me span{display:none}
   .logo{height:46px}
   .top-in{min-height:60px}
-  .bottom{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--surface);border-top:1px solid var(--hair);padding-bottom:env(safe-area-inset-bottom,0px)}
-  .bottom a{display:grid;justify-items:center;gap:3px;padding:10px 0 11px;text-decoration:none;color:var(--muted);font-size:10.5px;font-weight:500;letter-spacing:.06em;text-transform:uppercase}
+  .bottom{display:grid;grid-template-columns:repeat(6,1fr);position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--surface);border-top:1px solid var(--hair);padding-bottom:env(safe-area-inset-bottom,0px)}
+  .bottom a{display:grid;justify-items:center;gap:3px;padding:10px 0 11px;text-decoration:none;color:var(--muted);font-size:10.5px;font-weight:500;letter-spacing:0;min-width:0}
+  .bottom a span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   [dir="rtl"] .bottom a{letter-spacing:0;font-size:11.5px}
   .bottom a svg{width:21px;height:21px;stroke-width:1.5}
   .bottom a[aria-current="page"]{color:var(--brand)}
@@ -123,6 +124,10 @@ main{max-width:1160px;margin:0 auto;padding-inline:16px;padding-block:34px 120px
 .kpi b{font-family:var(--display);font-size:32px;font-weight:300;line-height:1.1;letter-spacing:-.01em}
 .kpi span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
 [dir="rtl"] .kpi span{letter-spacing:0;font-size:12.5px}
+.exrow{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;padding:14px 20px;border-bottom:1px solid var(--hair);cursor:pointer}
+.exrow:last-child{border-bottom:0}
+.exrow:hover{background:var(--sunk)}
+.exrow input{width:18px;height:18px;margin:0;accent-color:var(--brand)}
 .kpi .h{font-size:12.5px;color:var(--ink-2);line-height:1.4}
 .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
 table{border-collapse:collapse;width:100%;font-size:14px}
@@ -269,7 +274,7 @@ tr.click{cursor:pointer} tr.click:hover td{background:var(--sunk)}
 /* ============================== i18n ============================== */
 const T = {
   en: {
-    brand:"WS Tracker", brandsub:"Syria · Wholesale", t_ws:"Wholesalers", t_off:"Offtake", t_an:"Analysis", t_data:"Data",
+    brand:"WS Tracker", brandsub:"Syria · Wholesale", t_ws:"Wholesalers", t_off:"Offtake", t_an:"Analysis", t_data:"Data", t_exp:"Export", expTitle:"Export to Excel", expSub:(d)=>`Tick what you want and download one Excel file, one sheet per item. Data up to ${d}; all quantities in mastercases.`, expAll:"Select all", expNone:"Clear", expBtn:(n)=>`Download Excel · ${n} sheet${n===1?"":"s"}`, expRows:(n)=>`${n} rows`, expFile:(x)=>`File: ${x}`, expG_orders:"Orders & stock", expG_sales:"Sales", expG_offtake:"Offtake & stock counts", expG_raw:"Raw data",
     loading:"Loading…", noLedger:"No data yet. Import the Excel workbook to get started.", goData:"Data & settings", noClaude:"Open this app from its claude.ai link to load the data and log counts.",
     search:"Search wholesaler", wsTitle:"Wholesalers", wsSub:"Tap a wholesaler to count their stock. Due and never-counted come first.",
     never:"Never counted", lastCount:"Last count", daysAgo:d=>d===0?"today":d===1?"1 day ago":`${d} days ago`,
@@ -335,7 +340,7 @@ const T = {
     kIn:"Inbound (MC)", kOut:"Outbound (MC)", kOnHand:"On hand (MC)", kInMoves:"Inbound movements", lastIn:"last", inMonthly:"Inbound per month by format (MC)", inLog:"Inbound log", type:"Type", ref:"Ref"
   },
   ar: {
-    brand:"متتبع تجار الجملة", brandsub:"سوريا · الجملة", t_ws:"تجار الجملة", t_off:"التصريف", t_an:"التحليل", t_data:"البيانات",
+    brand:"متتبع تجار الجملة", brandsub:"سوريا · الجملة", t_ws:"تجار الجملة", t_off:"التصريف", t_an:"التحليل", t_data:"البيانات", t_exp:"تصدير", expTitle:"تصدير إلى Excel", expSub:(d)=>`اختر ما تريد وحمّل ملف Excel واحداً، ورقة لكل بند. البيانات حتى ${d}؛ كل الكميات بالكرتونة.`, expAll:"تحديد الكل", expNone:"إلغاء التحديد", expBtn:(n)=>`تنزيل Excel · ${n} ورقة`, expRows:(n)=>`${n} سطر`, expFile:(x)=>`الملف: ${x}`, expG_orders:"الطلبيات والمخزون", expG_sales:"المبيعات", expG_offtake:"التصريف والجرد", expG_raw:"البيانات الخام",
     loading:"جارٍ التحميل…", noLedger:"لا توجد بيانات بعد. استورد ملف الإكسل للبدء.", goData:"البيانات والإعدادات", noClaude:"افتح التطبيق من رابط claude.ai لتحميل البيانات وتسجيل الجرد.",
     search:"ابحث عن تاجر", wsTitle:"تجار الجملة", wsSub:"اضغط على التاجر لجرد مخزونه. يظهر المستحق ومن لم يُجرد أولاً.",
     never:"لم يُجرد بعد", lastCount:"آخر جرد", daysAgo:d=>d===0?"اليوم":d===1?"منذ يوم":`منذ ${d} يوم`,
@@ -560,7 +565,7 @@ function settings() {
 }
 
 /* ============================== routing ============================== */
-const route = () => { const h = decodeURIComponent(location.hash.replace(/^#\/?/, "")); const p = h.split("/"); if (p[0] === "ws" && p[1]) return { view: p[2] === "count" ? "count" : "ws", id: p[1], edit: p[3] || null }; if (["offtake", "warehouse", "analysis", "data"].includes(p[0])) return { view: p[0] }; return { view: "list" }; };
+const route = () => { const h = decodeURIComponent(location.hash.replace(/^#\/?/, "")); const p = h.split("/"); if (p[0] === "ws" && p[1]) return { view: p[2] === "count" ? "count" : "ws", id: p[1], edit: p[3] || null }; if (["offtake", "warehouse", "analysis", "export", "data"].includes(p[0])) return { view: p[0] }; return { view: "list" }; };
 const go = (h) => { if (location.hash === h) render(); else location.hash = h; };
 window.addEventListener("hashchange", () => { S.form = null; S.dirty = false; S.pendingDelete = null; render(); window.scrollTo(0, 0); });
 
@@ -570,6 +575,7 @@ const ICONS = {
   offtake: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
   analysis: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg>',
   warehouse: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5v8l9 5 9-5V8z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg>',
+  export: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M4 17v4h16v-4"/></svg>',
   data: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg>',
 };
 function renderShell(view) {
@@ -578,7 +584,7 @@ function renderShell(view) {
   document.getElementById("brandsub").textContent = t("brandsub");
   document.getElementById("langBtn").textContent = LANG === "ar" ? "EN" : "ع";
   const cur = view === "ws" || view === "count" ? "list" : view;
-  const items = [["list", "#", t("t_ws")], ["offtake", "#offtake", t("t_off")], ["warehouse", "#warehouse", t("t_wh")], ["analysis", "#analysis", t("t_an")], ["data", "#data", t("t_data")]];
+  const items = [["list", "#", t("t_ws")], ["offtake", "#offtake", t("t_off")], ["warehouse", "#warehouse", t("t_wh")], ["analysis", "#analysis", t("t_an")], ["export", "#export", t("t_exp")], ["data", "#data", t("t_data")]];
   document.getElementById("tabs").innerHTML = items.map(([k, h, l]) => `<a href="${h}" ${k === cur ? 'aria-current="page"' : ""}>${esc(l)}</a>`).join("");
   document.getElementById("bottom").innerHTML = items.map(([k, h, l]) => `<a href="${h}" ${k === cur ? 'aria-current="page"' : ""}>${ICONS[k]}<span>${esc(l)}</span></a>`).join("");
 }
@@ -600,6 +606,7 @@ function render() {
   if (r.view === "offtake") return viewOfftake(main);
   if (r.view === "warehouse") return viewWarehouse(main);
   if (r.view === "analysis") return viewAnalysis(main);
+  if (r.view === "export") return viewExport(main);
   if (r.view === "data") return viewData(main);
 }
 
@@ -1354,7 +1361,7 @@ function viewData(main) {
     ${Object.keys(S.aliases).length ? `<section class="panel stack"><h3>${esc(t("merged"))}</h3><div class="small ink2">${Object.entries(S.aliases).map(([from, to]) => `<div style="padding:4px 0;border-bottom:1px solid var(--hair)"><span dir="auto">${esc(from)}</span> → <b dir="auto">${esc(to)}</b></div>`).join("")}</div><p class="small muted">${esc(t("mergedNote"))}</p></section>` : ""}
     <section class="panel stack"><h3>${esc(t("method"))}</h3><p class="ink2" style="max-width:75ch">${esc(t("methodTxt"))}</p></section>`;
   document.getElementById("ledInfo").textContent = m && E ? t("ledgerInfo", fmt(m.rowCount), m.source || "Excel", fmtDate(E.ledgerStart), fmtDate(E.ledgerEnd)) : "";
-  document.getElementById("exportBtn").addEventListener("click", exportXlsx);
+  document.getElementById("exportBtn").addEventListener("click", () => go("#export"));
   if (S.admin) {
     document.getElementById("imp").addEventListener("change", onImportFile);
     document.getElementById("saveSet").addEventListener("click", async () => {
@@ -1408,45 +1415,118 @@ async function onImportFile(e) {
   } catch (err) { out.innerHTML = `<div class="notice crit">${esc(err.message === "xlsx library failed to load" ? t("err") + err.message : t("importErr"))}</div>`; }
   e.target.value = "";
 }
-async function exportXlsx() {
+/* ---------- export ---------- */
+const FMT_EN = { cruz: "50g", kf: "250g", kilo: "Kg" };
+// Everything the Export tab can put in the workbook, in workbook order. One entry = one sheet.
+function exportSheets() {
+  const N = nextOrders(), ls = S.ledger.skus, M = E.months;
+  const sales = S.ledger.rows.filter((r) => r[2] === "Sales Invoice" && r[6]);
+  const pivot = (label, keyOf) => {
+    const map = new Map();
+    for (const r of sales) { const k = keyOf(r); if (!k) continue; if (!map.has(k)) map.set(k, M.map(() => 0)); const i = M.indexOf(r[1].slice(0, 7)); if (i >= 0) map.get(k)[i] += r[6]; }
+    const rows = [...map].map(([k, v]) => [k, ...v, v.reduce((a, b) => a + b, 0)]).sort((a, b) => b.at(-1) - a.at(-1));
+    const tot = M.map((_, i) => rows.reduce((a, r) => a + r[i + 1], 0));
+    return [[label, ...M, "Total (MC)"], ...rows, ["TOTAL", ...tot, tot.reduce((a, b) => a + b, 0)]];
+  };
+  const sheet = (key, group, name, title, desc, aoa) => ({ key, group, name, title, desc, aoa });
+  const out = [];
+
+  // orders & stock
+  const nx = [["Wholesaler", "Status", "Last order", "Days since last order", "Usually orders every (days)", "Next due", "Stock at his shop (MC)", "Sells per day (MC)", "Last 60 days (MC)", "Previous 60 days (MC)", "Format", "SKU (EN)", "SKU (AR)", "Wanted (MC)", "Suggested (MC)", "Basis"]];
+  for (const o of N.list) {
+    const head = [o.w.name, STATUS_EN[o.status], o.last, o.since, o.gap, o.nextDue, o.shop == null ? "" : Math.round(o.shop), Math.round(o.sells * 10) / 10, o.trend.a, o.trend.b];
+    if (!o.lines.length) nx.push([...head, "", "", "", 0, 0, "Nothing to order"]);
+    for (const l of o.lines) nx.push([...head, FMT_EN[fmtOf(l.sku)], l.sku.en, l.sku.ar, l.want, l.qty, BASIS_EN[l.src]]);
+  }
+  out.push(sheet("next", "orders", "Next orders", { en: "Next orders", ar: "الطلبيات القادمة" },
+    { en: "Suggested next order for every wholesaler, product by product: wanted vs suggested, due date, his stock and sales pace.", ar: "الطلبية القادمة المقترحة لكل تاجر صنفاً صنفاً: المطلوب والمقترح، الموعد، مخزونه ووتيرة بيعه." }, nx));
+  const sih = [["Format", "SKU (EN)", "SKU (AR)", "Received (MC)", "Sold (MC)", "Other out (MC)", "In hand (MC)", "Next orders want (MC)", "Allocated (MC)", "Left after (MC)"]];
+  for (const x of N.stock) sih.push([FMT_EN[fmtOf(x.sku)], x.sku.en, x.sku.ar, x.received, x.sold, x.other, x.inHand, x.wanted, x.alloc, x.left]);
+  out.push(sheet("stock", "orders", "Stock in hand", { en: "Stock in hand", ar: "المخزون المتوفر" },
+    { en: "Main warehouse per product: received, sold, in hand, and how much the next orders take.", ar: "المستودع الرئيسي لكل صنف: المستلم، المباع، المتوفر، وما تأخذه الطلبيات القادمة." }, sih));
+  const wsa = [["Wholesaler", "Status", "First order", "Last order", "Days since last order", "Last order (MC)", "Orders every (days)", "Bought since first order (MC)", "Last 60 days (MC)", "Previous 60 days (MC)", "Stock at his shop (MC)", "Stock count date", "Sells per day (MC)", "Next order due", "Suggested next order (MC)"]];
+  for (const o of N.list) wsa.push([o.w.name, STATUS_EN[o.status], o.first, o.last, o.since, o.lastTotal, o.gap, o.w.totalDel, o.trend.a, o.trend.b, o.shop == null ? "" : Math.round(o.shop), o.countDate || "", Math.round(o.sells * 10) / 10, o.nextDue, o.total]);
+  out.push(sheet("ws", "orders", "Wholesalers", { en: "Wholesalers", ar: "التجار" },
+    { en: "One row per wholesaler: status, first and last order, how often he orders, totals, stock at his shop, next order.", ar: "سطر لكل تاجر: الحالة، أول وآخر طلبية، كل كم يطلب، المجاميع، مخزونه، الطلبية القادمة." }, wsa));
+
+  // sales
+  out.push(sheet("sFlavour", "sales", "Sales by flavour", { en: "Sales by flavour", ar: "المبيعات حسب النكهة" },
+    { en: "Mastercases sold per month for each flavour, with totals.", ar: "الكراتين المباعة شهرياً لكل نكهة، مع المجاميع." }, pivot("Flavour", (r) => flavourOf(ls[r[0]]))));
+  out.push(sheet("sFormat", "sales", "Sales by format", { en: "Sales by format", ar: "المبيعات حسب العبوة" },
+    { en: "Mastercases sold per month for 50g, 250g and Kg.", ar: "الكراتين المباعة شهرياً لعبوات 50غ و250غ والكيلو." }, pivot("Format", (r) => FMT_EN[fmtOf(ls[r[0]])])));
+  out.push(sheet("sSku", "sales", "Sales by product", { en: "Sales by product", ar: "المبيعات حسب الصنف" },
+    { en: "Mastercases sold per month for each product.", ar: "الكراتين المباعة شهرياً لكل صنف." }, pivot("Product", (r) => ls[r[0]].en)));
+  out.push(sheet("sWs", "sales", "Sales by wholesaler", { en: "Sales by wholesaler", ar: "المبيعات حسب التاجر" },
+    { en: "Mastercases sold per month to each wholesaler (merged names counted as one).", ar: "الكراتين المباعة شهرياً لكل تاجر (الأسماء المدمجة تُحسب تاجراً واحداً)." }, pivot("Wholesaler", (r) => (r[3] ? aliasOf(r[3]).trim() : ""))));
+
+  // offtake & stock counts
+  const market = [["Format", "SKU (EN)", "SKU (AR)", "Wholesalers counted", "Delivered to count dates (MC)", "Stock at wholesalers (MC)", "Offtake to date (MC)", "Sell-through", "Offtake per day (MC)"]];
+  for (const f of FORMATS) {
+    const fa = agg(allRows((r) => fmtOf(r.sku) === f)); if (!fa.counted) continue;
+    market.push([FMT_EN[f], "All " + FMT_EN[f], "", wsCountFor((r) => fmtOf(r.sku) === f), fa.delTo, fa.stock, fa.off, fa.delTo ? fa.off / fa.delTo : null, fa.rate]);
+    for (const s of E.skus.filter((x) => fmtOf(x) === f)) { const a = agg(allRows((r) => r.sku.id === s.id)); if (a.counted) market.push([FMT_EN[f], s.en, s.ar, wsCountFor((r) => r.sku.id === s.id), a.delTo, a.stock, a.off, a.delTo ? a.off / a.delTo : null, a.rate]); }
+  }
+  out.push(sheet("market", "offtake", "Market by format & SKU", { en: "Market offtake by format and product", ar: "تصريف السوق حسب العبوة والصنف" },
+    { en: "All counted wholesalers together: delivered, stock, offtake and sell-through per format and product.", ar: "كل التجار المجرودين معاً: المورَّد والمخزون والتصريف ونسبته لكل عبوة وصنف." }, market));
+  const byWs = [["Wholesaler", "Last count", "Delivered to count dates (MC)", "Stock at last count (MC)", "Offtake to date (MC)", "Sell-through", "Offtake per day (MC)", "Est. days left", "Checks"]];
+  for (const w of E.wsList) if (w.lastCount) byWs.push([w.name, w.lastCount.date, w.delTo, w.stock, w.offToDate, w.delTo ? w.offToDate / w.delTo : null, w.rate, w.rate > 0 ? w.estNow / w.rate : null, w.flags]);
+  out.push(sheet("offWs", "offtake", "Offtake by WS", { en: "Offtake by wholesaler", ar: "التصريف حسب التاجر" },
+    { en: "Per counted wholesaler: delivered, stock at the last count, offtake, days of stock left.", ar: "لكل تاجر مجرود: المورَّد، المخزون في آخر جرد، التصريف، الأيام المتبقية." }, byWs));
+  const byFmt = [["Wholesaler", ...FORMATS.map((f) => FMT_EN[f] + " offtake (MC)"), "Total offtake (MC)"]];
+  for (const w of E.wsList) if (w.lastCount) byFmt.push([w.name, ...FORMATS.map((f) => { const a = agg(w.skuRows.filter((r) => fmtOf(r.sku) === f)); return a.counted ? a.off : null; }), agg(w.skuRows).off]);
+  if (byFmt.length > 1) byFmt.push(["MARKET TOTAL", ...FORMATS.map((f) => { const a = agg(allRows((r) => fmtOf(r.sku) === f)); return a.counted ? a.off : null; }), agg(allRows(() => true)).off]);
+  out.push(sheet("offFmt", "offtake", "WS by format", { en: "Offtake per wholesaler by format", ar: "تصريف كل تاجر حسب العبوة" },
+    { en: "Offtake of each counted wholesaler split into 50g, 250g and Kg, with the market total.", ar: "تصريف كل تاجر مجرود موزعاً على 50غ و250غ والكيلو، مع إجمالي السوق." }, byFmt));
+  const bySku = [["Wholesaler", "Format", "SKU (EN)", "SKU (AR)", "Last count", "Delivered to count date (MC)", "Stock (MC)", "Offtake to date (MC)", "Offtake last period (MC)", "Days in period", "Per day (MC)", "Est. days left", "Check"]];
+  for (const w of E.wsList) for (const r of w.skuRows) if (r.counted) bySku.push([w.name, FMT_EN[fmtOf(r.sku)], r.sku.en, r.sku.ar, r.lastDate, r.delTo, r.stock, r.offToDate, r.lastOff, r.lastDays, r.rate, r.daysLeft, r.flag ? "CHECK" : ""]);
+  out.push(sheet("offSku", "offtake", "Offtake WS x SKU", { en: "Offtake per wholesaler and product", ar: "التصريف لكل تاجر وصنف" },
+    { en: "Every counted wholesaler and product: stock, offtake, per day, days left, and counts to check.", ar: "كل تاجر مجرود وكل صنف: المخزون، التصريف، اليومي، الأيام المتبقية، وما يحتاج تحقق." }, bySku));
+  const log = [["Wholesaler", "Count date", "SKU (EN)", "SKU (AR)", "Previous count (MC)", "Delivered in period (MC)", "Counted (MC)", "Offtake (MC)", "Days", "Note", "Supervisor"]];
+  for (const w of E.wsList) for (const c of w.counts) for (const r of w.skuRows) { const p = r.series.find((x) => x.id === c.id); if (p) log.push([w.name, c.date, r.sku.en, r.sku.ar, p.base ? 0 : p.prevV, p.rec, p.v, p.off, p.days, c.note || "", c.supervisorName || ""]); }
+  out.push(sheet("log", "offtake", "Stock count log", { en: "Stock count log", ar: "سجل الجرد" },
+    { en: "Every stock count the supervisors saved, product by product, with the offtake it gives.", ar: "كل جرد حفظه المشرفون صنفاً صنفاً، مع التصريف الناتج عنه." }, log));
+
+  // raw data
+  const purch = [["Date", "Month", "Wholesaler", "SKU (EN)", "SKU (AR)", "Flavour", "Format", "Ref", "Quantity (MC)"]];
+  for (const r of [...sales].sort((a, b) => (a[1] < b[1] ? -1 : a[1] > b[1] ? 1 : 0))) { const s = ls[r[0]]; purch.push([r[1], r[1].slice(0, 7), r[3] ? aliasOf(r[3]).trim() : "", s.en, s.ar, flavourOf(s), FMT_EN[fmtOf(s)], r[4] || "", r[6]]); }
+  out.push(sheet("purch", "raw", "Purchase history", { en: "Purchase history", ar: "سجل المشتريات" },
+    { en: "Every sales invoice line: date, month, wholesaler, product, flavour, format, quantity. Ready for your own pivot tables.", ar: "كل سطر فاتورة بيع: التاريخ، الشهر، التاجر، الصنف، النكهة، العبوة، الكمية. جاهز لجداولك المحورية." }, purch));
+  const mv = [["Date", "Type", "SKU (EN)", "SKU (AR)", "Format", "Wholesaler", "Ref", "Inbound (MC)", "Outbound (MC)"]];
+  for (const r of [...S.ledger.rows].sort((a, b) => (a[1] < b[1] ? -1 : a[1] > b[1] ? 1 : 0))) { const s = ls[r[0]]; mv.push([r[1], r[2], s.en, s.ar, FMT_EN[fmtOf(s)], r[3] ? aliasOf(r[3]).trim() : "", r[4] || "", r[5], r[6]]); }
+  out.push(sheet("moves", "raw", "All movements", { en: "All warehouse movements", ar: "كل حركات المستودع" },
+    { en: "The whole ledger: every receipt, transfer, adjustment and sale, in and out.", ar: "الدفتر كاملاً: كل استلام وتحويل وتعديل وبيع، وارداً وصادراً." }, mv));
+  return out;
+}
+function viewExport(main) {
+  const sheets = exportSheets(), L = LANG === "ar" ? "ar" : "en";
+  if (!S.expSel) S.expSel = new Set(sheets.map((x) => x.key));
+  const groups = [...new Set(sheets.map((x) => x.group))];
+  main.innerHTML = `
+    <div class="head"><div><h2>${esc(t("expTitle"))}</h2><p class="sub" style="max-width:75ch">${esc(t("expSub", fmtDate(E.ledgerEnd)))}</p></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" type="button" data-sel="all">${esc(t("expAll"))}</button><button class="btn" type="button" data-sel="none">${esc(t("expNone"))}</button></div></div>
+    ${groups.map((g) => `<section class="stack"><h3>${esc(t("expG_" + g))}</h3><div class="panel flush">${sheets.filter((x) => x.group === g).map((x) => `
+      <label class="exrow"><input type="checkbox" data-key="${x.key}" ${S.expSel.has(x.key) ? "checked" : ""}><span><span class="name">${esc(x.title[L])}</span><span class="sub2">${esc(x.desc[L])}</span></span><span class="small muted num">${esc(t("expRows", fmt(Math.max(0, x.aoa.length - 1))))}</span></label>`).join("")}</div></section>`).join("")}
+    <div class="sticky-save"><span class="small ink2" id="exSum"></span><button class="btn pri big" type="button" id="exGo"></button></div>`;
+  const sync = () => { const n = S.expSel.size, b = document.getElementById("exGo"); b.textContent = t("expBtn", n); b.disabled = !n; document.getElementById("exSum").textContent = t("expFile", `WS Tracker ${todayISO()}.xlsx`); };
+  main.querySelectorAll("[data-key]").forEach((c) => c.addEventListener("change", () => { if (c.checked) S.expSel.add(c.dataset.key); else S.expSel.delete(c.dataset.key); sync(); }));
+  main.querySelectorAll("[data-sel]").forEach((b) => b.addEventListener("click", () => { S.expSel = new Set(b.dataset.sel === "all" ? sheets.map((x) => x.key) : []); render(); }));
+  document.getElementById("exGo").addEventListener("click", () => exportXlsx([...S.expSel]));
+  sync();
+}
+// Write the chosen sheets (all of them when none are named) to one workbook.
+async function exportXlsx(keys) {
   if (!S.dl) { toast(t("err") + "downloads unavailable"); return; }
   try {
     const XLSX = await loadXLSX();
     const wb = XLSX.utils.book_new();
-    const byWs = [["Wholesaler", "Last count", "Delivered to count dates (MC)", "Stock at last count (MC)", "Offtake to date (MC)", "Sell-through", "Offtake per day (MC)", "Est. days left", "Checks"]];
-    for (const w of E.wsList) if (w.lastCount) byWs.push([w.name, w.lastCount.date, w.delTo, w.stock, w.offToDate, w.delTo ? w.offToDate / w.delTo : null, w.rate, w.rate > 0 ? w.estNow / w.rate : null, w.flags]);
-    const fmtEn = { cruz: "50g", kf: "250g", kilo: "Kg" };
-    const byFmt = [["Wholesaler", ...FORMATS.map((f) => fmtEn[f] + " offtake (MC)"), "Total offtake (MC)"]];
-    for (const w of E.wsList) if (w.lastCount) byFmt.push([w.name, ...FORMATS.map((f) => { const a = agg(w.skuRows.filter((r) => fmtOf(r.sku) === f)); return a.counted ? a.off : null; }), agg(w.skuRows).off]);
-    byFmt.push(["MARKET TOTAL", ...FORMATS.map((f) => { const a = agg(allRows((r) => fmtOf(r.sku) === f)); return a.counted ? a.off : null; }), agg(allRows(() => true)).off]);
-    const market = [["Format", "SKU (EN)", "SKU (AR)", "Wholesalers counted", "Delivered to count dates (MC)", "Stock at wholesalers (MC)", "Offtake to date (MC)", "Sell-through", "Offtake per day (MC)"]];
-    for (const f of FORMATS) {
-      const fa = agg(allRows((r) => fmtOf(r.sku) === f)); if (!fa.counted) continue;
-      market.push([fmtEn[f], "All " + fmtEn[f], "", wsCountFor((r) => fmtOf(r.sku) === f), fa.delTo, fa.stock, fa.off, fa.delTo ? fa.off / fa.delTo : null, fa.rate]);
-      for (const s of E.skus.filter((x) => fmtOf(x) === f)) { const a = agg(allRows((r) => r.sku.id === s.id)); if (a.counted) market.push([fmtEn[f], s.en, s.ar, wsCountFor((r) => r.sku.id === s.id), a.delTo, a.stock, a.off, a.delTo ? a.off / a.delTo : null, a.rate]); }
+    for (const x of exportSheets()) {
+      if (Array.isArray(keys) && !keys.includes(x.key)) continue;
+      const aoa = x.aoa.map((r) => r.map((v) => (typeof v === "number" && !Number.isInteger(v) ? Math.round(v * 100) / 100 : v)));
+      const ws = XLSX.utils.aoa_to_sheet(aoa);
+      ws["!cols"] = aoa[0].map((_, c) => ({ wch: Math.min(40, Math.max(8, ...aoa.slice(0, 300).map((r) => String(r[c] ?? "").length)) + 2) }));
+      XLSX.utils.book_append_sheet(wb, ws, x.name);
     }
-    const bySku = [["Wholesaler", "Format", "SKU (EN)", "SKU (AR)", "Last count", "Delivered to count date (MC)", "Stock (MC)", "Offtake to date (MC)", "Offtake last period (MC)", "Days in period", "Per day (MC)", "Est. days left", "Suggested order (MC)", "Check"]];
-    for (const w of E.wsList) for (const r of w.skuRows) if (r.counted) bySku.push([w.name, fmtEn[fmtOf(r.sku)], r.sku.en, r.sku.ar, r.lastDate, r.delTo, r.stock, r.offToDate, r.lastOff, r.lastDays, r.rate, r.daysLeft, r.suggest, r.flag ? "CHECK" : ""]);
-    const log = [["Wholesaler", "Count date", "SKU (EN)", "SKU (AR)", "Previous count (MC)", "Delivered in period (MC)", "Counted (MC)", "Offtake (MC)", "Days", "Note", "Supervisor"]];
-    for (const w of E.wsList) for (const c of w.counts) for (const r of w.skuRows) { const p = r.series.find((x) => x.id === c.id); if (p) log.push([w.name, c.date, r.sku.en, r.sku.ar, p.base ? 0 : p.prevV, p.rec, p.v, p.off, p.days, c.note || "", c.supervisorName || ""]); }
-    const nx = [["Wholesaler", "Status", "Last order", "Days since last order", "Usually orders every (days)", "Next due", "Stock at his shop (MC)", "Sells per day (MC)", "Last 60 days (MC)", "Previous 60 days (MC)", "Format", "SKU (EN)", "SKU (AR)", "Wanted (MC)", "Suggested (MC)", "Basis"]];
-    for (const o of nextOrders().list) {
-      const head = [o.w.name, STATUS_EN[o.status], o.last, o.since, o.gap, o.nextDue, o.shop == null ? "" : Math.round(o.shop), Math.round(o.sells * 10) / 10, o.trend.a, o.trend.b];
-      if (!o.lines.length) nx.push([...head, "", "", "", 0, 0, "Nothing to order"]);
-      for (const l of o.lines) nx.push([...head, fmtEn[fmtOf(l.sku)], l.sku.en, l.sku.ar, l.want, l.qty, BASIS_EN[l.src]]);
-    }
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(nx), "Next orders");
-    const sih = [["Format", "SKU (EN)", "SKU (AR)", "Received (MC)", "Sold (MC)", "Other out (MC)", "In hand (MC)", "Next orders want (MC)", "Allocated (MC)", "Left after (MC)"]];
-    for (const x of nextOrders().stock) sih.push([fmtEn[fmtOf(x.sku)], x.sku.en, x.sku.ar, x.received, x.sold, x.other, x.inHand, x.wanted, x.alloc, x.left]);
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(sih), "Stock in hand");
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(market), "Market by format & SKU");
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(byWs), "Offtake by WS");
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(byFmt), "WS by format");
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(bySku), "Offtake WS x SKU");
-    const purch = [["Wholesaler", "Date", "SKU (EN)", "SKU (AR)", "Format", "Ref", "Quantity (MC)"]];
-    for (const w of E.wsList) for (const r of purchaseLines(w)) purch.push([w.name, r.date, r.sku.en, r.sku.ar, fmtEn[fmtOf(r.sku)], r.ref || "", r.qty]);
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(log), "Stock count log");
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(purch), "Purchase history");
+    if (!wb.SheetNames.length) return;
     const buf = XLSX.write(wb, { type: "array", bookType: "xlsx" });
     await S.dl.save({ filename: `WS Tracker ${todayISO()}.xlsx`, data: new Blob([buf]) });
     toast(t("exported"));

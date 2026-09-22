@@ -43,7 +43,8 @@ The harness stands in for the hosted storage, so the app runs with no backend.
 - **Offtake** — per wholesaler, per format and per product, with market totals
 - **Warehouse** — inbound movements, stock on hand and months of cover
 - **Analysis** — two views. *Next orders*: the main warehouse's stock in hand (received − sold), then for every wholesaler their last order next to a suggested next order that covers every flavour in stock, shared out so the orders never exceed what the warehouse holds, with a status (low stock, overdue, due, on track, lapsed). *Sales*: sales per month by flavour, format, product or wholesaler, a month-by-month pivot and the wholesaler league
-- **Data** — import the workbook, export to Excel, settings, merged wholesaler names
+- **Export** — tick the sheets you want (next orders, stock in hand, wholesalers, sales by flavour, format, product or wholesaler, offtake, stock counts, every sales line, every warehouse movement) and download one Excel file
+- **Data** — import the workbook, settings, merged wholesaler names
 
 ## Data and secrets
 
