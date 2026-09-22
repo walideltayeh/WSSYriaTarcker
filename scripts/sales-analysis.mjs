@@ -5,7 +5,7 @@ const XLSX = require2("xlsx"); // npm install xlsx
 const wb = XLSX.readFile(process.argv[2] || "WS Data Syria - combined.xlsx");
 const rows = XLSX.utils.sheet_to_json(wb.Sheets["All Movements"], { defval: null });
 const sales = rows.filter((r) => r["Transaction Type"] === "Sales Invoice" && r["WS (grouped)"]);
-const flavourOf = (en) => (/Two Apple/i.test(en) ? "Two Apples" : /Red/i.test(en) ? "Red" : /Grape & Mint/i.test(en) ? "Grape & Mint" : /Grape/i.test(en) ? "Grape" : /Love/i.test(en) ? "Love" : "Blueberry");
+const flavourOf = (en) => (/Two Apple/i.test(en) ? (/Iced/i.test(en) ? "Two Apples Iced" : /Black|Blk/i.test(en) ? "Two Apples Black" : "Two Apples") : /Red/i.test(en) ? "Red" : /Grape & Mint/i.test(en) ? "Grape & Mint" : /Grape/i.test(en) ? "Grape" : /Love/i.test(en) ? "Love" : "Blueberry");
 const mc = (r) => +r["Outbound (MC)"] || 0;
 const months = [...new Set(sales.map((r) => String(r.Date).slice(0, 7)))].sort();
 const piv = (key) => {

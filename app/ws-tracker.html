@@ -1067,7 +1067,7 @@ function nextBlock(w) {
 }
 /* ---------- sales analysis ---------- */
 // Flavour is the marketing line, format the pack size; both are read from the product name.
-const flavourOf = (s) => (/Two Apple/i.test(s.en) ? "Two Apples" : /Red/i.test(s.en) ? "Red" : /Grape & Mint/i.test(s.en) ? "Grape & Mint" : /Grape/i.test(s.en) ? "Grape" : /Love/i.test(s.en) ? "Love" : "Blueberry");
+const flavourOf = (s) => (/Two Apple/i.test(s.en) ? (/Iced/i.test(s.en) ? "Two Apples Iced" : /Black|Blk/i.test(s.en) ? "Two Apples Black" : "Two Apples") : /Red/i.test(s.en) ? "Red" : /Grape & Mint/i.test(s.en) ? "Grape & Mint" : /Grape/i.test(s.en) ? "Grape" : /Love/i.test(s.en) ? "Love" : "Blueberry");
 const DIMS = ["flavour", "format", "sku", "ws"];
 // Sales per month for one dimension, biggest first.
 function salesBy(dim) {
