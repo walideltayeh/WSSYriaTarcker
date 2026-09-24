@@ -280,7 +280,7 @@ const T = {
   en: {
     brand:"WS Tracker", brandsub:"Syria · Wholesale", t_ws:"Wholesalers", t_off:"Offtake", t_an:"Analysis", t_data:"Data", t_exp:"Export", t_entry:"Entry", e_lockT:"Entry is password protected", e_lockS:"Ask the owner for the password that opens this tab.", e_lockPw:"Entry password", e_unlock:"Unlock", e_wrongPw:"Wrong password. Try again.", e_locked:"Locked again", entryTitle:"Enter movements", entrySub:"For the accountant: goods received into the Lattakia warehouse, and sales to wholesalers by product and date. Everything in mastercases (MC), and every screen counts it straight away.",
     e_in:"Inbound · Lattakia warehouse", e_out:"Outbound · sale to a wholesaler", e_in_short:"Inbound", e_out_short:"Outbound",
-    e_date:"Date", e_ws:"Wholesaler", e_newWs:"A wholesaler not in the list", e_newWsName:"Name of the new wholesaler", e_ref:"Reference (optional)", e_note:"Note (optional)", e_by:"Entered by (saved on this device)",
+    e_date:"Date", e_ws:"Wholesaler", e_newWs:"Add a wholesaler",  e_needWsName:"Type the wholesaler's name first.", e_wsExists:"That wholesaler is already in the list.", e_newWsName:"Name of the new wholesaler", e_ref:"Reference (optional)", e_note:"Note (optional)", e_by:"Entered by (saved on this device)",
     e_products:"Products", e_hint:"Put the quantity in mastercases next to each product and leave the rest empty.",
     e_save:"Save movement", e_saving:"Saving…", e_saved:"Movement saved", e_needLines:"Enter a quantity for at least one product.", e_needWs:"Choose the wholesaler.",
     e_total:(n,l)=>`${n} MC · ${l} product${l==1?"":"s"}`, e_recent:"Movements entered here", e_none:"Nothing entered yet. What you save appears here and counts in every screen.",
@@ -353,7 +353,7 @@ const T = {
   ar: {
     brand:"متتبع تجار الجملة", brandsub:"سوريا · الجملة", t_ws:"تجار الجملة", t_off:"التصريف", t_an:"التحليل", t_data:"البيانات", t_exp:"تصدير", t_entry:"الإدخال", e_lockT:"الإدخال محمي بكلمة مرور", e_lockS:"اطلب من المالك كلمة المرور التي تفتح هذا التبويب.", e_lockPw:"كلمة مرور الإدخال", e_unlock:"فتح", e_wrongPw:"كلمة المرور خاطئة. حاول مرة أخرى.", e_locked:"أُقفل من جديد", entryTitle:"إدخال الحركات", entrySub:"للمحاسب: البضاعة الواردة إلى مستودع اللاذقية، والمبيعات للتجار حسب الصنف والتاريخ. كل الكميات بالكرتونة، وتُحتسب في كل الشاشات فوراً.",
     e_in:"وارد · مستودع اللاذقية", e_out:"صادر · بيع لتاجر", e_in_short:"وارد", e_out_short:"صادر",
-    e_date:"التاريخ", e_ws:"التاجر", e_newWs:"تاجر غير موجود في القائمة", e_newWsName:"اسم التاجر الجديد", e_ref:"المرجع (اختياري)", e_note:"ملاحظة (اختياري)", e_by:"أدخلها (يُحفظ على هذا الجهاز)",
+    e_date:"التاريخ", e_ws:"التاجر", e_newWs:"إضافة تاجر",  e_needWsName:"اكتب اسم التاجر أولاً.", e_wsExists:"هذا التاجر موجود في القائمة.", e_newWsName:"اسم التاجر الجديد", e_ref:"المرجع (اختياري)", e_note:"ملاحظة (اختياري)", e_by:"أدخلها (يُحفظ على هذا الجهاز)",
     e_products:"الأصناف", e_hint:"اكتب الكمية بالكرتونة بجانب كل صنف واترك الباقي فارغاً.",
     e_save:"حفظ الحركة", e_saving:"جارٍ الحفظ…", e_saved:"تم حفظ الحركة", e_needLines:"أدخل كمية لصنف واحد على الأقل.", e_needWs:"اختر التاجر.",
     e_total:(n,l)=>`${n} كرتونة · ${l} صنف`, e_recent:"الحركات المُدخلة هنا", e_none:"لا حركات بعد. ما تحفظه يظهر هنا ويُحتسب في كل الشاشات.",
@@ -1499,7 +1499,7 @@ function viewEntry(main) {
       ${out ? `<div class="field"><label for="eWs">${esc(t("e_ws"))}</label><select class="inp" id="eWs">
         <option value="">—</option>${names.map((n) => `<option ${st.ws === n ? "selected" : ""}>${esc(n)}</option>`).join("")}
         <option value="__new">${esc(t("e_newWs"))}</option></select></div>
-        ${st.ws === "__new" ? `<div class="field"><label for="eNew">${esc(t("e_newWsName"))}</label><input class="inp" id="eNew" dir="auto" value="${esc(st.newWs)}"></div>` : ""}` : ""}
+        ${st.ws === "__new" ? `<div class="field"><label for="eNew">${esc(t("e_newWsName"))}</label><div style="display:flex;gap:8px"><input class="inp" id="eNew" dir="auto" value="${esc(st.newWs)}"><button class="btn" type="button" id="eAddWs">${esc(t("addWsBtn"))}</button></div></div>` : ""}` : ""}
       <div class="field"><label for="eRef">${esc(t("e_ref"))}</label><input class="inp" id="eRef" value="${esc(st.ref)}"></div>
       <div class="field"><label for="eBy">${esc(t("e_by"))}</label><input class="inp" id="eBy" dir="auto" value="${esc(S.sup || "")}"></div>
     </div>
@@ -1526,6 +1526,16 @@ function viewEntry(main) {
   if (wsSel) wsSel.addEventListener("change", (e) => { st.ws = e.target.value; render(); });
   const wsNew = document.getElementById("eNew");
   if (wsNew) wsNew.addEventListener("input", (e) => (st.newWs = e.target.value));
+  const wsAdd = document.getElementById("eAddWs");
+  if (wsAdd) wsAdd.addEventListener("click", async () => {
+    const name = (st.newWs || "").trim();
+    if (!name) { toast(t("e_needWsName")); return; }
+    if (E.wsList.some((w) => w.name === name)) { st.ws = name; st.newWs = ""; toast(t("e_wsExists")); render(); return; }
+    wsAdd.disabled = true;
+    try { await S.db.doc("config/wholesalers").set({ extra: [...new Set([...S.extraWs, name])] }); }
+    catch (err) { wsAdd.disabled = false; toast(t("err") + (err?.code || err?.message || err)); return; }
+    st.ws = name; st.newWs = ""; toast(t("wsAdded")); render();
+  });
   main.querySelectorAll("[data-q]").forEach((i) => i.addEventListener("input", () => { const v = +i.value; if (i.value.trim() === "" || !(v > 0)) delete st.qty[i.dataset.q]; else st.qty[i.dataset.q] = Math.round(v * 100) / 100; sum(); }));
   sum();
   main.querySelectorAll("[data-del]").forEach((b) => b.addEventListener("click", async () => {
