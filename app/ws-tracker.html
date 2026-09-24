@@ -348,7 +348,7 @@ const T = {
     league:"Wholesaler league", cumulative:"Cumulative", biggest:"Biggest product", otherN:(n)=>`${n} others`, mergedNote:"These ledger names are counted as one wholesaler, including after a new Excel import.", purchases:"Purchase history", purchasesSub:"Every sales invoice line delivered to this wholesaler, from the ledger", byDate:"By date", byProductT:"By product",
     linesN:"lines", orderDays:"order days", everyDays:d=>`about every ${d} days`, firstOrder:"First", lastOrder:"Last", shareOfWs:"Share", monthlyBuy:"Purchases per month by format (MC)",
     t_wh:"Warehouse", whTitle:"Warehouse: inbound & stock", whSub2:"Everything received into the warehouse according to the ledger (transfers from Lattakia, goods receipts, purchase invoices, adjustments) and what is left.",
-    kIn:"Inbound (MC)", kOut:"Outbound (MC)", kOnHand:"On hand (MC)", kInMoves:"Inbound movements", lastIn:"last", inMonthly:"Inbound per month by format (MC)", inLog:"Inbound log", type:"Type", ref:"Ref"
+    kIn:"Inbound (MC)", kOut:"Outbound (MC)", kOnHand:"On hand (MC)", kInMoves:"Inbound movements", lastIn:"last", inMonthly:"Inbound per month by format (MC)", inLog:"Inbound log", type:"Type", ref:"Ref", allMonths:"All months", monthShown:(m)=>`Showing ${m}`
   },
   ar: {
     brand:"متتبع تجار الجملة", brandsub:"سوريا · الجملة", t_ws:"تجار الجملة", t_off:"التصريف", t_an:"التحليل", t_data:"البيانات", t_exp:"تصدير", t_entry:"الإدخال", e_lockT:"الإدخال محمي بكلمة مرور", e_lockS:"اطلب من المالك كلمة المرور التي تفتح هذا التبويب.", e_lockPw:"كلمة مرور الإدخال", e_unlock:"فتح", e_wrongPw:"كلمة المرور خاطئة. حاول مرة أخرى.", e_locked:"أُقفل من جديد", entryTitle:"إدخال الحركات", entrySub:"للمحاسب: البضاعة الواردة إلى مستودع اللاذقية، والمبيعات للتجار حسب الصنف والتاريخ. كل الكميات بالكرتونة، وتُحتسب في كل الشاشات فوراً.",
@@ -421,7 +421,7 @@ const T = {
     league:"ترتيب التجار", cumulative:"التراكمي", biggest:"أكبر صنف", otherN:(n)=>`${n} أخرى`, mergedNote:"هذه الأسماء في الدفتر تُحسب كتاجر واحد، وتبقى مدمجة بعد أي استيراد جديد.", purchases:"سجل المشتريات", purchasesSub:"كل أسطر فواتير البيع المورَّدة لهذا التاجر من الدفتر", byDate:"حسب التاريخ", byProductT:"حسب الصنف",
     linesN:"سطر", orderDays:"يوم طلب", everyDays:d=>`كل ${d} يوم تقريباً`, firstOrder:"الأول", lastOrder:"الأخير", shareOfWs:"الحصة", monthlyBuy:"المشتريات الشهرية حسب العبوة (كرتونة)",
     t_wh:"المستودع", whTitle:"المستودع: الوارد والمخزون", whSub2:"كل ما دخل المستودع حسب الدفتر (تحويلات من اللاذقية، استلامات، فواتير شراء، تعديلات) وما تبقى منه.",
-    kIn:"الوارد (كرتونة)", kOut:"الصادر (كرتونة)", kOnHand:"المتوفر (كرتونة)", kInMoves:"حركات الوارد", lastIn:"آخرها", inMonthly:"الوارد الشهري حسب العبوة (كرتونة)", inLog:"سجل الوارد", type:"النوع", ref:"المرجع"
+    kIn:"الوارد (كرتونة)", kOut:"الصادر (كرتونة)", kOnHand:"المتوفر (كرتونة)", kInMoves:"حركات الوارد", lastIn:"آخرها", inMonthly:"الوارد الشهري حسب العبوة (كرتونة)", inLog:"سجل الوارد", type:"النوع", ref:"المرجع", allMonths:"كل الأشهر", monthShown:(m)=>`عرض ${m}`
   }
 };
 let LANG = "en";
@@ -1296,14 +1296,16 @@ function viewWarehouse(main) {
   const sel = S.whSel || "all";
   const sp = sel === "all" ? () => true : sel.startsWith("fmt:") ? (s) => fmtOf(s) === sel.slice(4) : (s) => s.id === sel;
   const ls = S.ledger.skus;
-  const inRows = E.rows.filter((r) => r[5] > 0 && sp(ls[r[0]])).sort((a, b) => (a[1] < b[1] ? 1 : a[1] > b[1] ? -1 : 0));
+  const inAll = E.rows.filter((r) => r[5] > 0 && sp(ls[r[0]])).sort((a, b) => (a[1] < b[1] ? 1 : a[1] > b[1] ? -1 : 0));
+  const mSel = S.whMonth && E.months.includes(S.whMonth) ? S.whMonth : "all";
+  const inRows = mSel === "all" ? inAll : inAll.filter((r) => r[1].slice(0, 7) === mSel);
   const wh = E.wh.filter((x) => sp(x.sku));
   const tot = wh.reduce((a, x) => ({ inb: a.inb + x.inb, out: a.out + x.out, on: a.on + x.onHand, pm: a.pm + x.perMonth }), { inb: 0, out: 0, on: 0, pm: 0 });
   const M = E.months, byF = Object.fromEntries(FORMATS.map((f) => [f, M.map(() => 0)]));
-  for (const r of inRows) { const i = M.indexOf(r[1].slice(0, 7)); if (i >= 0) byF[fmtOf(ls[r[0]])][i] += r[5]; }
+  for (const r of inAll) { const i = M.indexOf(r[1].slice(0, 7)); if (i >= 0) byF[fmtOf(ls[r[0]])][i] += r[5]; }
   main.innerHTML = `
     <div class="head"><div><h2>${esc(t("whTitle"))}</h2><p class="sub" style="max-width:70ch">${esc(t("whSub2"))}</p></div>
-      <div class="field"><label for="whSel">${esc(t("show"))}</label><select class="inp" id="whSel" style="min-width:240px">${selOptions(sel)}</select></div></div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap"><div class="field"><label for="whSel">${esc(t("show"))}</label><select class="inp" id="whSel" style="min-width:200px">${selOptions(sel)}</select></div><div class="field"><label for="whMonth">${esc(t("period"))}</label><select class="inp" id="whMonth" style="min-width:150px"><option value="all">${esc(t("allMonths"))}</option>${M.map((m) => `<option value="${m}" ${mSel === m ? "selected" : ""}>${esc(monthLabel(m))} ${m.slice(0, 4)}</option>`).join("")}</select></div></div></div>
     <div class="kpis">
       <div class="kpi"><b class="num">${fmt(tot.inb)}</b><span>${esc(t("kIn"))}</span></div>
       <div class="kpi"><b class="num">${fmt(tot.out)}</b><span>${esc(t("kOut"))}</span></div>
@@ -1312,12 +1314,13 @@ function viewWarehouse(main) {
       <div class="kpi"><b class="num">${inRows.length}</b><span>${esc(t("kInMoves"))}${inRows[0] ? ` · ${esc(t("lastIn"))} ${fmtShort(inRows[0][1])}` : ""}</span></div></div>
     <section class="panel chart stack"><div class="head"><h3>${esc(t("inMonthly"))}</h3><ul class="legend">${FORMATS.map((f, i) => `<li><span class="sw" style="background:var(--s${i + 1})"></span>${esc(t("f_" + f))}</li>`).join("")}</ul></div><div id="cIn"></div></section>
     <section class="stack"><h3>${esc(t("wh"))}</h3><p class="small muted">${esc(t("whSub"))}</p><div class="panel flush scroll">${whTable(wh)}</div></section>
-    <section class="stack"><h3>${esc(t("inLog"))}</h3><div class="panel flush scroll"><table>
+    <section class="stack"><div class="head"><h3>${esc(t("inLog"))}</h3>${mSel === "all" ? "" : `<span class="small muted">${esc(t("monthShown", monthLabel(mSel) + " " + mSel.slice(0, 4)))}</span>`}</div><div class="panel flush scroll"><table>
       <thead><tr><th>${esc(t("date"))}</th><th>${esc(t("product"))}</th><th>${esc(t("format"))}</th><th>${esc(t("type"))}</th><th>${esc(t("ref"))}</th><th class="r">${esc(t("received_"))} (MC)</th></tr></thead>
       <tbody>${inRows.map((r) => `<tr><td class="num small" style="white-space:nowrap">${fmtDate(r[1])}</td><td><span class="name">${esc(skuName(ls[r[0]]))}</span><span class="sub2">${esc(skuAlt(ls[r[0]]))}</span></td><td class="small">${esc(t("f_" + fmtOf(ls[r[0]])))}</td><td class="small">${esc(typeName(r[2]))}</td><td class="small muted">${esc(r[4] || "—")}</td><td class="r num"><b>${fmt(r[5])}</b></td></tr>`).join("") || `<tr><td colspan="6" class="muted">—</td></tr>`}</tbody>
       <tfoot><tr><td colspan="5">${esc(t("total"))}</td><td class="r num">${fmt(inRows.reduce((a, r) => a + r[5], 0))}</td></tr></tfoot></table></div></section>`;
   drawStacked(document.getElementById("cIn"), M, FORMATS.map((f, i) => ({ label: t("f_" + f), color: `--s${i + 1}`, values: byF[f] })), t("inMonthly"));
   document.getElementById("whSel").addEventListener("change", (e) => { S.whSel = e.target.value; render(); });
+  document.getElementById("whMonth").addEventListener("change", (e) => { S.whMonth = e.target.value; render(); });
 }
 // Warehouse stock grouped by format: received, shipped, on hand, cover.
 function whTable(list) {
