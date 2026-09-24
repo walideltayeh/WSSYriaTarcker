@@ -449,7 +449,7 @@ const famOf = (s) => /LB Warn/i.test(s.en) ? "lb" : /Two Apple/i.test(s.en) ? "o
 const FAMS = [["old", "--s1"], ["lb", "--s2"], ["red", "--s3"], ["grape", "--s4"]];
 // Pack format. "Two Apple Black" has no size in its name; it was replaced by "Two Apple Blk 50g (LB Warn)", so it is 50g.
 const FORMATS = ["cruz", "kf", "kilo"];
-const fmtOf = (s) => (/\bKg\b|Kilo/i.test(s.en) ? "kilo" : /\b250g\b|\bKF\b/i.test(s.en) ? "kf" : "cruz");
+const fmtOf = (s) => (/(?:\b|\d)Kg\b|Kilo/i.test(s.en) ? "kilo" : /\b250g\b|\bKF\b/i.test(s.en) ? "kf" : "cruz");
 // Old ledger names (Cruz/KF/Kilo) and new ones (50g/250g/Kg) are the same product.
 const canonSku = (en) => en.trim().replace(/\bCruz\b/gi, "50g").replace(/\bKF\b/g, "250g").replace(/\bKilo\b/gi, "Kg").replace(/\s+/g, " ");
 function toast(msg) { const el = document.getElementById("toast"); el.textContent = msg; el.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(() => (el.hidden = true), 2600); }
@@ -980,7 +980,7 @@ function wsMatrix() {
 
 /* ---------- analysis: next orders per wholesaler ---------- */
 // A product line is one product in any pack: the LB-warning pack stands in for the plain one.
-const lineOf = (s) => s.en.replace(/\(LB Warn\)/i, "").replace(/\bBlk\b/i, "Black").replace(/\b(Cruz|KF|Kilo|Kg|50g|250g)\b/gi, "").replace(/\s+/g, " ").trim().toLowerCase() + "|" + fmtOf(s);
+const lineOf = (s) => s.en.replace(/\(LB Warn\)/i, "").replace(/\bBlk\b/i, "Black").replace(/\b(Cruz|KF|Kilo|1\s*Kg|Kg|50g|250g)\b/gi, "").replace(/\s+/g, " ").trim().toLowerCase() + "|" + fmtOf(s);
 const STATUS_RANK = { low: 0, overdue: 1, due: 2, ok: 3, lapsed: 4, none: 5 };
 const STATUS_CHIP = { low: "c-crit", overdue: "c-serious", due: "c-warn", ok: "c-good", lapsed: "c-crit", none: "" };
 const STATUS_EN = { low: "Low stock", overdue: "Overdue", due: "Due now", ok: "On track", lapsed: "Lapsed", none: "No orders yet" };
@@ -1207,7 +1207,7 @@ function nextBlock(w) {
 }
 /* ---------- sales analysis ---------- */
 // Flavour is the marketing line, format the pack size; both are read from the product name.
-const flavourOf = (s) => (/Two Apple/i.test(s.en) ? (/Iced/i.test(s.en) ? "Two Apples Iced" : /Black|Blk/i.test(s.en) ? "Two Apples Black" : "Two Apples") : /Red/i.test(s.en) ? "Red" : /Grape & Mint/i.test(s.en) ? "Grape & Mint" : /Grape/i.test(s.en) ? "Grape" : /Love/i.test(s.en) ? "Love" : "Blueberry");
+const flavourOf = (s) => (/Two Apple/i.test(s.en) ? (/Iced|Frosty/i.test(s.en) ? "Two Apples Frosty" : /Black|Blk/i.test(s.en) ? "Two Apples Black" : "Two Apples") : /Red/i.test(s.en) ? "Red" : /Grape & Mint/i.test(s.en) ? "Grape & Mint" : /Grape/i.test(s.en) ? "Grape" : /Love/i.test(s.en) ? "Love" : "Blueberry");
 const DIMS = ["flavour", "format", "imsline", "sku", "ws"];
 // Sales per month for one dimension, biggest first.
 function salesBy(dim) {
@@ -1364,7 +1364,7 @@ function drawStacked(host, M, series, title) {
 function flavourLabel(s) {
   const lb = /LB Warn/i.test(s.en);
   if (LANG === "ar") return s.ar.replace(/^فاخر\s*/, "").replace(/تحذير\s*لبن?ان/, "").replace(/(^|\s)(كروز|كف|كيلو)(?=\s|$)/g, " ").replace(/\s+/g, " ").trim() + (lb ? " · لبنان" : "");
-  return s.en.replace(/\(LB Warn\)/i, "").replace(/\b(Cruz|KF|Kilo|Kg|50g|250g)\b/gi, "").replace(/\s+/g, " ").trim() + (lb ? " · LB" : "");
+  return s.en.replace(/\(LB Warn\)/i, "").replace(/\b(Cruz|KF|Kilo|1\s*Kg|Kg|50g|250g)\b/gi, "").replace(/\s+/g, " ").trim() + (lb ? " · LB" : "");
 }
 function drawMatrix() {
   const groups = FORMATS.map((f) => ({ f, items: E.skus.filter((s) => fmtOf(s) === f) })).filter((g) => g.items.length);
@@ -1432,10 +1432,17 @@ async function onImportFile(e) {
     const toISO = (v) => typeof v === "number" ? new Date(Date.UTC(1899, 11, 30) + v * 864e5).toISOString().slice(0, 10) : v instanceof Date ? v.toISOString().slice(0, 10) : /^\d{4}-\d{2}-\d{2}/.test(String(v)) ? String(v).slice(0, 10) : null;
     const slug = (s) => s.toLowerCase().replace(/[()]/g, "").replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
     const skus = [], idx = new Map(), rows = [];
+    // A product already in the tracker keeps its id and the names given to it here, even when the
+    // workbook still uses an older name, so renames survive a re-import and counts stay attached.
+    const prevById = new Map((S.meta?.skus || []).map((s) => [s.id, s])), prevByEn = new Map((S.meta?.skus || []).map((s) => [s.en.toLowerCase(), s])), byId = new Map();
     for (const r of aoa.slice(hi + 1)) {
       if (!r || !r[col("SKU (EN)")]) continue; const d = toISO(r[col("Date")]); if (!d) continue;
       const en = canonSku(String(r[col("SKU (EN)")]));
-      if (!idx.has(en)) { idx.set(en, skus.length); skus.push({ id: slug(en), en, ar: String(r[col("SKU (AR)")] ?? "").trim(), src: String(r[col("Source")] ?? "") }); }
+      if (!idx.has(en)) {
+        const p = prevById.get(slug(en)) || prevByEn.get(en.toLowerCase()), id = p ? p.id : slug(en);
+        if (byId.has(id)) idx.set(en, byId.get(id));
+        else { byId.set(id, skus.length); idx.set(en, skus.length); skus.push({ id, en: p ? p.en : en, ar: (p && p.ar) || String(r[col("SKU (AR)")] ?? "").trim(), src: String(r[col("Source")] ?? "") }); }
+      }
       rows.push([idx.get(en), d, String(r[col("Transaction Type (EN)")] ?? "").trim(), r[col("WS (grouped)")] ? String(r[col("WS (grouped)")]).trim() : "", r[col("Ref")] == null ? "" : String(r[col("Ref")]), +r[col("Inbound")] || 0, +r[col("Outbound")] || 0]);
     }
     if (!rows.length) throw new Error("rows");
@@ -1457,7 +1464,7 @@ async function onImportFile(e) {
 /* ---------- entry: the accountant records inbound and outbound movements ---------- */
 // Saved movements live beside the imported workbook (never inside it) and count everywhere at once.
 // Flavour names for the entry form (the keys themselves are English).
-const FLAV_AR = { "Two Apples": "تفاحتين", "Two Apples Black": "تفاحتين أسود", "Two Apples Iced": "تفاحتين مثلج", Red: "أحمر", Grape: "عنب", "Grape & Mint": "عنب ونعناع", Love: "لوف", Blueberry: "بلوبيري" };
+const FLAV_AR = { "Two Apples": "تفاحتين", "Two Apples Black": "تفاحتين أسود", "Two Apples Frosty": "تفاحتين مثلج", Red: "أحمر", Grape: "عنب", "Grape & Mint": "عنب ونعناع", Love: "لوف", Blueberry: "بلوبيري" };
 const flavourLabelOf = (f) => (LANG === "ar" ? FLAV_AR[f] || f : f);
 const moveTotal = (m) => (m.lines || []).reduce((a, l) => a + (+l.qty || 0), 0);
 function moveSummary(m) {
