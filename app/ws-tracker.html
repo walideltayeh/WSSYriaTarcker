@@ -88,7 +88,7 @@ main{max-width:1160px;margin:0 auto;padding-inline:16px;padding-block:34px 120px
   .me span{display:none}
   .logo{height:46px}
   .top-in{min-height:60px}
-  .bottom{display:grid;grid-template-columns:repeat(6,1fr);position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--surface);border-top:1px solid var(--hair);padding-bottom:env(safe-area-inset-bottom,0px)}
+  .bottom{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(62px,1fr);overflow-x:auto;position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--surface);border-top:1px solid var(--hair);padding-bottom:env(safe-area-inset-bottom,0px)}
   .bottom a{display:grid;justify-items:center;gap:3px;padding:10px 0 11px;text-decoration:none;color:var(--muted);font-size:10.5px;font-weight:500;letter-spacing:0;min-width:0}
   .bottom a span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   [dir="rtl"] .bottom a{letter-spacing:0;font-size:11.5px}
@@ -127,6 +127,10 @@ main{max-width:1160px;margin:0 auto;padding-inline:16px;padding-block:34px 120px
 .exrow{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;padding:14px 20px;border-bottom:1px solid var(--hair);cursor:pointer}
 .exrow:last-child{border-bottom:0}
 .exrow:hover{background:var(--sunk)}
+.fgroup{border-bottom:2px solid var(--axis)}
+.fgroup:last-child{border-bottom:0}
+.fhead{padding:10px 20px 6px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);background:var(--sunk)}
+[dir="rtl"] .fhead{letter-spacing:0;font-size:12.5px}
 .exrow input{width:18px;height:18px;margin:0;accent-color:var(--brand)}
 .kpi .h{font-size:12.5px;color:var(--ink-2);line-height:1.4}
 .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
@@ -274,7 +278,14 @@ tr.click{cursor:pointer} tr.click:hover td{background:var(--sunk)}
 /* ============================== i18n ============================== */
 const T = {
   en: {
-    brand:"WS Tracker", brandsub:"Syria · Wholesale", t_ws:"Wholesalers", t_off:"Offtake", t_an:"Analysis", t_data:"Data", t_exp:"Export", expTitle:"Export to Excel", expSub:(d)=>`Tick what you want and download one Excel file, one sheet per item. Data up to ${d}; all quantities in mastercases.`, expAll:"Select all", expNone:"Clear", expBtn:(n)=>`Download Excel · ${n} sheet${n===1?"":"s"}`, expRows:(n)=>`${n} rows`, expFile:(x)=>`File: ${x}`, expG_orders:"Orders & stock", expG_sales:"Sales", expG_offtake:"Offtake & stock counts", expG_raw:"Raw data",
+    brand:"WS Tracker", brandsub:"Syria · Wholesale", t_ws:"Wholesalers", t_off:"Offtake", t_an:"Analysis", t_data:"Data", t_exp:"Export", t_entry:"Entry", entryTitle:"Enter movements", entrySub:"For the accountant: goods received into the Lattakia warehouse, and sales to wholesalers by product and date. Everything in mastercases (MC), and every screen counts it straight away.",
+    e_in:"Inbound · Lattakia warehouse", e_out:"Outbound · sale to a wholesaler", e_in_short:"Inbound", e_out_short:"Outbound",
+    e_date:"Date", e_ws:"Wholesaler", e_newWs:"A wholesaler not in the list", e_newWsName:"Name of the new wholesaler", e_ref:"Reference (optional)", e_note:"Note (optional)", e_by:"Entered by (saved on this device)",
+    e_products:"Products", e_hint:"Put the quantity in mastercases next to each product and leave the rest empty.",
+    e_save:"Save movement", e_saving:"Saving…", e_saved:"Movement saved", e_needLines:"Enter a quantity for at least one product.", e_needWs:"Choose the wholesaler.",
+    e_total:(n,l)=>`${n} MC · ${l} product${l==1?"":"s"}`, e_recent:"Movements entered here", e_none:"Nothing entered yet. What you save appears here and counts in every screen.",
+    e_del:"Delete", e_delConfirm:"Tap again to delete", e_deleted:"Movement deleted",
+    e_importNote:"Movements entered on the Entry tab are kept separate from the workbook. If a new workbook already contains them, delete them on that tab first.", expTitle:"Export to Excel", expSub:(d)=>`Tick what you want and download one Excel file, one sheet per item. Data up to ${d}; all quantities in mastercases.`, expAll:"Select all", expNone:"Clear", expBtn:(n)=>`Download Excel · ${n} sheet${n===1?"":"s"}`, expRows:(n)=>`${n} rows`, expFile:(x)=>`File: ${x}`, expG_orders:"Orders & stock", expG_sales:"Sales", expG_offtake:"Offtake & stock counts", expG_raw:"Raw data",
     loading:"Loading…", noLedger:"No data yet. Import the Excel workbook to get started.", goData:"Data & settings", noClaude:"Open this app from its claude.ai link to load the data and log counts.",
     search:"Search wholesaler", wsTitle:"Wholesalers", wsSub:"Tap a wholesaler to count their stock. Due and never-counted come first.",
     never:"Never counted", lastCount:"Last count", daysAgo:d=>d===0?"today":d===1?"1 day ago":`${d} days ago`,
@@ -340,7 +351,14 @@ const T = {
     kIn:"Inbound (MC)", kOut:"Outbound (MC)", kOnHand:"On hand (MC)", kInMoves:"Inbound movements", lastIn:"last", inMonthly:"Inbound per month by format (MC)", inLog:"Inbound log", type:"Type", ref:"Ref"
   },
   ar: {
-    brand:"متتبع تجار الجملة", brandsub:"سوريا · الجملة", t_ws:"تجار الجملة", t_off:"التصريف", t_an:"التحليل", t_data:"البيانات", t_exp:"تصدير", expTitle:"تصدير إلى Excel", expSub:(d)=>`اختر ما تريد وحمّل ملف Excel واحداً، ورقة لكل بند. البيانات حتى ${d}؛ كل الكميات بالكرتونة.`, expAll:"تحديد الكل", expNone:"إلغاء التحديد", expBtn:(n)=>`تنزيل Excel · ${n} ورقة`, expRows:(n)=>`${n} سطر`, expFile:(x)=>`الملف: ${x}`, expG_orders:"الطلبيات والمخزون", expG_sales:"المبيعات", expG_offtake:"التصريف والجرد", expG_raw:"البيانات الخام",
+    brand:"متتبع تجار الجملة", brandsub:"سوريا · الجملة", t_ws:"تجار الجملة", t_off:"التصريف", t_an:"التحليل", t_data:"البيانات", t_exp:"تصدير", t_entry:"الإدخال", entryTitle:"إدخال الحركات", entrySub:"للمحاسب: البضاعة الواردة إلى مستودع اللاذقية، والمبيعات للتجار حسب الصنف والتاريخ. كل الكميات بالكرتونة، وتُحتسب في كل الشاشات فوراً.",
+    e_in:"وارد · مستودع اللاذقية", e_out:"صادر · بيع لتاجر", e_in_short:"وارد", e_out_short:"صادر",
+    e_date:"التاريخ", e_ws:"التاجر", e_newWs:"تاجر غير موجود في القائمة", e_newWsName:"اسم التاجر الجديد", e_ref:"المرجع (اختياري)", e_note:"ملاحظة (اختياري)", e_by:"أدخلها (يُحفظ على هذا الجهاز)",
+    e_products:"الأصناف", e_hint:"اكتب الكمية بالكرتونة بجانب كل صنف واترك الباقي فارغاً.",
+    e_save:"حفظ الحركة", e_saving:"جارٍ الحفظ…", e_saved:"تم حفظ الحركة", e_needLines:"أدخل كمية لصنف واحد على الأقل.", e_needWs:"اختر التاجر.",
+    e_total:(n,l)=>`${n} كرتونة · ${l} صنف`, e_recent:"الحركات المُدخلة هنا", e_none:"لا حركات بعد. ما تحفظه يظهر هنا ويُحتسب في كل الشاشات.",
+    e_del:"حذف", e_delConfirm:"اضغط مرة أخرى للحذف", e_deleted:"تم حذف الحركة",
+    e_importNote:"الحركات المُدخلة من تبويب الإدخال تبقى منفصلة عن ملف الإكسل. إذا كان الملف الجديد يحتويها فاحذفها من هناك أولاً.", expTitle:"تصدير إلى Excel", expSub:(d)=>`اختر ما تريد وحمّل ملف Excel واحداً، ورقة لكل بند. البيانات حتى ${d}؛ كل الكميات بالكرتونة.`, expAll:"تحديد الكل", expNone:"إلغاء التحديد", expBtn:(n)=>`تنزيل Excel · ${n} ورقة`, expRows:(n)=>`${n} سطر`, expFile:(x)=>`الملف: ${x}`, expG_orders:"الطلبيات والمخزون", expG_sales:"المبيعات", expG_offtake:"التصريف والجرد", expG_raw:"البيانات الخام",
     loading:"جارٍ التحميل…", noLedger:"لا توجد بيانات بعد. استورد ملف الإكسل للبدء.", goData:"البيانات والإعدادات", noClaude:"افتح التطبيق من رابط claude.ai لتحميل البيانات وتسجيل الجرد.",
     search:"ابحث عن تاجر", wsTitle:"تجار الجملة", wsSub:"اضغط على التاجر لجرد مخزونه. يظهر المستحق ومن لم يُجرد أولاً.",
     never:"لم يُجرد بعد", lastCount:"آخر جرد", daysAgo:d=>d===0?"اليوم":d===1?"منذ يوم":`منذ ${d} يوم`,
@@ -442,13 +460,27 @@ const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { ret
 
 /* ============================== state ============================== */
 const DEFAULTS = { visitDays: 7, lowDays: 10, targetDays: 21 };
-const S = { db: null, user: null, dl: null, aliases: {}, sup: store.get("wst_sup") || "", admin: false, canWrite: null, noClaude: false, loaded: false, anView: store.get("wst_an") || "next", meta: null, ledger: null, counts: [], settings: { ...DEFAULTS }, extraWs: [], loadErr: null, sku: "all", showAllSkus: false, form: null, dirty: false, pendingDelete: null, profiles: {} };
+const S = { db: null, user: null, dl: null, aliases: {}, sup: store.get("wst_sup") || "", admin: false, canWrite: null, noClaude: false, loaded: false, moves: [], entry: null, anView: store.get("wst_an") || "next", meta: null, ledger: null, counts: [], settings: { ...DEFAULTS }, extraWs: [], loadErr: null, sku: "all", showAllSkus: false, form: null, dirty: false, pendingDelete: null, profiles: {} };
 let E = null; // derived model
 
 /* ============================== engine ============================== */
 function recompute() {
   if (!S.ledger) { E = null; return; }
-  const { skus, rows } = S.ledger;
+  const { skus } = S.ledger;
+  // Movements the accountant entered in the app sit beside the workbook and count everywhere.
+  const skuIx = new Map(skus.map((x, i) => [x.id, i]));
+  const manual = [];
+  for (const m of S.moves) {
+    if (!m || !m.date || !Array.isArray(m.lines)) continue;
+    for (const l of m.lines) {
+      const i = skuIx.get(l.sku), q = +l.qty;
+      if (i == null || !(q > 0)) continue;
+      manual.push(m.kind === "out"
+        ? [i, m.date, "Sales Invoice", (m.ws || "").trim(), m.ref || "", 0, q, m.id]
+        : [i, m.date, "Transfer from Lattakia", "", m.ref || "", q, 0, m.id]);
+    }
+  }
+  const rows = manual.length ? [...S.ledger.rows, ...manual].sort((a, b) => (a[1] < b[1] ? -1 : a[1] > b[1] ? 1 : 0)) : S.ledger.rows;
   const today = todayISO();
   const ledgerEnd = rows.reduce((m, r) => (r[1] > m ? r[1] : m), "");
   const ledgerStart = rows.reduce((m, r) => (!m || r[1] < m ? r[1] : m), "");
@@ -556,7 +588,7 @@ function recompute() {
   const buyers = months.map(() => new Set());
   for (const r of rows) { if (r[2] !== "Sales Invoice" || !r[6]) continue; const mi = months.indexOf(r[1].slice(0, 7)); if (mi < 0) continue; monthly[famOf(skus[r[0]])][mi] += r[6]; if (r[3]) buyers[mi].add(aliasOf(r[3])); }
 
-  E = { skus: skuOrder, wsList, wsById: new Map(wsList.map((w) => [w.id, w])), cum, firstDel, del, wh, whById, months, monthly, buyers: buyers.map((b) => b.size), totalDel, ledgerStart, ledgerEnd, salesLines: rows.filter((r) => r[2] === "Sales Invoice").length };
+  E = { skus: skuOrder, rows, entered: manual.length, wsList, wsById: new Map(wsList.map((w) => [w.id, w])), cum, firstDel, del, wh, whById, months, monthly, buyers: buyers.map((b) => b.size), totalDel, ledgerStart, ledgerEnd, salesLines: rows.filter((r) => r[2] === "Sales Invoice").length };
 }
 function settings() {
   const s = { ...DEFAULTS, ...S.settings };
@@ -565,7 +597,7 @@ function settings() {
 }
 
 /* ============================== routing ============================== */
-const route = () => { const h = decodeURIComponent(location.hash.replace(/^#\/?/, "")); const p = h.split("/"); if (p[0] === "ws" && p[1]) return { view: p[2] === "count" ? "count" : "ws", id: p[1], edit: p[3] || null }; if (["offtake", "warehouse", "analysis", "export", "data"].includes(p[0])) return { view: p[0] }; return { view: "list" }; };
+const route = () => { const h = decodeURIComponent(location.hash.replace(/^#\/?/, "")); const p = h.split("/"); if (p[0] === "ws" && p[1]) return { view: p[2] === "count" ? "count" : "ws", id: p[1], edit: p[3] || null }; if (["offtake", "warehouse", "analysis", "entry", "export", "data"].includes(p[0])) return { view: p[0] }; return { view: "list" }; };
 const go = (h) => { if (location.hash === h) render(); else location.hash = h; };
 window.addEventListener("hashchange", () => { S.form = null; S.dirty = false; S.pendingDelete = null; render(); window.scrollTo(0, 0); });
 
@@ -575,6 +607,7 @@ const ICONS = {
   offtake: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
   analysis: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg>',
   warehouse: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5v8l9 5 9-5V8z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg>',
+  entry: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 8v8M8 12h8"/></svg>',
   export: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M4 17v4h16v-4"/></svg>',
   data: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg>',
 };
@@ -584,9 +617,11 @@ function renderShell(view) {
   document.getElementById("brandsub").textContent = t("brandsub");
   document.getElementById("langBtn").textContent = LANG === "ar" ? "EN" : "ع";
   const cur = view === "ws" || view === "count" ? "list" : view;
-  const items = [["list", "#", t("t_ws")], ["offtake", "#offtake", t("t_off")], ["warehouse", "#warehouse", t("t_wh")], ["analysis", "#analysis", t("t_an")], ["export", "#export", t("t_exp")], ["data", "#data", t("t_data")]];
+  const items = [["list", "#", t("t_ws")], ["offtake", "#offtake", t("t_off")], ["warehouse", "#warehouse", t("t_wh")], ["analysis", "#analysis", t("t_an")], ["entry", "#entry", t("t_entry")], ["export", "#export", t("t_exp")], ["data", "#data", t("t_data")]];
   document.getElementById("tabs").innerHTML = items.map(([k, h, l]) => `<a href="${h}" ${k === cur ? 'aria-current="page"' : ""}>${esc(l)}</a>`).join("");
   document.getElementById("bottom").innerHTML = items.map(([k, h, l]) => `<a href="${h}" ${k === cur ? 'aria-current="page"' : ""}>${ICONS[k]}<span>${esc(l)}</span></a>`).join("");
+  const here = document.querySelector("#bottom a[aria-current]");
+  if (here && here.scrollIntoView) here.scrollIntoView({ inline: "center", block: "nearest" }); // the phone menu scrolls sideways
 }
 document.getElementById("langBtn").addEventListener("click", () => { LANG = LANG === "ar" ? "en" : "ar"; store.set("wst_lang", LANG); render(); });
 
@@ -606,6 +641,7 @@ function render() {
   if (r.view === "offtake") return viewOfftake(main);
   if (r.view === "warehouse") return viewWarehouse(main);
   if (r.view === "analysis") return viewAnalysis(main);
+  if (r.view === "entry") return viewEntry(main);
   if (r.view === "export") return viewExport(main);
   if (r.view === "data") return viewData(main);
 }
@@ -679,7 +715,7 @@ function skuTable(w, rows) {
 function purchaseLines(w) {
   if (!S.ledger) return [];
   const ls = S.ledger.skus;
-  return S.ledger.rows.filter((r) => r[2] === "Sales Invoice" && aliasOf(r[3]) === w.name && r[6] > 0)
+  return E.rows.filter((r) => r[2] === "Sales Invoice" && aliasOf(r[3]) === w.name && r[6] > 0)
     .map((r) => ({ date: r[1], sku: ls[r[0]], ref: r[4], qty: r[6] }))
     .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
 }
@@ -958,7 +994,7 @@ const addDays = (iso, n) => new Date(Date.parse(iso + "T00:00:00Z") + n * 864e5)
 // Main-warehouse stock in hand per product: everything received minus everything that left (sales, plus any adjustment out).
 function stockInHand() {
   const sold = new Map();
-  for (const r of S.ledger.rows) if (r[2] === "Sales Invoice") { const id = S.ledger.skus[r[0]].id; sold.set(id, (sold.get(id) || 0) + r[6]); }
+  for (const r of E.rows) if (r[2] === "Sales Invoice") { const id = S.ledger.skus[r[0]].id; sold.set(id, (sold.get(id) || 0) + r[6]); }
   return E.wh.map((x) => { const s = sold.get(x.sku.id) || 0; return { sku: x.sku, received: x.inb, sold: s, other: x.out - s, inHand: Math.max(0, x.onHand) }; });
 }
 
@@ -1176,7 +1212,7 @@ const DIMS = ["flavour", "format", "sku", "ws"];
 // Sales per month for one dimension, biggest first.
 function salesBy(dim) {
   const M = E.months, ls = S.ledger.skus, map = new Map();
-  for (const r of S.ledger.rows) {
+  for (const r of E.rows) {
     if (r[2] !== "Sales Invoice" || !r[6]) continue;
     const sku = ls[r[0]];
     const key = dim === "flavour" ? flavourOf(sku) : dim === "format" ? t("f_" + fmtOf(sku)) : dim === "sku" ? skuName(sku) : aliasOf(r[3]);
@@ -1260,7 +1296,7 @@ function viewWarehouse(main) {
   const sel = S.whSel || "all";
   const sp = sel === "all" ? () => true : sel.startsWith("fmt:") ? (s) => fmtOf(s) === sel.slice(4) : (s) => s.id === sel;
   const ls = S.ledger.skus;
-  const inRows = S.ledger.rows.filter((r) => r[5] > 0 && sp(ls[r[0]])).sort((a, b) => (a[1] < b[1] ? 1 : a[1] > b[1] ? -1 : 0));
+  const inRows = E.rows.filter((r) => r[5] > 0 && sp(ls[r[0]])).sort((a, b) => (a[1] < b[1] ? 1 : a[1] > b[1] ? -1 : 0));
   const wh = E.wh.filter((x) => sp(x.sku));
   const tot = wh.reduce((a, x) => ({ inb: a.inb + x.inb, out: a.out + x.out, on: a.on + x.onHand, pm: a.pm + x.perMonth }), { inb: 0, out: 0, on: 0, pm: 0 });
   const M = E.months, byF = Object.fromEntries(FORMATS.map((f) => [f, M.map(() => 0)]));
@@ -1349,7 +1385,7 @@ function viewData(main) {
     <section class="panel stack"><h3>${esc(t("ledger"))}</h3>
       <p class="ink2" id="ledInfo"></p>
       <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn pri" type="button" id="exportBtn">${esc(t("exportBtn"))}</button>${S.admin ? `<label class="btn" for="imp">${esc(t("importBtn"))}</label><input id="imp" type="file" accept=".xlsx,.xls" hidden>` : ""}</div>
-      ${S.admin ? `<p class="small muted">${esc(t("importHelp"))}</p>` : `<p class="small muted">${esc(t("adminOnly"))}</p>`}
+      ${S.admin ? `<p class="small muted">${esc(t("importHelp"))} ${esc(t("e_importNote"))}</p>` : `<p class="small muted">${esc(t("adminOnly"))}</p>`}
       <div id="impOut"></div></section>
     <section class="panel stack"><h3>${esc(t("settings"))}</h3>
       <div class="grid2" style="gap:12px">
@@ -1415,12 +1451,90 @@ async function onImportFile(e) {
   } catch (err) { out.innerHTML = `<div class="notice crit">${esc(err.message === "xlsx library failed to load" ? t("err") + err.message : t("importErr"))}</div>`; }
   e.target.value = "";
 }
+/* ---------- entry: the accountant records inbound and outbound movements ---------- */
+// Saved movements live beside the imported workbook (never inside it) and count everywhere at once.
+// Flavour names for the entry form (the keys themselves are English).
+const FLAV_AR = { "Two Apples": "تفاحتين", "Two Apples Black": "تفاحتين أسود", "Two Apples Iced": "تفاحتين مثلج", Red: "أحمر", Grape: "عنب", "Grape & Mint": "عنب ونعناع", Love: "لوف", Blueberry: "بلوبيري" };
+const flavourLabelOf = (f) => (LANG === "ar" ? FLAV_AR[f] || f : f);
+const moveTotal = (m) => (m.lines || []).reduce((a, l) => a + (+l.qty || 0), 0);
+function moveSummary(m) {
+  const by = new Map(E.skus.map((s) => [s.id, s]));
+  return (m.lines || []).filter((l) => +l.qty > 0).map((l) => `${by.get(l.sku) ? skuName(by.get(l.sku)) : l.sku} ${fmt(+l.qty)}`).join(" · ");
+}
+function viewEntry(main) {
+  const st = S.entry && S.entry.kind ? S.entry : (S.entry = { kind: "in", date: todayISO(), ws: "", newWs: "", ref: "", note: "", qty: {} });
+  const out = st.kind === "out";
+  const names = E.wsList.map((w) => w.name).sort((a, b) => a.localeCompare(b, "ar"));
+  const groups = [];
+  for (const s of E.skus) { const f = flavourOf(s); let g = groups.find((x) => x.f === f); if (!g) groups.push((g = { f, items: [] })); g.items.push(s); }
+  const moves = [...S.moves].sort((a, b) => String(b.savedAt || b.date).localeCompare(String(a.savedAt || a.date)));
+  main.innerHTML = `
+    <div class="head"><div><h2>${esc(t("entryTitle"))}</h2><p class="sub" style="max-width:75ch">${esc(t("entrySub"))}</p></div>
+      <div class="seg" role="group">${["in", "out"].map((k) => `<button type="button" data-kind="${k}" aria-pressed="${k === st.kind}">${esc(t("e_" + k))}</button>`).join("")}</div></div>
+    <div class="grid2" style="gap:12px">
+      <div class="field"><label for="eDate">${esc(t("e_date"))}</label><input class="inp" type="date" id="eDate" value="${esc(st.date)}" max="${todayISO()}"></div>
+      ${out ? `<div class="field"><label for="eWs">${esc(t("e_ws"))}</label><select class="inp" id="eWs">
+        <option value="">—</option>${names.map((n) => `<option ${st.ws === n ? "selected" : ""}>${esc(n)}</option>`).join("")}
+        <option value="__new">${esc(t("e_newWs"))}</option></select></div>
+        ${st.ws === "__new" ? `<div class="field"><label for="eNew">${esc(t("e_newWsName"))}</label><input class="inp" id="eNew" dir="auto" value="${esc(st.newWs)}"></div>` : ""}` : ""}
+      <div class="field"><label for="eRef">${esc(t("e_ref"))}</label><input class="inp" id="eRef" value="${esc(st.ref)}"></div>
+      <div class="field"><label for="eBy">${esc(t("e_by"))}</label><input class="inp" id="eBy" dir="auto" value="${esc(S.sup || "")}"></div>
+    </div>
+    <section class="stack"><h3>${esc(t("e_products"))}</h3><p class="small muted">${esc(t("e_hint"))}</p>
+      <div class="panel flush">${groups.map((g) => `<div class="fgroup"><div class="fhead">${esc(flavourLabelOf(g.f))}</div>${g.items.map((s) => `
+        <div class="line" data-sku="${s.id}"><div><div class="pn">${esc(skuName(s))}</div><div class="pa">${esc(t("f_" + fmtOf(s)))} · ${esc(skuAlt(s))}</div></div>
+          <div class="qty"><input inputmode="decimal" type="number" min="0" step="any" aria-label="${esc(skuName(s))}" data-q="${s.id}" value="${st.qty[s.id] ?? ""}"></div></div>`).join("")}</div>`).join("")}</div></section>
+    <div class="field"><label for="eNote">${esc(t("e_note"))}</label><input class="inp" id="eNote" dir="auto" value="${esc(st.note)}"></div>
+    <div class="sticky-save"><span class="small ink2" id="eSum"></span><button class="btn pri big" type="button" id="eSave">${esc(t("e_save"))}</button></div>
+    <section class="stack"><h3>${esc(t("e_recent"))}</h3><div class="panel flush">${moves.length ? moves.slice(0, 40).map((m) => `
+      <div class="exrow" style="cursor:default"><span class="chip ${m.kind === "out" ? "c-acc" : "c-good"}">${esc(t(m.kind === "out" ? "e_out_short" : "e_in_short"))}</span>
+        <span><span class="name num">${esc(fmtDate(m.date))}${m.kind === "out" ? ` · <span dir="auto">${esc(m.ws || "")}</span>` : ""}</span>
+          <span class="sub2">${esc(moveSummary(m))}${m.ref ? " · " + esc(m.ref) : ""}${m.by ? " · " + esc(m.by) : ""}</span></span>
+        <span style="display:flex;align-items:center;gap:10px"><b class="num">${fmt(moveTotal(m))}</b><button class="btn ghost danger" type="button" data-del="${esc(m.id)}">${esc(S.pendingDelete === m.id ? t("e_delConfirm") : t("e_del"))}</button></span></div>`).join("")
+      : `<p style="padding:16px" class="muted">${esc(t("e_none"))}</p>`}</div></section>`;
+
+  const sum = () => { const ls = Object.values(st.qty).filter((v) => +v > 0); document.getElementById("eSum").textContent = t("e_total", fmt(ls.reduce((a, v) => a + +v, 0)), ls.length); };
+  main.querySelectorAll("[data-kind]").forEach((b) => b.addEventListener("click", () => { st.kind = b.dataset.kind; render(); }));
+  document.getElementById("eDate").addEventListener("change", (e) => { if (e.target.value) st.date = e.target.value; });
+  document.getElementById("eRef").addEventListener("input", (e) => (st.ref = e.target.value));
+  document.getElementById("eNote").addEventListener("input", (e) => (st.note = e.target.value));
+  document.getElementById("eBy").addEventListener("input", (e) => { S.sup = e.target.value.slice(0, 60); store.set("wst_sup", S.sup); });
+  const wsSel = document.getElementById("eWs");
+  if (wsSel) wsSel.addEventListener("change", (e) => { st.ws = e.target.value; render(); });
+  const wsNew = document.getElementById("eNew");
+  if (wsNew) wsNew.addEventListener("input", (e) => (st.newWs = e.target.value));
+  main.querySelectorAll("[data-q]").forEach((i) => i.addEventListener("input", () => { const v = +i.value; if (i.value.trim() === "" || !(v > 0)) delete st.qty[i.dataset.q]; else st.qty[i.dataset.q] = Math.round(v * 100) / 100; sum(); }));
+  sum();
+  main.querySelectorAll("[data-del]").forEach((b) => b.addEventListener("click", async () => {
+    const id = b.dataset.del;
+    if (S.pendingDelete !== id) { S.pendingDelete = id; b.textContent = t("e_delConfirm"); return; }
+    S.pendingDelete = null;
+    try { await S.db.doc("moves/" + id).delete(); toast(t("e_deleted")); } catch (err) { toast(t("err") + (err.code || err.message)); }
+  }));
+  document.getElementById("eSave").addEventListener("click", async (e) => {
+    const btn = e.currentTarget;
+    const lines = Object.entries(st.qty).filter(([, q]) => +q > 0).map(([sku, qty]) => ({ sku, qty: +qty }));
+    if (!lines.length) { toast(t("e_needLines")); return; }
+    const ws = st.ws === "__new" ? (st.newWs || "").trim() : st.ws;
+    if (st.kind === "out" && !ws) { toast(t("e_needWs")); return; }
+    btn.disabled = true; btn.textContent = t("e_saving");
+    const id = `${st.date}-${st.kind}-${Date.now().toString(36)}`;
+    try {
+      await S.db.doc("moves/" + id).set({ kind: st.kind, date: st.date, ws: st.kind === "out" ? ws : "", ref: (st.ref || "").slice(0, 40), note: (st.note || "").slice(0, 200), by: (S.sup || "").slice(0, 60), lines, savedAt: new Date().toISOString() });
+      S.entry = { kind: st.kind, date: st.date, ws: st.kind === "out" ? ws : "", newWs: "", ref: "", note: "", qty: {} };
+      toast(t("e_saved")); render();
+    } catch (err) {
+      btn.disabled = false; btn.textContent = t("e_save");
+      toast(t("err") + (err?.code || err?.message || err));
+    }
+  });
+}
 /* ---------- export ---------- */
 const FMT_EN = { cruz: "50g", kf: "250g", kilo: "Kg" };
 // Everything the Export tab can put in the workbook, in workbook order. One entry = one sheet.
 function exportSheets() {
   const N = nextOrders(), ls = S.ledger.skus, M = E.months;
-  const sales = S.ledger.rows.filter((r) => r[2] === "Sales Invoice" && r[6]);
+  const sales = E.rows.filter((r) => r[2] === "Sales Invoice" && r[6]);
   const pivot = (label, keyOf) => {
     const map = new Map();
     for (const r of sales) { const k = keyOf(r); if (!k) continue; if (!map.has(k)) map.set(k, M.map(() => 0)); const i = M.indexOf(r[1].slice(0, 7)); if (i >= 0) map.get(k)[i] += r[6]; }
@@ -1491,8 +1605,8 @@ function exportSheets() {
   for (const r of [...sales].sort((a, b) => (a[1] < b[1] ? -1 : a[1] > b[1] ? 1 : 0))) { const s = ls[r[0]]; purch.push([r[1], r[1].slice(0, 7), r[3] ? aliasOf(r[3]).trim() : "", s.en, s.ar, flavourOf(s), FMT_EN[fmtOf(s)], r[4] || "", r[6]]); }
   out.push(sheet("purch", "raw", "Purchase history", { en: "Purchase history", ar: "سجل المشتريات" },
     { en: "Every sales invoice line: date, month, wholesaler, product, flavour, format, quantity. Ready for your own pivot tables.", ar: "كل سطر فاتورة بيع: التاريخ، الشهر، التاجر، الصنف، النكهة، العبوة، الكمية. جاهز لجداولك المحورية." }, purch));
-  const mv = [["Date", "Type", "SKU (EN)", "SKU (AR)", "Format", "Wholesaler", "Ref", "Inbound (MC)", "Outbound (MC)"]];
-  for (const r of [...S.ledger.rows].sort((a, b) => (a[1] < b[1] ? -1 : a[1] > b[1] ? 1 : 0))) { const s = ls[r[0]]; mv.push([r[1], r[2], s.en, s.ar, FMT_EN[fmtOf(s)], r[3] ? aliasOf(r[3]).trim() : "", r[4] || "", r[5], r[6]]); }
+  const mv = [["Date", "Type", "SKU (EN)", "SKU (AR)", "Format", "Wholesaler", "Ref", "Inbound (MC)", "Outbound (MC)", "Source"]];
+  for (const r of [...E.rows].sort((a, b) => (a[1] < b[1] ? -1 : a[1] > b[1] ? 1 : 0))) { const s = ls[r[0]]; mv.push([r[1], r[2], s.en, s.ar, FMT_EN[fmtOf(s)], r[3] ? aliasOf(r[3]).trim() : "", r[4] || "", r[5], r[6], r[7] ? "Entered in the app" : "Excel import"]); }
   out.push(sheet("moves", "raw", "All movements", { en: "All warehouse movements", ar: "كل حركات المستودع" },
     { en: "The whole ledger: every receipt, transfer, adjustment and sale, in and out.", ar: "الدفتر كاملاً: كل استلام وتحويل وتعديل وبيع، وارداً وصادراً." }, mv));
   return out;
@@ -1556,6 +1670,7 @@ async function boot() {
       recompute(); render();
     } catch (err) { S.loadErr = err.code || err.message; render(); }
   }, (err) => { S.loadErr = err.code; render(); });
+  db.collection("moves").onSnapshot((snap) => { S.moves = snap.docs.map((d) => ({ id: d.id, ...d.data() })); recompute(); render(); }, (err) => { S.loadErr = err.code; render(); });
   db.collection("counts").onSnapshot((snap) => { S.counts = snap.docs.map((d) => ({ id: d.id, ...d.data() })); recompute(); render(); }, (err) => { S.loadErr = err.code; render(); });
   db.doc("config/settings").onSnapshot((snap) => { S.settings = snap.exists ? snap.data() : {}; recompute(); render(); });
   db.doc("config/aliases").onSnapshot((snap) => { S.aliases = snap.exists && snap.data().map && typeof snap.data().map === "object" ? snap.data().map : {}; recompute(); render(); });
