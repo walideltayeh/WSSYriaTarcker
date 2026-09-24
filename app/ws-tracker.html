@@ -343,7 +343,7 @@ const T = {
     lowOn:(x)=>`Running low: ${x}`, lowItem:(n,d)=>`${n}, ${d} days left`,
     nextMethod:(d)=>`How it works. Sales per day: from the supervisor's stock count where there is one (everything delivered minus the stock counted, over the days since his first delivery; old and LB packs of the same product are counted together), otherwise from what he bought over the last 90 days. Next order date: with a count, the day his main products get down to ${d} days of stock; without one, his last order plus his usual gap between orders. Next order size: with a count, enough for one ordering cycle (his usual gap, 7–60 days) plus ${d} days of safety, minus the stock he will still hold on that date; without one, one cycle of his sales. Every other flavour the warehouse has is added at 5% of the order (5–50 MC) unless his counted stock already covers it. Orders are then shared out from the warehouse stock in hand: when they want more of a product than it holds, each is cut in proportion and the most urgent get the remainder.`, salesSub:(a,b)=>`Every sales invoice in the ledger, ${a} – ${b}. All quantities in mastercases.`,
     kSales:"Sales (MC)", kPerMonth:"Average month", kBest:"Best month", kMom:"Last month vs previous", kTop:"Biggest",
-    byMonth:"Sales per month", dim_flavour:"Flavour", dim_format:"Format", dim_sku:"Product", dim_ws:"Wholesaler",
+    byMonth:"Sales per month", dim_flavour:"Flavour", dim_format:"Format", dim_imsline:"IMS line", dim_sku:"Product", dim_ws:"Wholesaler", imsNote:"IMS line = flavour and format together, with the Lebanon-warning pack counted as its parent product. This is exactly what the SSOF planning system reads as Syria IMS.",
     pivotTitle:"Month by month", pivotNote:"Rows add up to the market total; a dot means nothing sold that month.",
     league:"Wholesaler league", cumulative:"Cumulative", biggest:"Biggest product", otherN:(n)=>`${n} others`, mergedNote:"These ledger names are counted as one wholesaler, including after a new Excel import.", purchases:"Purchase history", purchasesSub:"Every sales invoice line delivered to this wholesaler, from the ledger", byDate:"By date", byProductT:"By product",
     linesN:"lines", orderDays:"order days", everyDays:d=>`about every ${d} days`, firstOrder:"First", lastOrder:"Last", shareOfWs:"Share", monthlyBuy:"Purchases per month by format (MC)",
@@ -416,7 +416,7 @@ const T = {
     lowOn:(x)=>`ينفد قريباً: ${x}`, lowItem:(n,d)=>`${n}، ${d} يوم متبقٍ`,
     nextMethod:(d)=>`طريقة الحساب. المبيعات اليومية: من جرد المشرف إن وجد (كل ما ورِّد له ناقص المخزون المجرود، مقسوماً على الأيام منذ أول توريد؛ العبوة القديمة وعبوة لبنان من الصنف نفسه تُحسبان معاً)، وإلا من مشترياته في آخر 90 يوماً. موعد الطلبية القادمة: مع الجرد، اليوم الذي تنخفض فيه أصنافه الرئيسية إلى ${d} يوماً من المخزون؛ بدونه، آخر طلبية زائد فترته المعتادة بين الطلبيات. حجم الطلبية: مع الجرد، ما يكفي دورة طلب واحدة (فترته المعتادة، 7–60 يوماً) زائد ${d} يوماً احتياطاً، ناقص المخزون الذي سيبقى لديه في ذلك اليوم؛ بدونه، مبيعات دورة واحدة. كل نكهة أخرى متوفرة في المستودع تُضاف بنسبة 5% من الطلبية (5–50 كرتونة) إلا إذا كان مخزونه المجرود يغطيها. ثم تُوزَّع الطلبيات من المخزون المتوفر في المستودع: إذا طلبت من صنف أكثر مما فيه، تُخفَّض كل طلبية بالنسبة نفسها ويحصل الأكثر إلحاحاً على الباقي.`, salesSub:(a,b)=>`كل فواتير البيع في الدفتر، ${a} – ${b}. كل الكميات بالكرتونة.`,
     kSales:"المبيعات (كرتونة)", kPerMonth:"متوسط الشهر", kBest:"أفضل شهر", kMom:"الشهر الأخير مقارنة بسابقه", kTop:"الأكبر",
-    byMonth:"المبيعات الشهرية", dim_flavour:"النكهة", dim_format:"العبوة", dim_sku:"الصنف", dim_ws:"التاجر",
+    byMonth:"المبيعات الشهرية", dim_flavour:"النكهة", dim_format:"العبوة", dim_imsline:"سطر IMS", dim_sku:"الصنف", dim_ws:"التاجر", imsNote:"سطر IMS = النكهة والعبوة معاً، مع احتساب عبوة تحذير لبنان ضمن الصنف الأصلي. هذا بالضبط ما يقرأه نظام SSOF كـ IMS لسوريا.",
     pivotTitle:"شهراً بشهر", pivotNote:"مجموع الأسطر يساوي إجمالي السوق؛ النقطة تعني لا مبيعات في ذلك الشهر.",
     league:"ترتيب التجار", cumulative:"التراكمي", biggest:"أكبر صنف", otherN:(n)=>`${n} أخرى`, mergedNote:"هذه الأسماء في الدفتر تُحسب كتاجر واحد، وتبقى مدمجة بعد أي استيراد جديد.", purchases:"سجل المشتريات", purchasesSub:"كل أسطر فواتير البيع المورَّدة لهذا التاجر من الدفتر", byDate:"حسب التاريخ", byProductT:"حسب الصنف",
     linesN:"سطر", orderDays:"يوم طلب", everyDays:d=>`كل ${d} يوم تقريباً`, firstOrder:"الأول", lastOrder:"الأخير", shareOfWs:"الحصة", monthlyBuy:"المشتريات الشهرية حسب العبوة (كرتونة)",
@@ -1208,14 +1208,14 @@ function nextBlock(w) {
 /* ---------- sales analysis ---------- */
 // Flavour is the marketing line, format the pack size; both are read from the product name.
 const flavourOf = (s) => (/Two Apple/i.test(s.en) ? (/Iced/i.test(s.en) ? "Two Apples Iced" : /Black|Blk/i.test(s.en) ? "Two Apples Black" : "Two Apples") : /Red/i.test(s.en) ? "Red" : /Grape & Mint/i.test(s.en) ? "Grape & Mint" : /Grape/i.test(s.en) ? "Grape" : /Love/i.test(s.en) ? "Love" : "Blueberry");
-const DIMS = ["flavour", "format", "sku", "ws"];
+const DIMS = ["flavour", "format", "imsline", "sku", "ws"];
 // Sales per month for one dimension, biggest first.
 function salesBy(dim) {
   const M = E.months, ls = S.ledger.skus, map = new Map();
   for (const r of E.rows) {
     if (r[2] !== "Sales Invoice" || !r[6]) continue;
     const sku = ls[r[0]];
-    const key = dim === "flavour" ? flavourOf(sku) : dim === "format" ? t("f_" + fmtOf(sku)) : dim === "sku" ? skuName(sku) : aliasOf(r[3]);
+    const key = dim === "flavour" ? flavourOf(sku) : dim === "format" ? t("f_" + fmtOf(sku)) : dim === "imsline" ? `${flavourOf(sku)} ${t("f_" + fmtOf(sku))}` : dim === "sku" ? skuName(sku) : aliasOf(r[3]);
     if (!key) continue;
     if (!map.has(key)) map.set(key, { key, total: 0, lines: 0, values: M.map(() => 0), buyers: new Set() });
     const row = map.get(key), i = M.indexOf(r[1].slice(0, 7));
@@ -1250,7 +1250,7 @@ function viewSales(main) {
         <thead><tr><th>${esc(t("dim_" + dim))}</th>${M.map((m) => `<th class="r">${esc(monthLabel(m))}</th>`).join("")}<th class="r">${esc(t("total"))}</th><th class="r">${esc(t("shareOfWs"))}</th></tr></thead>
         <tbody>${rows.map((r) => `<tr><td><span class="name" dir="auto">${esc(r.key)}</span></td>${r.values.map((v) => `<td class="r num">${v ? fmt(v) : '<span class="muted">·</span>'}</td>`).join("")}<td class="r num"><b>${fmt(r.total)}</b></td><td class="r num">${pct(r.total / total)}</td></tr>`).join("")}</tbody>
         <tfoot><tr><td>${esc(t("total"))}</td>${monthTot.map((v) => `<td class="r num">${fmt(v)}</td>`).join("")}<td class="r num">${fmt(total)}</td><td class="r num">100%</td></tr></tfoot>
-      </table></div><p class="small muted">${esc(t("pivotNote"))}</p></section>
+      </table></div><p class="small muted">${esc(t("pivotNote"))}${dim === "imsline" ? " " + esc(t("imsNote")) : ""}</p></section>
     <section class="stack"><h3>${esc(t("league"))}</h3><div class="panel flush scroll">${leagueTable()}</div></section>
     <section class="panel stack"><h3>${esc(t("cover"))}</h3><p class="small ink2" style="max-width:85ch">${esc(t("mxHelp"))}</p><div class="mlegend" id="mxLeg"></div><div class="scroll"><table class="matrix" id="mx"></table></div></section>`;
   // chart: the four biggest, everything else folded into one neutral band
@@ -1601,6 +1601,9 @@ function exportSheets() {
     { en: "Mastercases sold per month for each flavour, with totals.", ar: "الكراتين المباعة شهرياً لكل نكهة، مع المجاميع." }, pivot("Flavour", (r) => flavourOf(ls[r[0]]))));
   out.push(sheet("sFormat", "sales", "Sales by format", { en: "Sales by format", ar: "المبيعات حسب العبوة" },
     { en: "Mastercases sold per month for 50g, 250g and Kg.", ar: "الكراتين المباعة شهرياً لعبوات 50غ و250غ والكيلو." }, pivot("Format", (r) => FMT_EN[fmtOf(ls[r[0]])])));
+  out.push(sheet("sIms", "sales", "IMS by flavour and format", { en: "IMS — flavour and format", ar: "IMS — النكهة والعبوة" },
+    { en: "Mastercases sold per month per flavour and format, Lebanon-warning packs merged into their parent product. What SSOF reads as Syria IMS.", ar: "الكراتين المباعة شهرياً لكل نكهة وعبوة، مع دمج عبوات تحذير لبنان في الصنف الأصلي. وهو ما يقرأه SSOF كـ IMS لسوريا." },
+    pivot("IMS line", (r) => `${flavourOf(ls[r[0]])} ${FMT_EN[fmtOf(ls[r[0]])]}`)));
   out.push(sheet("sSku", "sales", "Sales by product", { en: "Sales by product", ar: "المبيعات حسب الصنف" },
     { en: "Mastercases sold per month for each product.", ar: "الكراتين المباعة شهرياً لكل صنف." }, pivot("Product", (r) => ls[r[0]].en)));
   out.push(sheet("sWs", "sales", "Sales by wholesaler", { en: "Sales by wholesaler", ar: "المبيعات حسب التاجر" },
