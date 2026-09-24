@@ -278,7 +278,7 @@ tr.click{cursor:pointer} tr.click:hover td{background:var(--sunk)}
 /* ============================== i18n ============================== */
 const T = {
   en: {
-    brand:"WS Tracker", brandsub:"Syria · Wholesale", t_ws:"Wholesalers", t_off:"Offtake", t_an:"Analysis", t_data:"Data", t_exp:"Export", t_entry:"Entry", entryTitle:"Enter movements", entrySub:"For the accountant: goods received into the Lattakia warehouse, and sales to wholesalers by product and date. Everything in mastercases (MC), and every screen counts it straight away.",
+    brand:"WS Tracker", brandsub:"Syria · Wholesale", t_ws:"Wholesalers", t_off:"Offtake", t_an:"Analysis", t_data:"Data", t_exp:"Export", t_entry:"Entry", e_lockT:"Entry is password protected", e_lockS:"Ask the owner for the password that opens this tab.", e_lockPw:"Entry password", e_unlock:"Unlock", e_wrongPw:"Wrong password. Try again.", e_locked:"Locked again", entryTitle:"Enter movements", entrySub:"For the accountant: goods received into the Lattakia warehouse, and sales to wholesalers by product and date. Everything in mastercases (MC), and every screen counts it straight away.",
     e_in:"Inbound · Lattakia warehouse", e_out:"Outbound · sale to a wholesaler", e_in_short:"Inbound", e_out_short:"Outbound",
     e_date:"Date", e_ws:"Wholesaler", e_newWs:"A wholesaler not in the list", e_newWsName:"Name of the new wholesaler", e_ref:"Reference (optional)", e_note:"Note (optional)", e_by:"Entered by (saved on this device)",
     e_products:"Products", e_hint:"Put the quantity in mastercases next to each product and leave the rest empty.",
@@ -351,7 +351,7 @@ const T = {
     kIn:"Inbound (MC)", kOut:"Outbound (MC)", kOnHand:"On hand (MC)", kInMoves:"Inbound movements", lastIn:"last", inMonthly:"Inbound per month by format (MC)", inLog:"Inbound log", type:"Type", ref:"Ref"
   },
   ar: {
-    brand:"متتبع تجار الجملة", brandsub:"سوريا · الجملة", t_ws:"تجار الجملة", t_off:"التصريف", t_an:"التحليل", t_data:"البيانات", t_exp:"تصدير", t_entry:"الإدخال", entryTitle:"إدخال الحركات", entrySub:"للمحاسب: البضاعة الواردة إلى مستودع اللاذقية، والمبيعات للتجار حسب الصنف والتاريخ. كل الكميات بالكرتونة، وتُحتسب في كل الشاشات فوراً.",
+    brand:"متتبع تجار الجملة", brandsub:"سوريا · الجملة", t_ws:"تجار الجملة", t_off:"التصريف", t_an:"التحليل", t_data:"البيانات", t_exp:"تصدير", t_entry:"الإدخال", e_lockT:"الإدخال محمي بكلمة مرور", e_lockS:"اطلب من المالك كلمة المرور التي تفتح هذا التبويب.", e_lockPw:"كلمة مرور الإدخال", e_unlock:"فتح", e_wrongPw:"كلمة المرور خاطئة. حاول مرة أخرى.", e_locked:"أُقفل من جديد", entryTitle:"إدخال الحركات", entrySub:"للمحاسب: البضاعة الواردة إلى مستودع اللاذقية، والمبيعات للتجار حسب الصنف والتاريخ. كل الكميات بالكرتونة، وتُحتسب في كل الشاشات فوراً.",
     e_in:"وارد · مستودع اللاذقية", e_out:"صادر · بيع لتاجر", e_in_short:"وارد", e_out_short:"صادر",
     e_date:"التاريخ", e_ws:"التاجر", e_newWs:"تاجر غير موجود في القائمة", e_newWsName:"اسم التاجر الجديد", e_ref:"المرجع (اختياري)", e_note:"ملاحظة (اختياري)", e_by:"أدخلها (يُحفظ على هذا الجهاز)",
     e_products:"الأصناف", e_hint:"اكتب الكمية بالكرتونة بجانب كل صنف واترك الباقي فارغاً.",
@@ -1461,7 +1461,30 @@ function moveSummary(m) {
   const by = new Map(E.skus.map((s) => [s.id, s]));
   return (m.lines || []).filter((l) => +l.qty > 0).map((l) => `${by.get(l.sku) ? skuName(by.get(l.sku)) : l.sku} ${fmt(+l.qty)}`).join(" · ");
 }
+const ENTRY_HASH = "541acf8c36a0ec1f893f43d4b7aaaa65df6be71d988a1f05266b4ba05fb97ee4";
+const sha256Hex = async (v) => [...new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(v)))].map((b) => b.toString(16).padStart(2, "0")).join("");
+// The password is checked here and handed to the storage bridge, which sends it with every saved movement.
+function entryLock(main) {
+  main.innerHTML = `<div class="head"><div><h2>${esc(t("entryTitle"))}</h2><p class="sub">${esc(t("e_lockS"))}</p></div></div>
+    <section class="panel stack" style="max-width:420px">
+      <h3>${esc(t("e_lockT"))}</h3>
+      <form class="stack" id="eLock" style="gap:12px">
+        <div class="field"><label for="ePw">${esc(t("e_lockPw"))}</label><input class="inp" id="ePw" type="password" autocomplete="current-password"></div>
+        <div><button class="btn pri" type="submit">${esc(t("e_unlock"))}</button></div>
+        <div class="small" id="ePwErr" style="color:var(--crit);min-height:18px"></div>
+      </form></section>`;
+  const form = document.getElementById("eLock");
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const pw = document.getElementById("ePw").value;
+    if (pw && (await sha256Hex(pw)) === ENTRY_HASH) { S.entryOk = true; window.__wsEntry = pw; render(); return; }
+    document.getElementById("ePwErr").textContent = t("e_wrongPw");
+    document.getElementById("ePw").value = "";
+  });
+  setTimeout(() => document.getElementById("ePw").focus(), 30);
+}
 function viewEntry(main) {
+  if (!S.entryOk) return entryLock(main);
   const st = S.entry && S.entry.kind ? S.entry : (S.entry = { kind: "in", date: todayISO(), ws: "", newWs: "", ref: "", note: "", qty: {} });
   const out = st.kind === "out";
   const names = E.wsList.map((w) => w.name).sort((a, b) => a.localeCompare(b, "ar"));

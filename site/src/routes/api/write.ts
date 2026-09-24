@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { adminAuthorized, authorized, db, isLedgerPath, validPath } from "../../lib/ws.server";
+import { adminAuthorized, authorized, db, entryAuthorized, isLedgerPath, isMovePath, validPath } from "../../lib/ws.server";
 
 export const Route = createFileRoute("/api/write")({
   server: {
@@ -12,6 +12,9 @@ export const Route = createFileRoute("/api/write")({
         const path = body.path;
         if (isLedgerPath(path) && !(await adminAuthorized(request))) {
           return Response.json({ error: "admin password required" }, { status: 403 });
+        }
+        if (isMovePath(path) && !(await entryAuthorized(request))) {
+          return Response.json({ error: "entry password required" }, { status: 403 });
         }
         if (body.op === "delete") {
           await db().prepare("DELETE FROM docs WHERE path = ?").bind(path).run();

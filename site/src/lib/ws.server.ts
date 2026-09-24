@@ -36,5 +36,11 @@ export const adminAuthorized = (request: Request) => matches("admin_hash", reque
 const PATH = new RegExp("^[A-Za-z0-9_.~:@+-]+(/[A-Za-z0-9_.~:@+-]+)+$");
 export const validPath = (p: unknown): p is string => typeof p === "string" && p.length <= 200 && PATH.test(p);
 
+/** The accountant's password, required to save a movement. */
+export const entryAuthorized = (request: Request) => matches("entry_hash", request.headers.get("x-ws-entry") ?? "");
+
+/** Movements the accountant enters live here. */
+export const isMovePath = (p: string) => p.startsWith("moves/");
+
 /** Ledger documents hold the imported workbook: owner-only. */
 export const isLedgerPath = (p: string) => p === "ledger" || p.startsWith("ledger/");

@@ -20,7 +20,9 @@
   const sub = (fn) => { listeners.push(fn); if (ready) fn(); return () => { const i = listeners.indexOf(fn); if (i >= 0) listeners.splice(i, 1); }; };
   let adminPw = "";
   const isLedger = (p) => p === "ledger" || p.indexOf("ledger/") === 0;
+  const isMove = (p) => p.indexOf("moves/") === 0;
   async function writeDoc(p, payload, tries) {
+    if (isMove(p)) return api("/api/write", { method: "POST", body: JSON.stringify(payload) }, { "x-ws-entry": window.__wsEntry || "" });
     if (!isLedger(p)) return api("/api/write", { method: "POST", body: JSON.stringify(payload) });
     if (!adminPw) { adminPw = await askPassword(); if (!adminPw) throw { code: "cancelled" }; }
     try {
