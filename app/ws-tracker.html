@@ -348,7 +348,7 @@ const T = {
     whyLast:(d,n,mc)=>`last order ${d}, ${n} days ago (${mc} MC)`, whyShop:(mc,d)=>`${mc} MC at his shop (counted ${d})`, whyNoCount:"his shop has not been counted", whyNone:"Has not ordered yet.",
     whenOut:"Out of stock: order now.", whenLow:"His stock is down to the low-stock level: order now.", whenDue:(d)=>`Was due ${d}: order now.`, whenOn:(d)=>`Next order around ${d}.`,
     whenStocked:(m)=>`Well stocked: about ${m} months of stock at his pace, so no order is needed for now.`, whenLapsed:(n)=>`No order for ${n} days: offer his usual order to win him back.`,
-    alsoOffer:"Also offer:", availNow:(n)=>`only ${n} available now: more urgent orders come first`, canCover:(n)=>`The warehouse can supply ${n} MC of this today.`, lastOrdWas:(d,x)=>`Last order ${d}: ${x}`, nothingYet:"Nothing needed yet: his stock covers it.", sihOpen:"tap to open",
+    alsoOffer:"Also offer:", alsoOfferN:(n)=>`Also offer (${n} MC):`, offerH:"Also offer", withOffers:"Total with offers", flavoursN:(n)=>`${n} flavour${n === 1 ? "" : "s"} to try`, noOffer:"nothing to add", orderPlusOffer:(a,b)=>`${a} order + ${b} offer`, hasAtShop:(n)=>`he has ${n}`, availNow:(n)=>`only ${n} available now: more urgent orders come first`, canCover:(n)=>`The warehouse can supply ${n} MC of this today.`, lastOrdWas:(d,x)=>`Last order ${d}: ${x}`, nothingYet:"Nothing needed yet: his stock covers it.", sihOpen:"tap to open",
     lapsedSub:"No order for a long time. The suggestion is his usual order, as a win-back offer.",
     nextMethod2:(d)=>`How it works. His usual order is the middle of his last five orders, and his usual gap the middle of his last four gaps between orders; together they give how much he takes per day. A stock count only tells us what he still has: zero means he ran out, not that he stopped selling. The order is due when his stock is down to ${d} days of sales (at once if he is out), or after his usual gap when his shop has not been counted. It tops him up, product by product and split the way he buys, to last until his next usual order plus ${d} days. Flavours he does not buy are listed under "Also offer". Orders are shared out from the warehouse stock in hand, most urgent first.`,
     kCallNow:"Wholesalers to call now", kOnTrack:"Wholesalers on track", kLapsed:"Lapsed wholesalers", kNextMc:"Suggested orders (MC)", kTrials:"New-flavour trials",
@@ -429,7 +429,7 @@ const T = {
     whyLast:(d,n,mc)=>`آخر طلبية ${d}، منذ ${n} يوم (${mc} كرتونة)`, whyShop:(mc,d)=>`${mc} كرتونة في محله (جرد ${d})`, whyNoCount:"لم يُجرد محله بعد", whyNone:"لم يطلب بعد.",
     whenOut:"نفد مخزونه: اطلب الآن.", whenLow:"مخزونه وصل إلى حد النقص: اطلب الآن.", whenDue:(d)=>`كان موعده ${d}: اطلب الآن.`, whenOn:(d)=>`الطلبية القادمة حوالي ${d}.`,
     whenStocked:(m)=>`مخزونه كبير: يكفيه حوالي ${m} أشهر بوتيرته، فلا حاجة لطلبية الآن.`, whenLapsed:(n)=>`لم يطلب منذ ${n} يوم: اعرض عليه طلبيته المعتادة لاستعادته.`,
-    alsoOffer:"اعرض أيضاً:", availNow:(n)=>`المتوفر الآن ${n} فقط: الطلبيات الأكثر إلحاحاً أولاً`, canCover:(n)=>`يمكن للمستودع توفير ${n} كرتونة من هذه الطلبية اليوم.`, lastOrdWas:(d,x)=>`آخر طلبية ${d}: ${x}`, nothingYet:"لا حاجة بعد: مخزونه يكفي.", sihOpen:"اضغط للعرض",
+    alsoOffer:"اعرض أيضاً:", alsoOfferN:(n)=>`اعرض أيضاً (${n} كرتونة):`, offerH:"اعرض أيضاً", withOffers:"المجموع مع العروض", flavoursN:(n)=>`${n} نكهات للتجربة`, noOffer:"لا شيء للإضافة", orderPlusOffer:(a,b)=>`${a} طلبية + ${b} عرض`, hasAtShop:(n)=>`لديه ${n}`, availNow:(n)=>`المتوفر الآن ${n} فقط: الطلبيات الأكثر إلحاحاً أولاً`, canCover:(n)=>`يمكن للمستودع توفير ${n} كرتونة من هذه الطلبية اليوم.`, lastOrdWas:(d,x)=>`آخر طلبية ${d}: ${x}`, nothingYet:"لا حاجة بعد: مخزونه يكفي.", sihOpen:"اضغط للعرض",
     lapsedSub:"لم يطلبوا منذ مدة طويلة. الاقتراح هو طلبيته المعتادة كعرض لاستعادته.",
     nextMethod2:(d)=>`طريقة الحساب. طلبيته المعتادة هي الوسط بين آخر خمس طلبيات، وفترته المعتادة هي الوسط بين آخر أربع فترات بين طلبياته؛ ومنهما نعرف كم يأخذ يومياً. الجرد يخبرنا فقط بما بقي لديه: الصفر يعني أن مخزونه نفد، لا أنه توقف عن البيع. يحين موعد الطلبية عندما ينزل مخزونه إلى مبيعات ${d} أيام (فوراً إذا نفد)، أو بعد فترته المعتادة إذا لم يُجرد محله. الكمية تكفيه، صنفاً صنفاً وحسب ما يشتريه، حتى طلبيته المعتادة التالية زائد ${d} أيام. النكهات التي لا يشتريها تظهر تحت "اعرض أيضاً". توزَّع الطلبيات من مخزون المستودع المتوفر، الأكثر إلحاحاً أولاً.`,
     kCallNow:"تجار للاتصال الآن", kOnTrack:"تجار في موعدهم", kLapsed:"تجار منقطعون", kNextMc:"الطلبيات المقترحة (كرتونة)", kTrials:"تجارب نكهات جديدة",
@@ -1131,8 +1131,7 @@ function nextOrders() {
 function whyTxt(o) {
   if (o.status === "none") return t("whyNone");
   return [o.orders > 1 ? t("whyUsual", fmt(o.usual), o.gap) : t("whyOne", fmt(o.usual)),
-    t("whyLast", fmtShort(o.last), o.since, fmt(o.lastTotal)),
-    o.shop != null ? t("whyShop", fmt(Math.round(o.shop)), fmtShort(o.countDate)) : t("whyNoCount")].join(" · ");
+    t("whyLast", fmtShort(o.last), o.since, fmt(o.lastTotal))].join(" · ");
 }
 // And so, when.
 function whenTxt(o) {
@@ -1141,18 +1140,31 @@ function whenTxt(o) {
   if (o.D === 0) return o.cover == null ? t("whenDue", fmtShort(o.nextDue)) : o.shop < 5 ? t("whenOut") : t("whenLow");
   return o.cover != null && o.cover > 90 ? t("whenStocked", Math.round(o.cover / 30)) : t("whenOn", fmtShort(o.nextDue));
 }
+// Three figures under the suggestion: his stock now, the flavours to also offer, and everything together.
+function nextStrip(o) {
+  const cell = (k, v, sub) => `<div><div class="k">${esc(k)}</div><div class="v num">${esc(v)}</div><div class="s">${esc(sub)}</div></div>`;
+  const n = o.extras.filter((l) => l.qty > 0).length;
+  return `<div class="mini">
+    ${cell(t("mStock"), o.shop != null ? `${fmt(Math.round(o.shop))} ${t("units")}` : "—", o.shop != null ? t("countedOn", fmtShort(o.countDate)) : t("notCounted"))}
+    ${cell(t("offerH"), `${fmt(o.extraTotal)} ${t("units")}`, n ? t("flavoursN", n) : t("noOffer"))}
+    ${cell(t("withOffers"), `${fmt(o.wantTotal + o.extraTotal)} ${t("units")}`, t("orderPlusOffer", fmt(o.wantTotal), fmt(o.extraTotal)))}
+  </div>`;
+}
 const plRow = (name, qty, note) => `<div class="pl"><span><span dir="auto">${esc(name)}</span>${note ? `<span class="pn2">${esc(note)}</span>` : ""}</span><b class="num">${fmt(qty)}</b></div>`;
 // The suggested order product by product, then the flavours to offer, what is sold out, and his last order.
 function productList(o) {
   // what the warehouse can supply matters only for orders due now or this week
   const supply = o.status === "now" || o.status === "week";
-  const rows = o.lines.map((l) => plRow(skuName(l.sku), l.want, !supply || l.qty >= l.want ? "" : l.qty === 0 ? t("noStockLeft") : t("availNow", fmt(l.qty)))).join("");
+  const rows = o.lines.map((l) => plRow(skuName(l.sku), l.want, [
+    l.has != null ? t("hasAtShop", fmt(Math.round(l.has))) : null,
+    !supply || l.qty >= l.want ? null : l.qty === 0 ? t("noStockLeft") : t("availNow", fmt(l.qty)),
+  ].filter(Boolean).join(" · "))).join("");
   const extra = o.extras.filter((l) => l.qty > 0);
   return `<div>
     <div class="colh"><span>${esc(t("nextOrderH"))}</span><b class="num">${fmt(o.wantTotal)}</b></div>
     ${rows || `<div class="small muted" style="padding:4px 0">${esc(t(o.soldOut.length ? "onlySoldOut" : "nothingYet"))}</div>`}
     ${supply && o.total < o.wantTotal ? `<div class="nx-short">${esc(t("canCover", fmt(o.total)))}</div>` : ""}
-    ${extra.length ? `<div class="nx-also"><b>${esc(t("alsoOffer"))}</b> ${extra.map((l) => `<span dir="auto">${esc(skuName(l.sku))}</span> ${fmt(l.qty)}`).join(" · ")}</div>` : ""}
+    ${extra.length ? `<div class="nx-also"><b>${esc(t("alsoOfferN", fmt(o.extraTotal)))}</b> ${extra.map((l) => `<span dir="auto">${esc(skuName(l.sku))}</span> ${fmt(l.qty)}`).join(" · ")}</div>` : ""}
     ${o.soldOut.length ? `<div class="small muted" style="padding-top:4px">${esc(t("soldOutNote", o.soldOut.map(skuName).join(" · ")))}</div>` : ""}
     ${o.lastLines.length ? `<div class="small muted" style="padding-top:4px">${esc(t("lastOrdWas", fmtShort(o.last), o.lastLines.map((l) => `${skuName(l.sku)} ${fmt(l.qty)}`).join(" · ")))}</div>` : ""}
   </div>`;
@@ -1164,7 +1176,7 @@ function nextCard(o) {
       ${o.status !== "none" ? `<span class="nx-big num">${fmt(o.wantTotal)} <small>${esc(t("units"))}</small></span>` : ""}</div>
     <div class="nx-why">${esc(whyTxt(o))}</div>
     ${when ? `<div class="nx-when">${esc(when)}</div>` : ""}
-    ${o.status !== "none" ? productList(o) : ""}
+    ${o.status !== "none" ? nextStrip(o) + productList(o) : ""}
   </div>`;
 }
 // Stock in hand at the main warehouse, and how much of it the next orders take.
@@ -1221,6 +1233,7 @@ function nextBlock(w) {
   return `<section class="panel stack"><div class="head"><h3>${esc(t("nextOrder"))} <span class="chip ${STATUS_CHIP[o.status]}">${esc(t("st_" + o.status))}</span></h3>${give.length ? `<a class="btn" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(msg)}">${esc(t("wa"))}</a>` : ""}</div>
     <div class="nx-why">${esc(whyTxt(o))}</div>
     ${when ? `<div class="nx-when">${esc(when)}</div>` : ""}
+    ${nextStrip(o)}
     ${productList(o)}
     <p class="small muted" style="max-width:85ch">${esc(t("nextMethod2", settings().lowDays))}</p></section>`;
 }
