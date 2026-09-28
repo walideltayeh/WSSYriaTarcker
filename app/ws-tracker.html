@@ -292,7 +292,7 @@ tr.click{cursor:pointer} tr.click:hover td{background:var(--sunk)}
 /* ============================== i18n ============================== */
 const T = {
   en: {
-    brand:"WS Tracker", brandsub:"Syria · Wholesale", t_ws:"Wholesalers", t_off:"Offtake", t_an:"Analysis", t_data:"Data", t_exp:"Export", t_entry:"Entry", e_lockT:"Entry is password protected", e_lockS:"Ask the owner for the password that opens this tab.", e_lockPw:"Entry password", e_unlock:"Unlock", e_wrongPw:"Wrong password. Try again.", e_locked:"Locked again", entryTitle:"Enter movements", entrySub:"For the accountant: goods received into the Lattakia warehouse, and sales to wholesalers by product and date. Everything in mastercases (MC), and every screen counts it straight away.",
+    brand:"WS Tracker", brandsub:"Syria · Wholesale", t_ws:"Wholesalers", t_off:"Offtake", t_an:"Analysis", t_next:"Next order", t_data:"Data", t_exp:"Export", t_entry:"Entry", e_lockT:"Entry is password protected", e_lockS:"Ask the owner for the password that opens this tab.", e_lockPw:"Entry password", e_unlock:"Unlock", e_wrongPw:"Wrong password. Try again.", e_locked:"Locked again", entryTitle:"Enter movements", entrySub:"For the accountant: goods received into the Lattakia warehouse, and sales to wholesalers by product and date. Everything in mastercases (MC), and every screen counts it straight away.",
     e_in:"Inbound · Lattakia warehouse", e_out:"Outbound · sale to a wholesaler", e_in_short:"Inbound", e_out_short:"Outbound",
     e_date:"Date", e_ws:"Wholesaler", e_newWs:"Add a wholesaler",  e_needWsName:"Type the wholesaler's name first.", e_wsExists:"That wholesaler is already in the list.", e_newWsName:"Name of the new wholesaler", e_ref:"Reference (optional)", e_note:"Note (optional)", e_by:"Entered by (saved on this device)",
     e_products:"Products", e_hint:"Put the quantity in mastercases next to each product and leave the rest empty.",
@@ -397,7 +397,7 @@ const T = {
     kIn:"Inbound (MC)", kOut:"Outbound (MC)", kOnHand:"On hand (MC)", kInMoves:"Inbound movements", lastIn:"last", inMonthly:"Inbound per month by format (MC)", inLog:"Inbound log", type:"Type", ref:"Ref", allMonths:"All months", monthShown:(m)=>`Showing ${m}`
   },
   ar: {
-    brand:"متتبع تجار الجملة", brandsub:"سوريا · الجملة", t_ws:"تجار الجملة", t_off:"التصريف", t_an:"التحليل", t_data:"البيانات", t_exp:"تصدير", t_entry:"الإدخال", e_lockT:"الإدخال محمي بكلمة مرور", e_lockS:"اطلب من المالك كلمة المرور التي تفتح هذا التبويب.", e_lockPw:"كلمة مرور الإدخال", e_unlock:"فتح", e_wrongPw:"كلمة المرور خاطئة. حاول مرة أخرى.", e_locked:"أُقفل من جديد", entryTitle:"إدخال الحركات", entrySub:"للمحاسب: البضاعة الواردة إلى مستودع اللاذقية، والمبيعات للتجار حسب الصنف والتاريخ. كل الكميات بالكرتونة، وتُحتسب في كل الشاشات فوراً.",
+    brand:"متتبع تجار الجملة", brandsub:"سوريا · الجملة", t_ws:"تجار الجملة", t_off:"التصريف", t_an:"التحليل", t_next:"الطلبية القادمة", t_data:"البيانات", t_exp:"تصدير", t_entry:"الإدخال", e_lockT:"الإدخال محمي بكلمة مرور", e_lockS:"اطلب من المالك كلمة المرور التي تفتح هذا التبويب.", e_lockPw:"كلمة مرور الإدخال", e_unlock:"فتح", e_wrongPw:"كلمة المرور خاطئة. حاول مرة أخرى.", e_locked:"أُقفل من جديد", entryTitle:"إدخال الحركات", entrySub:"للمحاسب: البضاعة الواردة إلى مستودع اللاذقية، والمبيعات للتجار حسب الصنف والتاريخ. كل الكميات بالكرتونة، وتُحتسب في كل الشاشات فوراً.",
     e_in:"وارد · مستودع اللاذقية", e_out:"صادر · بيع لتاجر", e_in_short:"وارد", e_out_short:"صادر",
     e_date:"التاريخ", e_ws:"التاجر", e_newWs:"إضافة تاجر",  e_needWsName:"اكتب اسم التاجر أولاً.", e_wsExists:"هذا التاجر موجود في القائمة.", e_newWsName:"اسم التاجر الجديد", e_ref:"المرجع (اختياري)", e_note:"ملاحظة (اختياري)", e_by:"أدخلها (يُحفظ على هذا الجهاز)",
     e_products:"الأصناف", e_hint:"اكتب الكمية بالكرتونة بجانب كل صنف واترك الباقي فارغاً.",
@@ -675,12 +675,13 @@ function settings() {
 }
 
 /* ============================== routing ============================== */
-const route = () => { const h = decodeURIComponent(location.hash.replace(/^#\/?/, "")); const p = h.split("/"); if (p[0] === "ws" && p[1]) return { view: p[2] === "count" ? "count" : "ws", id: p[1], edit: p[3] || null }; if (["offtake", "warehouse", "analysis", "entry", "export", "data"].includes(p[0])) return { view: p[0] }; return { view: "list" }; };
+const route = () => { const h = decodeURIComponent(location.hash.replace(/^#\/?/, "")); const p = h.split("/"); if (p[0] === "ws" && p[1]) return { view: p[2] === "count" ? "count" : "ws", id: p[1], edit: p[3] || null }; if (["next", "offtake", "warehouse", "analysis", "entry", "export", "data"].includes(p[0])) return { view: p[0] }; return { view: "list" }; };
 const go = (h) => { if (location.hash === h) render(); else location.hash = h; };
 window.addEventListener("hashchange", () => { S.form = null; S.dirty = false; S.pendingDelete = null; render(); window.scrollTo(0, 0); });
 
 /* ============================== shell ============================== */
 const ICONS = {
+  next: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 2-1.5L21 8H6.2"/><circle cx="10" cy="20.5" r="1"/><circle cx="18" cy="20.5" r="1"/></svg>',
   list: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg>',
   offtake: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
   analysis: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg>',
@@ -695,7 +696,7 @@ function renderShell(view) {
   document.getElementById("brandsub").textContent = t("brandsub");
   document.getElementById("langBtn").textContent = LANG === "ar" ? "EN" : "ع";
   const cur = view === "ws" || view === "count" ? "list" : view;
-  const items = [["list", "#", t("t_ws")], ["offtake", "#offtake", t("t_off")], ["warehouse", "#warehouse", t("t_wh")], ["analysis", "#analysis", t("t_an")], ["entry", "#entry", t("t_entry")], ["export", "#export", t("t_exp")], ["data", "#data", t("t_data")]];
+  const items = [["list", "#", t("t_ws")], ["next", "#next", t("t_next")], ["offtake", "#offtake", t("t_off")], ["warehouse", "#warehouse", t("t_wh")], ["analysis", "#analysis", t("t_an")], ["entry", "#entry", t("t_entry")], ["export", "#export", t("t_exp")], ["data", "#data", t("t_data")]];
   document.getElementById("tabs").innerHTML = items.map(([k, h, l]) => `<a href="${h}" ${k === cur ? 'aria-current="page"' : ""}>${esc(l)}</a>`).join("");
   document.getElementById("bottom").innerHTML = items.map(([k, h, l]) => `<a href="${h}" ${k === cur ? 'aria-current="page"' : ""}>${ICONS[k]}<span>${esc(l)}</span></a>`).join("");
   const here = document.querySelector("#bottom a[aria-current]");
@@ -718,7 +719,8 @@ function render() {
   if (r.view === "count") return viewCount(main, r.id, r.edit);
   if (r.view === "offtake") return viewOfftake(main);
   if (r.view === "warehouse") return viewWarehouse(main);
-  if (r.view === "analysis") return viewAnalysis(main);
+  if (r.view === "next") return viewNext(main);
+  if (r.view === "analysis") return viewSales(main);
   if (r.view === "entry") return viewEntry(main);
   if (r.view === "export") return viewExport(main);
   if (r.view === "data") return viewData(main);
@@ -1484,16 +1486,13 @@ function stockTable(rows) {
       <td class="r num">${x.alloc ? fmt(x.alloc) : "—"}</td><td class="r num">${x.inHand > 0 ? fmt(x.left) : "—"}</td></tr>`).join("")}</tbody>
     <tfoot><tr><td>${esc(t("total"))}</td><td class="r num">${fmt(tot.received)}</td><td class="r num">${fmt(tot.sold)}</td><td class="r num">${fmt(tot.inHand)}</td><td class="r num">${fmt(tot.wanted)}</td><td class="r num">${fmt(tot.alloc)}</td><td class="r num">${fmt(tot.left)}</td></tr></tfoot></table>`;
 }
+// The head of the Next order and Analysis pages.
 function anHead(v, sub) {
-  return `<div class="head"><div><h2>${esc(t("salesTitle"))}</h2><p class="sub">${esc(sub)}</p></div>
-    <div class="seg" role="group">${["next", "sales"].map((k) => `<button type="button" data-an="${k}" aria-pressed="${k === v}">${esc(t("an_" + k))}</button>`).join("")}</div></div>`;
+  return `<div class="head"><div><h2>${esc(t(v === "next" ? "t_next" : "salesTitle"))}</h2><p class="sub">${esc(sub)}</p></div></div>`;
 }
-function bindAnSeg(main) {
-  main.querySelectorAll("[data-an]").forEach((b) => b.addEventListener("click", () => { S.anView = b.dataset.an; store.set("wst_an", S.anView); render(); }));
-}
-// Wholesalers grouped by when they should order: now, this week, later, lapsed, not yet ordering.
-function viewAnalysis(main) {
-  if (S.anView === "sales") return viewSales(main);
+function bindAnSeg() {}
+// The Next order tab: wholesalers grouped by what to sell them now, maybe, later, lapsed, not yet ordering.
+function viewNext(main) {
   const N = nextOrders(), st = settings();
   const grp = (k) => N.list.filter((o) => o.status === k);
   const mcOf = (g) => fmt(g.reduce((a, o) => a + o.headline, 0));
