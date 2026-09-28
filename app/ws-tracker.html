@@ -242,7 +242,12 @@ tr.click{cursor:pointer} tr.click:hover td{background:var(--sunk)}
 .mkt td:first-child{min-width:230px}
 .mkt td .muted.small,.mkt td.muted{white-space:nowrap}
 .pushcard a.name{text-decoration:none;font-size:16px}
-.nextgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,440px),1fr))}
+.nextgrid{display:grid;grid-template-columns:1fr}
+.nx-tbl td,.nx-tbl th{white-space:nowrap}
+.nx-pct{display:inline-block;min-width:44px;padding:1px 6px;border-radius:4px;text-align:end}
+.nx-pct.sell{background:var(--crit-bg);color:var(--crit)}
+.nx-pct.maybe{background:var(--warn-bg);color:var(--warn)}
+.nx-pct.no{background:var(--good-bg);color:var(--good)}
 .nextcard{display:grid;gap:8px;align-content:start;padding:18px 20px;border-bottom:2px solid var(--axis);border-inline-end:2px solid var(--axis)}
 .nextcard .top1{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center}
 .nextcard a.name{text-decoration:none;color:inherit;font-size:16px}
@@ -255,6 +260,8 @@ tr.click{cursor:pointer} tr.click:hover td{background:var(--sunk)}
 .wsa-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:16px 24px;align-items:start}
 .ins ul{margin:0;padding-inline-start:18px;display:grid;gap:6px}
 .ins li{font-size:13.5px;line-height:1.55}
+.nx-tgrp{padding:14px 20px;border-bottom:2px solid var(--axis)}
+.nx-tgh{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline;margin-bottom:8px}
 .nx-hold{font-size:12.5px;color:var(--ink-2);padding-top:6px;line-height:1.6}
 .nx-also{font-size:12.5px;color:var(--ink-2);padding-top:6px;line-height:1.6}
 .nx-grph{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
@@ -353,12 +360,14 @@ const T = {
     whenOut:"Out of stock: order now.", whenLow:"His stock is down to the low-stock level: order now.", whenDue:(d)=>`Was due ${d}: order now.`, whenOn:(d)=>`Next order around ${d}.`,
     whenStocked:(m)=>`Well stocked: about ${m} months of stock at his pace, so no order is needed for now.`, whenLapsed:(n)=>`No order for ${n} days: offer his usual order to win him back.`,
     alsoOffer:"Also offer:",
-    sellNowH:"Sell him now (definitely)", kEnough:"enough stock for now", maybeH:"Potential sell (optional)", doNotH:"Do not sell, he has enough:", notMoving:"not moving", fl_sell:"definitely sell", fl_maybe:"potential",
+    sellNowH:"Sell him now (definitely)", pctStock:"% of his stock", delToCount:"Delivered to count date (MC)", stockMc:"Stock (MC)", flagH:"Flag", recH:"Recommended order", chipSell:"Sell", chipMaybe:"Potential", chipNo:"Do not sell", chipCount:"Count needed",
+    whNone:"warehouse has none", optionalW:"optional", ofWanted:(n)=>`of ${n} (warehouse short)`, recTot:(a,b)=>`Recommended order: ${a} MC to sell now · ${b} MC optional`, packOld:"old pack", packLB:"LB pack", sinceCountS:"since count",
+    nxCards:"Cards", nxTable:"One table", kEnough:"enough stock for now", maybeH:"Potential sell (optional)", doNotH:"Do not sell, he has enough:", notMoving:"not moving", fl_sell:"definitely sell", fl_maybe:"potential",
     hasPct:(h,p,b)=>`he has ${h} = ${p} of the ${b} he bought in 90 days`, hasNot90:(h)=>`he has ${h}; none bought in 90 days`, countNeeded:"shop not counted: count it to flag this product",
     optH:"Potential (optional)", linesOpt:(n)=>`${n} product${n === 1 ? "" : "s"} to top up`, noOpt:"none", withAll:"If he takes everything", sumParts:(a,b,c)=>`${a} sell + ${b} optional + ${c} offer`,
-    whenSell:(n)=>`Low on ${n} product${n === 1 ? "" : "s"} against his last 90 days: sell him now.`, whenMaybe:(n)=>`Nothing urgent: ${n} product${n === 1 ? "" : "s"} could be topped up (optional).`, whenLater:(d)=>`Enough stock of what he buys; next order around ${d}.`,
+    whenSell:(n)=>`Low on ${n} product${n === 1 ? "" : "s"} at his last count: sell him now.`, whenMaybe:(n)=>`Nothing urgent: ${n} product${n === 1 ? "" : "s"} could be topped up (optional).`, whenLater:(d)=>`Enough stock of what he buys; next order around ${d}.`,
     soldOutFlag:(x)=>`He needs these but the warehouse has none: ${x}`,
-    insSellNow:(x)=>`Sell him now, low against his last 90 days: ${x}.`, insHold:(x)=>`Do not push, he has plenty: ${x}.`,
+    insSellNow:(x)=>`Sell him now, low at his last count: ${x}.`, insHold:(x)=>`Do not push, he has plenty: ${x}.`,
     anWs:"Analysis", anWsSub:(d)=>`from the ledger up to ${d}; market = every wholesaler in Syria`, aBought:"Bought since first order (MC)", aSince:(d,n)=>`since ${d} · ${n} order${n === 1 ? "" : "s"}`,
     aShare:"Share of all sales", aRank:(r,n)=>`#${r} of ${n} wholesalers`, aUsual:"Usual order (MC)", aEvery:(d)=>`every ~${d} days`, aDaysSince:"Days since last order", aOverdue:"overdue",
     aTrend:"Last 90 days vs the 90 before", aTrendSub:(a,b)=>`${a} MC vs ${b} MC`, insTitle:"Key findings", monthByMonth:"Month by month", monthH:"Month", hisMc:"His MC", ordersN:"Orders", mktMc:"Market MC", hisShare:"His share",
@@ -378,7 +387,7 @@ const T = {
     wsExportBtn:"Export analysis (Excel)", expByWs:"Analysis by wholesaler", expWsBtn:"Export analysis",
     expByWsSub:"One wholesaler: a workbook with his summary and findings, month by month, products against the market, orders, order lines, stock counts and next order. All wholesalers: an overview sheet with one row each, then one sheet per wholesaler.", alsoOfferN:(n)=>`Also offer (${n} MC):`, offerH:"Also offer", withOffers:"Total with offers", flavoursN:(n)=>`${n} flavour${n === 1 ? "" : "s"} to try`, noOffer:"nothing to add", orderPlusOffer:(a,b)=>`${a} order + ${b} offer`, hasAtShop:(n)=>`he has ${n}`, availNow:(n)=>`only ${n} available now: more urgent orders come first`, canCover:(n)=>`The warehouse can supply ${n} MC of this today.`, lastOrdWas:(d,x)=>`Last order ${d}: ${x}`, nothingYet:"Nothing needed yet: his stock covers it.", sihOpen:"tap to open",
     lapsedSub:"No order for a long time. The suggestion is his usual order, as a win-back offer.",
-    nextMethod2:(d)=>`How it works. Each product he buys is flagged from his last stock count: his stock at the shop as a share of what he bought of it in the last 90 days (the old and LB packs count together). Up to 30%: definitely sell; it goes in the order, enough to bring him to 50% of his 90-day buying. From 31% to 50%: potential sell, listed as optional. Above 50%: do not sell, he has enough. A product he did not buy in 90 days but still holds is not moving: do not sell. Only what the warehouse has in stock is suggested: definitely-sell lines are served first, most urgent wholesaler first, then potential lines. When his shop has not been counted, his usual order (the middle of his last five) is suggested after his usual gap (the middle of his last four). A wholesaler with no order for a long time gets his usual order as a win-back offer. Flavours he does not buy are listed under "Also offer". The low-stock setting (${d} days) is not used for counted shops.`,
+    nextMethod2:(d)=>`How it works. Each product he buys is judged from his last stock count: % of his stock = the stock counted at his shop ÷ everything delivered to him up to that count (the old and LB packs count together as one product). Up to 30%: sell; it goes in the recommended order. From 31% to 50%: potential sell, recommended as optional. Above 50%: do not sell. The recommended quantity brings him up to half of what he bought of that product in the last 90 days, less what he holds now (the count plus anything delivered since). Only what the warehouse has in stock is recommended: sell lines are served first, most urgent wholesaler first, then optional ones; a product the warehouse lacks is marked "warehouse has none". When his shop has not been counted, his usual order (the middle of his last five) is recommended after his usual gap. A wholesaler with no order for a long time gets his usual order as a win-back offer. Flavours he does not buy are listed under "Also offer". The low-stock setting (${d} days) is not used for counted shops.`,
     kCallNow:"Wholesalers to call now", kOnTrack:"Wholesalers on track", kLapsed:"Lapsed wholesalers", kNextMc:"Suggested orders (MC)", kTrials:"New-flavour trials",
     lastOrd:"Last order", everyN:(d)=>`orders every ~${d} days on average`, oneOrder:"one order so far", nextDue:(d)=>`next due ${d}`,
     trend60:"Last 60 days vs previous 60", trendNew:"new", tagNew:"New flavour", tagCount:"from stock count", nextOrder:"Next order",
@@ -458,12 +467,14 @@ const T = {
     whenOut:"نفد مخزونه: اطلب الآن.", whenLow:"مخزونه وصل إلى حد النقص: اطلب الآن.", whenDue:(d)=>`كان موعده ${d}: اطلب الآن.`, whenOn:(d)=>`الطلبية القادمة حوالي ${d}.`,
     whenStocked:(m)=>`مخزونه كبير: يكفيه حوالي ${m} أشهر بوتيرته، فلا حاجة لطلبية الآن.`, whenLapsed:(n)=>`لم يطلب منذ ${n} يوم: اعرض عليه طلبيته المعتادة لاستعادته.`,
     alsoOffer:"اعرض أيضاً:",
-    sellNowH:"بِعه الآن (مؤكد)", kEnough:"لديهم ما يكفي حالياً", maybeH:"بيع محتمل (اختياري)", doNotH:"لا تبِع، لديه ما يكفي:", notMoving:"لا يتحرك", fl_sell:"بيع مؤكد", fl_maybe:"محتمل",
+    sellNowH:"بِعه الآن (مؤكد)", pctStock:"% من مخزونه", delToCount:"ورد حتى تاريخ الجرد (كرتونة)", stockMc:"المخزون (كرتونة)", flagH:"التقييم", recH:"الطلبية المقترحة", chipSell:"بِع", chipMaybe:"محتمل", chipNo:"لا تبِع", chipCount:"يحتاج جرد",
+    whNone:"غير متوفر في المستودع", optionalW:"اختياري", ofWanted:(n)=>`من ${n} (نقص في المستودع)`, recTot:(a,b)=>`الطلبية المقترحة: ${a} كرتونة للبيع الآن · ${b} كرتونة اختياري`, packOld:"العبوة القديمة", packLB:"عبوة تحذير لبنان", sinceCountS:"بعد الجرد",
+    nxCards:"بطاقات", nxTable:"جدول واحد", kEnough:"لديهم ما يكفي حالياً", maybeH:"بيع محتمل (اختياري)", doNotH:"لا تبِع، لديه ما يكفي:", notMoving:"لا يتحرك", fl_sell:"بيع مؤكد", fl_maybe:"محتمل",
     hasPct:(h,p,b)=>`لديه ${h} = ${p} من الـ${b} التي اشتراها في 90 يوماً`, hasNot90:(h)=>`لديه ${h}؛ لم يشترِ منه في 90 يوماً`, countNeeded:"المحل غير مجرود: اجرده لتقييم هذا الصنف",
     optH:"محتمل (اختياري)", linesOpt:(n)=>n === 1 ? "صنف واحد للإضافة" : `${n} أصناف للإضافة`, noOpt:"لا شيء", withAll:"إذا أخذ كل شيء", sumParts:(a,b,c)=>`${a} مؤكد + ${b} اختياري + ${c} عرض`,
-    whenSell:(n)=>`مخزونه منخفض في ${n === 1 ? "صنف واحد" : n + " أصناف"} مقارنة بآخر 90 يوماً: بِعه الآن.`, whenMaybe:(n)=>`لا شيء عاجل: يمكن إضافة ${n === 1 ? "صنف واحد" : n + " أصناف"} (اختياري).`, whenLater:(d)=>`لديه ما يكفي مما يشتريه؛ الطلبية القادمة حوالي ${d}.`,
+    whenSell:(n)=>`مخزونه منخفض في ${n === 1 ? "صنف واحد" : n + " أصناف"} حسب آخر جرد: بِعه الآن.`, whenMaybe:(n)=>`لا شيء عاجل: يمكن إضافة ${n === 1 ? "صنف واحد" : n + " أصناف"} (اختياري).`, whenLater:(d)=>`لديه ما يكفي مما يشتريه؛ الطلبية القادمة حوالي ${d}.`,
     soldOutFlag:(x)=>`يحتاجها لكن المستودع لا يملك منها شيئاً: ${x}`,
-    insSellNow:(x)=>`بِعه الآن، مخزونه منخفض مقارنة بآخر 90 يوماً: ${x}.`, insHold:(x)=>`لا تضغط عليه، لديه الكثير: ${x}.`,
+    insSellNow:(x)=>`بِعه الآن، مخزونه منخفض حسب آخر جرد: ${x}.`, insHold:(x)=>`لا تضغط عليه، لديه الكثير: ${x}.`,
     anWs:"التحليل", anWsSub:(d)=>`من دفتر الحركات حتى ${d}؛ السوق = كل التجار في سوريا`, aBought:"اشترى منذ أول طلبية (كرتونة)", aSince:(d,n)=>`منذ ${d} · ${n === 1 ? "طلبية واحدة" : n + " طلبيات"}`,
     aShare:"حصته من كل المبيعات", aRank:(r,n)=>`المرتبة ${r} من ${n} تاجر`, aUsual:"طلبيته المعتادة (كرتونة)", aEvery:(d)=>`كل ~${d} يوم`, aDaysSince:"أيام منذ آخر طلبية", aOverdue:"متأخر",
     aTrend:"آخر 90 يوماً مقابل الـ90 قبلها", aTrendSub:(a,b)=>`${a} مقابل ${b} كرتونة`, insTitle:"أهم الملاحظات", monthByMonth:"شهراً بشهر", monthH:"الشهر", hisMc:"مشترياته", ordersN:"الطلبيات", mktMc:"السوق", hisShare:"حصته",
@@ -483,7 +494,7 @@ const T = {
     wsExportBtn:"تصدير التحليل (Excel)", expByWs:"التحليل حسب التاجر", expWsBtn:"تصدير التحليل",
     expByWsSub:"تاجر واحد: ملف فيه ملخصه وأهم الملاحظات، شهراً بشهر، الأصناف مقارنة بالسوق، الطلبيات، سطور الطلبيات، الجرد والطلبية القادمة. كل التجار: ورقة عامة بسطر لكل تاجر، ثم ورقة لكل تاجر.", alsoOfferN:(n)=>`اعرض أيضاً (${n} كرتونة):`, offerH:"اعرض أيضاً", withOffers:"المجموع مع العروض", flavoursN:(n)=>`${n} نكهات للتجربة`, noOffer:"لا شيء للإضافة", orderPlusOffer:(a,b)=>`${a} طلبية + ${b} عرض`, hasAtShop:(n)=>`لديه ${n}`, availNow:(n)=>`المتوفر الآن ${n} فقط: الطلبيات الأكثر إلحاحاً أولاً`, canCover:(n)=>`يمكن للمستودع توفير ${n} كرتونة من هذه الطلبية اليوم.`, lastOrdWas:(d,x)=>`آخر طلبية ${d}: ${x}`, nothingYet:"لا حاجة بعد: مخزونه يكفي.", sihOpen:"اضغط للعرض",
     lapsedSub:"لم يطلبوا منذ مدة طويلة. الاقتراح هو طلبيته المعتادة كعرض لاستعادته.",
-    nextMethod2:(d)=>`طريقة الحساب. كل صنف يشتريه يُقيَّم من آخر جرد: مخزونه في المحل كنسبة مما اشتراه منه في آخر 90 يوماً (العبوة القديمة وعبوة تحذير لبنان معاً). حتى 30%: بيع مؤكد ويدخل في الطلبية بكمية توصله إلى 50% مما اشتراه في 90 يوماً. من 31% إلى 50%: بيع محتمل ويظهر كاختياري. أكثر من 50%: لا تبِع، لديه ما يكفي. الصنف الذي لم يشترِه في 90 يوماً ولا يزال لديه منه لا يتحرك: لا تبِع. لا يُقترح إلا ما هو متوفر في المستودع: أصناف البيع المؤكد أولاً والأكثر إلحاحاً أولاً، ثم الأصناف المحتملة. إذا لم يُجرد محله، تُقترح طلبيته المعتادة (الوسط بين آخر خمس) بعد فترته المعتادة (الوسط بين آخر أربع). التاجر المنقطع منذ مدة طويلة تُقترح عليه طلبيته المعتادة لاستعادته. النكهات التي لا يشتريها تظهر تحت "اعرض أيضاً". إعداد حد النقص (${d} أيام) لا يُستخدم للمحلات المجرودة.`,
+    nextMethod2:(d)=>`طريقة الحساب. كل صنف يشتريه يُقيَّم من آخر جرد: % من مخزونه = المخزون المجرود في محله ÷ كل ما ورد له حتى تاريخ الجرد (العبوة القديمة وعبوة تحذير لبنان صنف واحد). حتى 30%: بِع، ويدخل في الطلبية المقترحة. من 31% إلى 50%: بيع محتمل، يُقترح كاختياري. أكثر من 50%: لا تبِع. الكمية المقترحة توصله إلى نصف ما اشتراه من هذا الصنف في آخر 90 يوماً، ناقص ما لديه الآن (الجرد زائد ما ورد له بعده). لا يُقترح إلا ما هو متوفر في المستودع: أصناف البيع أولاً والأكثر إلحاحاً أولاً، ثم الاختيارية؛ والصنف غير المتوفر يُعلَّم "غير متوفر في المستودع". إذا لم يُجرد محله، تُقترح طلبيته المعتادة (الوسط بين آخر خمس) بعد فترته المعتادة. التاجر المنقطع منذ مدة طويلة تُقترح عليه طلبيته المعتادة لاستعادته. النكهات التي لا يشتريها تظهر تحت "اعرض أيضاً". إعداد حد النقص (${d} أيام) لا يُستخدم للمحلات المجرودة.`,
     kCallNow:"تجار للاتصال الآن", kOnTrack:"تجار في موعدهم", kLapsed:"تجار منقطعون", kNextMc:"الطلبيات المقترحة (كرتونة)", kTrials:"تجارب نكهات جديدة",
     lastOrd:"آخر طلبية", everyN:(d)=>`يطلب كل ~${d} يوم في المتوسط`, oneOrder:"طلبية واحدة حتى الآن", nextDue:(d)=>`الموعد التالي ${d}`,
     trend60:"آخر 60 يوماً مقارنة بالـ60 السابقة", trendNew:"جديد", tagNew:"نكهة جديدة", tagCount:"من الجرد", nextOrder:"الطلبية القادمة",
@@ -837,7 +848,7 @@ function wsAnalysis(w) {
     else if (pace > 0 && stock / pace < settings().lowDays) ins.push(t("insLow", fmt(Math.round(stock)), Math.max(0, Math.round(stock / pace))));
     else if (pace > 0) ins.push(t("insStock", fmt(Math.round(stock)), Math.round(stock / pace)));
     if (o && o.status !== "lapsed" && o.counted) {
-      const ls = (arr) => arr.slice(0, 4).map((l) => `${skuName(l.sku)} (${l.b90 ? pctS(l.ratio) : t("notMoving")})`).join(" · ");
+      const ls = (arr) => arr.slice(0, 4).map((l) => `${skuName(l.sku)} (${pctS(l.pct)})`).join(" · ");
       const sell = [...o.lines, ...o.soldOut.filter((x) => x.flag === "sell")];
       if (sell.length) ins.push(t("insSellNow", ls(sell)));
       if (o.doNot.length) ins.push(t("insHold", ls(o.doNot)));
@@ -903,8 +914,8 @@ function wsAnalysisSheets(w) {
     const lines = [["Date", "SKU (EN)", "SKU (AR)", "Format", "Ref", "MC"], ...A.lines.slice().reverse().map((l) => [l.date, l.sku.en, l.sku.ar, FMT_EN[fmtOf(l.sku)], l.ref || "", l.qty])];
     const counts = [["Count date", "SKU (EN)", "SKU (AR)", "Previous count", "Received since", "Counted", "Sold (offtake)", "Days"]];
     for (const c of [...w.counts].reverse()) for (const r of w.skuRows) { const p = r.series.find((x) => x.id === c.id); if (p) counts.push([c.date, r.sku.en, r.sku.ar, p.base ? 0 : p.prevV, p.rec, p.v, p.off, p.days ?? ""]); }
-    const next = [["Status", o ? STATUS_EN[o.status] : ""], ["Why", o ? whyTxt(o) : ""], ["When", o ? whenTxt(o) : ""], [], ["SKU (EN)", "SKU (AR)", "Suggested (MC)", "Warehouse can supply now (MC)", "Flag", "He has at his shop (MC)", "Bought last 90 days (MC)", "Stock % of last 90 days"],
-      ...(o ? [...o.lines, ...o.optional, ...o.doNot.map((l) => ({ ...l, qty: 0 })), ...o.extras].map((l) => [l.sku.en, l.sku.ar, l.want, l.qty, basisOf(l), l.has == null ? "" : Math.round(l.has), l.b90 ?? "", l.ratio == null ? "" : Math.round(l.ratio * 100) + "%"]) : [])];
+    const next = [["Status", o ? STATUS_EN[o.status] : ""], ["Why", o ? whyTxt(o) : ""], ["When", o ? whenTxt(o) : ""], [], ["Format", "SKU (EN)", "SKU (AR)", "Last count", "Delivered to count date (MC)", "Stock at count (MC)", "% of his stock", "Flag", "Recommended order (MC)", "Warehouse can supply now (MC)", "Delivered since the count (MC)", "Bought in the last 90 days (MC)"],
+      ...(o ? [...nextRows(o), ...o.extras].map((l) => [FMT_EN[fmtOf(l.sku)], l.sku.en, l.sku.ar, l.countDate || "", l.delTo ?? "", l.stock ?? "", l.pct == null ? "" : Math.round(l.pct * 100) + "%", l.none ? basisOf(l) + " - warehouse has none" : basisOf(l), l.flag === "no" ? 0 : l.want, l.none || l.flag === "no" ? 0 : l.qty ?? 0, l.delSince ?? "", l.b90 ?? ""]) : [])];
     return { A, sheets: [["Summary", summary], ["Month by month", monthly], ["Products vs market", products], ["Orders", orders], ["Order lines", lines], ["Stock counts", counts], ["Next order", next]] };
   } finally { LANG = keep; }
 }
@@ -1350,15 +1361,28 @@ function nextOrders() {
         if (want > 0) lines.push(item);
       }
     } else {
-      // counted: each product line on its own, his stock against what he bought of it in the last 90 days
+      // counted: each product (old and LB packs together), his stock at the last count as a share of
+      // everything delivered to him up to that count. The quantity tops him up to half of what he bought
+      // of it in the last 90 days, less what he holds now (the count plus anything delivered since).
+      const L = new Map();
+      for (const r of w.skuRows) {
+        if (!r.counted) continue;
+        const k = lineOf(r.sku), p = r.series.at(-1), x = L.get(k) || { k, rep: r.sku, repDel: -1, packs: [], delTo: 0, stock: 0, delSince: 0, countDate: null };
+        x.delTo += r.delTo || 0; x.stock += p.v; x.delSince += r.delSince || 0;
+        if (!x.countDate || p.date > x.countDate) x.countDate = p.date;
+        if ((r.delTo || 0) + (r.delSince || 0) > 0) x.packs.push({ sku: r.sku, delTo: r.delTo || 0, stock: p.v });
+        if ((r.delTo || 0) > x.repDel) { x.rep = r.sku; x.repDel = r.delTo || 0; }
+        L.set(k, x);
+      }
       let firstLow = null;
-      for (const x of rows) {
-        const bought = b90Of(x.k), has = x.now, ratio = bought ? has / bought : null;
-        // not bought in 90 days: holding stock means it is not moving; none left means he may have dropped it
-        const flag = !bought ? (has > 0 ? "no" : "maybe") : ratio <= SELL_MAX ? "sell" : ratio <= MAYBE_MAX ? "maybe" : "no";
+      for (const x of L.values()) {
+        if (!x.delTo) continue;                                   // nothing delivered before the count: too early to judge
+        const pct = x.stock / x.delTo, bought = b90Of(x.k), has = x.stock + x.delSince;
+        const flag = pct <= SELL_MAX ? "sell" : pct <= MAYBE_MAX ? "maybe" : "no";
         const want = flag === "no" ? 0 : bought ? Math.max(5, round5(TOP_UP * bought - has)) : usualOf(x.k);
-        const pack = packFor.get(x.k), item = { sku: pack || x.rep, want, src: "usual", flag, has, ratio, b90: bought };
-        if (flag === "no") { doNot.push(item); if (bought) { const d = Math.ceil((has - SELL_MAX * bought) / (bought / 90)); if (firstLow == null || d < firstLow) firstLow = d; } continue; }
+        const pack = packFor.get(x.k);
+        const item = { sku: pack || x.rep, want, src: "usual", flag, pct, ratio: pct, delTo: x.delTo, stock: x.stock, delSince: x.delSince, countDate: x.countDate, packs: x.packs, has, b90: bought };
+        if (flag === "no") { doNot.push(item); const rate = bought / 90; if (rate > 0) { const d = Math.ceil((x.stock - SELL_MAX * x.delTo) / rate); if (firstLow == null || d < firstLow) firstLow = d; } continue; }
         if (!pack) { soldOut.push(item); continue; }
         (flag === "sell" ? lines : optional).push(item);
       }
@@ -1448,22 +1472,45 @@ function nextStrip(o) {
 }
 const plRow = (name, qty, note) => `<div class="pl"><span><span dir="auto">${esc(name)}</span>${note ? `<span class="pn2">${esc(note)}</span>` : ""}</span><b class="num">${fmt(qty)}</b></div>`;
 // The suggested order product by product, then the flavours to offer, what is sold out, and his last order.
-function productList(o) {
-  // what the warehouse can supply matters only for orders due now, this week, or topped up now
+const FLAG_RANK = { sell: 0, maybe: 1, count: 2, no: 3 };
+// Every product line of his next order, most urgent first: sell, potential, then what he has enough of.
+const nextRows = (o) => [...o.lines, ...o.optional, ...o.soldOut.map((l) => ({ ...l, none: true })), ...o.doNot]
+  .sort((a, b) => (a.none ? 1.5 : FLAG_RANK[a.flag] ?? 2) - (b.none ? 1.5 : FLAG_RANK[b.flag] ?? 2) || (a.pct ?? 1) - (b.pct ?? 1) || b.want - a.want);
+const flagChip = (l) => l.flag === "sell" ? `<span class="chip c-crit">${esc(t("chipSell"))}</span>` : l.flag === "maybe" ? `<span class="chip c-warn">${esc(t("chipMaybe"))}</span>` : l.flag === "no" ? `<span class="chip c-good">${esc(t("chipNo"))}</span>` : l.flag === "count" ? `<span class="chip c-mute">${esc(t("chipCount"))}</span>` : "";
+const pctCell = (l) => l.pct == null ? "—" : `<span class="nx-pct ${l.flag}">${esc(pctS(l.pct))}</span>`;
+// the recommended order: what to sell him, what the warehouse can give, or why nothing
+function recCell(o, l) {
+  if (l.flag === "no") return `<span class="muted">—</span>`;
+  if (l.none) return `<span class="muted small">${esc(t("whNone"))}</span>`;
   const supply = o.status === "now" || o.status === "week" || o.status === "maybe";
-  const stockNote = (l) => l.flag === "count" ? t("countNeeded") : l.has == null ? null : l.b90 ? t("hasPct", fmt(Math.round(l.has)), pctS(l.ratio), fmt(l.b90)) : t("hasNot90", fmt(Math.round(l.has)));
-  const row = (l) => plRow(skuName(l.sku), l.want, [stockNote(l), !supply || l.qty >= l.want ? null : l.qty === 0 ? t("noStockLeft") : t("availNow", fmt(l.qty))].filter(Boolean).join(" · "));
+  const opt = l.flag === "maybe" ? ` <span class="small muted">${esc(t("optionalW"))}</span>` : "";
+  if (!supply || l.qty >= l.want) return `<b>${fmt(l.want)}</b>${opt}`;
+  return `<b>${fmt(l.qty)}</b> <span class="small muted">${esc(t("ofWanted", fmt(l.want)))}</span>${opt}`;
+}
+function nextTable(o, withName) {
+  const rows = nextRows(o);
+  if (!rows.length) return `<div class="small muted" style="padding:4px 0">${esc(t("nothingYet"))}</div>`;
+  const packs = (l) => l.packs && l.packs.length > 1 ? `<span class="sub2">${esc(l.packs.map((p) => `${/LB Warn/i.test(p.sku.en) ? t("packLB") : t("packOld")} ${fmt(p.delTo)} / ${fmt(p.stock)}`).join(" · "))}</span>` : "";
+  const body = rows.map((l) => `<tr>${withName ? `<td><a class="name" dir="auto" href="#ws/${o.w.id}">${esc(o.w.name)}</a></td>` : ""}
+      <td class="small nt">${esc(t("f_" + fmtOf(l.sku)))}</td>
+      <td><span class="name" dir="auto">${esc(skuName(l.sku))}</span>${packs(l)}</td>
+      <td class="small num">${l.countDate ? esc(fmtShort(l.countDate)) : "—"}</td>
+      <td class="r num">${l.delTo == null ? "—" : fmt(l.delTo)}</td>
+      <td class="r num">${l.stock == null ? "—" : fmt(l.stock)}${l.delSince ? `<span class="sub2">+${fmt(l.delSince)} ${esc(t("sinceCountS"))}</span>` : ""}</td>
+      <td class="r num">${pctCell(l)}</td><td>${flagChip(l)}</td><td class="r num">${recCell(o, l)}</td></tr>`).join("");
+  const sell = o.lines.reduce((a, l) => a + l.want, 0), opt = o.optional.reduce((a, l) => a + l.want, 0);
+  return `<div class="scroll"><table class="nx-tbl"><thead><tr>${withName ? `<th>${esc(t("wholesaler"))}</th>` : ""}<th>${esc(t("format"))}</th><th>${esc(t("product"))}</th><th>${esc(t("lastCount"))}</th><th class="r">${esc(t("delToCount"))}</th><th class="r">${esc(t("stockMc"))}</th><th class="r">${esc(t("pctStock"))}</th><th>${esc(t("flagH"))}</th><th class="r">${esc(t("recH"))}</th></tr></thead>
+    <tbody>${body}</tbody><tfoot><tr><td colspan="${withName ? 8 : 7}">${esc(t("recTot", fmt(sell), fmt(opt)))}</td><td class="r num">${fmt(sell)}</td></tr></tfoot></table></div>`;
+}
+// The card body: the table, then flavours to offer, what the warehouse lacks, and his last order.
+function productList(o) {
   const extra = o.extras.filter((l) => l.qty > 0);
-  const head = o.counted && o.status !== "lapsed" ? t("sellNowH") : t("nextOrderH");
-  return `<div>
-    ${o.lines.length || o.status !== "maybe" ? `<div class="colh"><span>${esc(head)}</span><b class="num">${fmt(o.wantTotal)}</b></div>
-    ${o.lines.map(row).join("") || `<div class="small muted" style="padding:4px 0">${esc(t(o.soldOut.some((x) => x.flag === "sell") ? "onlySoldOut" : "nothingYet"))}</div>`}` : ""}
+  const supply = o.status === "now" || o.status === "week" || o.status === "maybe";
+  return `<div class="stack" style="gap:6px">
+    ${nextTable(o, false)}
     ${supply && o.total < o.wantTotal ? `<div class="nx-short">${esc(t("canCover", fmt(o.total)))}</div>` : ""}
-    ${o.optional.length ? `<div class="colh sub"><span>${esc(t("maybeH"))}</span><b class="num">${fmt(o.optWant)}</b></div>${o.optional.map(row).join("")}` : ""}
-    ${o.doNot.length ? `<div class="nx-hold"><b>${esc(t("doNotH"))}</b> ${o.doNot.map((l) => `<span dir="auto">${esc(skuName(l.sku))}</span> ${l.b90 ? pctS(l.ratio) : esc(t("notMoving"))}`).join(" · ")}</div>` : ""}
     ${extra.length ? `<div class="nx-also"><b>${esc(t("alsoOfferN", fmt(o.extraTotal)))}</b> ${extra.map((l) => `<span dir="auto">${esc(skuName(l.sku))}</span> ${fmt(l.qty)}`).join(" · ")}</div>` : ""}
-    ${o.soldOut.length ? `<div class="small muted" style="padding-top:4px">${esc(t("soldOutFlag", o.soldOut.map((x) => skuName(x.sku) + (x.flag === "sell" ? " (" + t("fl_sell") + ")" : x.flag === "maybe" ? " (" + t("fl_maybe") + ")" : "")).join(" · ")))}</div>` : ""}
-    ${o.lastLines.length ? `<div class="small muted" style="padding-top:4px">${esc(t("lastOrdWas", fmtShort(o.last), o.lastLines.map((l) => `${skuName(l.sku)} ${fmt(l.qty)}`).join(" · ")))}</div>` : ""}
+    ${o.lastLines.length ? `<div class="small muted">${esc(t("lastOrdWas", fmtShort(o.last), o.lastLines.map((l) => `${skuName(l.sku)} ${fmt(l.qty)}`).join(" · ")))}</div>` : ""}
   </div>`;
 }
 function nextCard(o) {
@@ -1503,20 +1550,26 @@ function viewNext(main) {
       ${k === "lapsed" ? `<p class="small muted">${esc(t("lapsedSub"))}</p>` : ""}
       <div class="panel flush nextgrid">${g.map(nextCard).join("")}</div></section>`;
   };
+  const mode = S.nxMode || store.get("wst_nx") || "cards";
+  const allTable = () => {
+    const withRows = N.list.filter((o) => o.status !== "none" && nextRows(o).length);
+    return `<section class="stack"><div class="panel flush">${withRows.map((o) => `<div class="nx-tgrp"><div class="nx-tgh"><a class="name" dir="auto" href="#ws/${o.w.id}">${esc(o.w.name)}</a> <span class="chip ${STATUS_CHIP[o.status]}">${esc(t("st_" + o.status))}</span> <span class="small muted">${esc(whenTxt(o))}</span></div>${nextTable(o, false)}</div>`).join("")}</div></section>`;
+  };
   main.innerHTML = `
     ${anHead("next", t("nextSub2"))}
+    <div class="seg" role="group" style="margin-bottom:4px"><button type="button" data-nx="cards" aria-pressed="${mode === "cards"}">${esc(t("nxCards"))}</button><button type="button" data-nx="table" aria-pressed="${mode === "table"}">${esc(t("nxTable"))}</button></div>
     <div class="kpis">
       ${["now", "maybe", "later"].concat(grp("week").length ? ["week"] : []).map((k) => `<div class="kpi"><b class="num">${grp(k).length}</b><span>${esc(t("st_" + k))}</span><div class="h">${esc(k === "later" ? t("kEnough") : t("kMc", mcOf(grp(k))))}</div></div>`).join("")}
       <div class="kpi"><b class="num">${fmt(N.stock.reduce((a, x) => a + x.inHand, 0))}</b><span>${esc(t("kInHand"))}</span><div class="h">${esc(t("hInHand", fmtShort(E.ledgerEnd)))}</div></div>
     </div>
-    ${["now", "maybe", "week", "later", "lapsed", "none"].map(sec).join("")}
+    ${mode === "table" ? allTable() : ["now", "maybe", "week", "later", "lapsed", "none"].map(sec).join("")}
     ${N.freshOut.length ? `<p class="small muted">${esc(t("freshOutNote", N.freshOut.join(", ")))}</p>` : ""}
     <details class="panel stack nx-sih"><summary><h3>${esc(t("sihTitle"))}</h3><span class="small muted">${esc(t("sihOpen"))}</span></summary>
       <p class="small muted" style="max-width:85ch">${esc(t("sihSub", fmtDate(E.ledgerEnd)))}</p>
       <div class="scroll">${stockTable(N.stock)}</div>
       ${other.length ? `<p class="small muted">${esc(t("otherOutNote", other.map((x) => `${skuName(x.sku)} ${fmt(x.other)}`).join(", ")))}</p>` : ""}</details>
     <p class="small muted" style="max-width:85ch">${esc(t("nextMethod2", st.lowDays))}</p>`;
-  bindAnSeg(main);
+  main.querySelectorAll("[data-nx]").forEach((b) => b.addEventListener("click", () => { S.nxMode = b.dataset.nx; store.set("wst_nx", S.nxMode); render(); }));
 }
 // The same suggestion on the wholesaler's own page, ready to send.
 function nextBlock(w) {
@@ -1915,15 +1968,16 @@ function exportSheets() {
   const out = [];
 
   // orders & stock
-  const nx = [["Wholesaler", "Status", "Last order", "Days since last order", "Usual order (MC)", "Usually orders every (days)", "Next due", "Stock at his shop now (MC)", "Takes per day (MC)", "Last 60 days (MC)", "Previous 60 days (MC)", "Format", "SKU (EN)", "SKU (AR)", "Wanted (MC)", "Suggested (MC)", "Basis", "He has at his shop (MC)", "Bought last 90 days (MC)", "Stock % of last 90 days"]];
+  const nx = [["Wholesaler", "Status", "Format", "SKU (EN)", "SKU (AR)", "Last count", "Delivered to count date (MC)", "Stock at count (MC)", "% of his stock", "Flag", "Recommended order (MC)", "Warehouse can supply now (MC)", "Delivered since the count (MC)", "Bought in the last 90 days (MC)", "Last order", "Days since last order", "Usual order (MC)", "Usually orders every (days)"]];
   for (const o of N.list) {
-    const head = [o.w.name, STATUS_EN[o.status], o.last, o.since, o.usual, o.gap, o.nextDue, o.shop == null ? "" : Math.round(o.shop), Math.round(o.sells * 10) / 10, o.trend.a, o.trend.b];
-    const all = [...o.lines, ...o.optional, ...o.doNot.map((l) => ({ ...l, qty: 0 })), ...o.extras];
-    if (!all.length) nx.push([...head, "", "", "", 0, 0, "Nothing to order"]);
-    for (const l of all) nx.push([...head, FMT_EN[fmtOf(l.sku)], l.sku.en, l.sku.ar, l.want, l.qty, basisOf(l), l.has == null ? "" : Math.round(l.has), l.b90 ?? "", l.ratio == null ? "" : Math.round(l.ratio * 100) + "%"]);
+    const tail = [o.last || "", o.since ?? "", o.usual || "", o.gap ?? ""];
+    const rows = [...nextRows(o), ...o.extras];
+    if (!rows.length) nx.push([o.w.name, STATUS_EN[o.status], "", "", "", "", "", "", "", "Nothing to order", 0, 0, "", "", ...tail]);
+    for (const l of rows) nx.push([o.w.name, STATUS_EN[o.status], FMT_EN[fmtOf(l.sku)], l.sku.en, l.sku.ar, l.countDate || "", l.delTo ?? "", l.stock ?? "", l.pct == null ? "" : Math.round(l.pct * 100) + "%",
+      l.none ? basisOf(l) + " - warehouse has none" : basisOf(l), l.flag === "no" ? 0 : l.want, l.none || l.flag === "no" ? 0 : l.qty ?? 0, l.delSince ?? "", l.b90 ?? "", ...tail]);
   }
   out.push(sheet("next", "orders", "Next orders", { en: "Next orders", ar: "الطلبيات القادمة" },
-    { en: "Suggested next order for every wholesaler, product by product: his usual order and gap, due date, stock at his shop, wanted vs suggested, and the flavours to also offer.", ar: "الطلبية القادمة المقترحة لكل تاجر صنفاً صنفاً: طلبيته وفترته المعتادتان، الموعد، مخزون محله، المطلوب والمقترح، والنكهات المعروضة أيضاً." }, nx));
+    { en: "Every wholesaler, product by product: last count, delivered to the count date, stock, % of his stock, sell flag and the recommended order, plus the flavours to also offer.", ar: "الطلبية القادمة المقترحة لكل تاجر صنفاً صنفاً: طلبيته وفترته المعتادتان، الموعد، مخزون محله، المطلوب والمقترح، والنكهات المعروضة أيضاً." }, nx));
   const sih = [["Format", "SKU (EN)", "SKU (AR)", "Received (MC)", "Sold (MC)", "Other out (MC)", "In hand (MC)", "Next orders want (MC)", "Allocated (MC)", "Left after (MC)"]];
   for (const x of N.stock) sih.push([FMT_EN[fmtOf(x.sku)], x.sku.en, x.sku.ar, x.received, x.sold, x.other, x.inHand, x.wanted, x.alloc, x.left]);
   out.push(sheet("stock", "orders", "Stock in hand", { en: "Stock in hand", ar: "المخزون المتوفر" },
