@@ -252,6 +252,9 @@ tr.click{cursor:pointer} tr.click:hover td{background:var(--sunk)}
 .nx-why{font-size:13.5px;color:var(--ink-2);line-height:1.5}
 .nx-when{font-size:13.5px;font-weight:500}
 .nx-short{font-size:13px;color:var(--serious, var(--crit));padding-top:6px}
+.wsa-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:16px 24px;align-items:start}
+.ins ul{margin:0;padding-inline-start:18px;display:grid;gap:6px}
+.ins li{font-size:13.5px;line-height:1.55}
 .nx-also{font-size:12.5px;color:var(--ink-2);padding-top:6px;line-height:1.6}
 .nx-grph{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
 .nx-sih summary{display:flex;gap:12px;align-items:baseline;cursor:pointer;list-style:none}
@@ -348,7 +351,25 @@ const T = {
     whyLast:(d,n,mc)=>`last order ${d}, ${n} days ago (${mc} MC)`, whyShop:(mc,d)=>`${mc} MC at his shop (counted ${d})`, whyNoCount:"his shop has not been counted", whyNone:"Has not ordered yet.",
     whenOut:"Out of stock: order now.", whenLow:"His stock is down to the low-stock level: order now.", whenDue:(d)=>`Was due ${d}: order now.`, whenOn:(d)=>`Next order around ${d}.`,
     whenStocked:(m)=>`Well stocked: about ${m} months of stock at his pace, so no order is needed for now.`, whenLapsed:(n)=>`No order for ${n} days: offer his usual order to win him back.`,
-    alsoOffer:"Also offer:", alsoOfferN:(n)=>`Also offer (${n} MC):`, offerH:"Also offer", withOffers:"Total with offers", flavoursN:(n)=>`${n} flavour${n === 1 ? "" : "s"} to try`, noOffer:"nothing to add", orderPlusOffer:(a,b)=>`${a} order + ${b} offer`, hasAtShop:(n)=>`he has ${n}`, availNow:(n)=>`only ${n} available now: more urgent orders come first`, canCover:(n)=>`The warehouse can supply ${n} MC of this today.`, lastOrdWas:(d,x)=>`Last order ${d}: ${x}`, nothingYet:"Nothing needed yet: his stock covers it.", sihOpen:"tap to open",
+    alsoOffer:"Also offer:",
+    anWs:"Analysis", anWsSub:(d)=>`from the ledger up to ${d}; market = every wholesaler in Syria`, aBought:"Bought since first order (MC)", aSince:(d,n)=>`since ${d} · ${n} order${n === 1 ? "" : "s"}`,
+    aShare:"Share of all sales", aRank:(r,n)=>`#${r} of ${n} wholesalers`, aUsual:"Usual order (MC)", aEvery:(d)=>`every ~${d} days`, aDaysSince:"Days since last order", aOverdue:"overdue",
+    aTrend:"Last 90 days vs the 90 before", aTrendSub:(a,b)=>`${a} MC vs ${b} MC`, insTitle:"Key findings", monthByMonth:"Month by month", monthH:"Month", hisMc:"His MC", ordersN:"Orders", mktMc:"Market MC", hisShare:"His share",
+    mixVsMkt:"Product mix vs the market", productLine:"Product line", ofHis:"Of his buying", ofMktSales:"Of market sales", vsMktH:"vs market", lastBoughtH:"Last bought", atShop:"At his shop",
+    mixNote:"vs market: his share of a line divided by the market's share. ×2 means he buys that line twice as much as the average wholesaler; strong from ×1.3, weak up to ×0.5; lines under 3% of the market are not rated. At his shop: his last count plus what he got since.",
+    strong:"strong", weak:"weak", vsMkt:"vs", ofMkt:"of the market", insNone:"No purchases recorded for him yet.",
+    insRank:(r,n,mc,d,p)=>`#${r} of ${n} wholesalers by volume: ${mc} MC since ${d}, ${p} of all sales.`, insLapsed:(n)=>`Lapsed: no order for ${n} days. Worth a call to win him back.`,
+    insOverdue:(n,g)=>`Overdue: ${n} days since his last order, against his usual ~${g}.`, insDue:(n,g)=>`Due now: ${n} days since his last order; he usually orders every ~${g}.`, insOnTime:(n,g)=>`On rhythm: ${n} days since his last order; he usually orders every ~${g}.`,
+    insDown:(a,b,p)=>`Buying less: ${a} MC in the last 90 days against ${b} MC in the 90 before (${p}).`, insUp:(a,b,p)=>`Buying more: ${a} MC in the last 90 days against ${b} MC in the 90 before (${p}).`,
+    insNew:(d)=>`New wholesaler: first order ${d}.`, insQuiet:"No order in the last 90 days.",
+    insBigger:(a,b)=>`Orders are getting bigger: his last three averaged ${a} MC, against ${b} MC before.`, insSmaller:(a,b)=>`Orders are getting smaller: his last three averaged ${a} MC, against ${b} MC before.`,
+    insTop:(l,p,m)=>`${l} is ${p} of what he buys (${m} of the market).`, insGap:(x)=>`Room to grow, big sellers he under-buys: ${x}.`,
+    insNoCount:"His shop has not been counted: count it to see his stock and how fast he sells.", insOut:(d)=>`Out of stock at his shop (count of ${d}).`,
+    insOverstock:(mc,m)=>`Well stocked: ${mc} MC at his shop, about ${m} months at his pace.`, insLow:(mc,d)=>`Running low: ${mc} MC at his shop, about ${d} days left.`,
+    insStock:(mc,d)=>`${mc} MC at his shop, about ${d} days at his pace.`, insSell:(p,mc)=>`From his counts, ${p} of the ${mc} MC delivered to him has sold.`,
+    stockSec:"Stock at his shop (from counts)", byOrder:"By order", productsN:"Products", daysSincePrev:"Days since previous", whatH:"What",
+    wsExportBtn:"Export analysis (Excel)", expByWs:"Analysis by wholesaler", expWsBtn:"Export analysis",
+    expByWsSub:"One wholesaler: a workbook with his summary and findings, month by month, products against the market, orders, order lines, stock counts and next order. All wholesalers: an overview sheet with one row each, then one sheet per wholesaler.", alsoOfferN:(n)=>`Also offer (${n} MC):`, offerH:"Also offer", withOffers:"Total with offers", flavoursN:(n)=>`${n} flavour${n === 1 ? "" : "s"} to try`, noOffer:"nothing to add", orderPlusOffer:(a,b)=>`${a} order + ${b} offer`, hasAtShop:(n)=>`he has ${n}`, availNow:(n)=>`only ${n} available now: more urgent orders come first`, canCover:(n)=>`The warehouse can supply ${n} MC of this today.`, lastOrdWas:(d,x)=>`Last order ${d}: ${x}`, nothingYet:"Nothing needed yet: his stock covers it.", sihOpen:"tap to open",
     lapsedSub:"No order for a long time. The suggestion is his usual order, as a win-back offer.",
     nextMethod2:(d)=>`How it works. His usual order is the middle of his last five orders, and his usual gap the middle of his last four gaps between orders; together they give how much he takes per day. A stock count only tells us what he still has: zero means he ran out, not that he stopped selling. The order is due when his stock is down to ${d} days of sales (at once if he is out), or after his usual gap when his shop has not been counted. It tops him up, product by product and split the way he buys, to last until his next usual order plus ${d} days. Flavours he does not buy are listed under "Also offer". Orders are shared out from the warehouse stock in hand, most urgent first.`,
     kCallNow:"Wholesalers to call now", kOnTrack:"Wholesalers on track", kLapsed:"Lapsed wholesalers", kNextMc:"Suggested orders (MC)", kTrials:"New-flavour trials",
@@ -429,7 +450,25 @@ const T = {
     whyLast:(d,n,mc)=>`آخر طلبية ${d}، منذ ${n} يوم (${mc} كرتونة)`, whyShop:(mc,d)=>`${mc} كرتونة في محله (جرد ${d})`, whyNoCount:"لم يُجرد محله بعد", whyNone:"لم يطلب بعد.",
     whenOut:"نفد مخزونه: اطلب الآن.", whenLow:"مخزونه وصل إلى حد النقص: اطلب الآن.", whenDue:(d)=>`كان موعده ${d}: اطلب الآن.`, whenOn:(d)=>`الطلبية القادمة حوالي ${d}.`,
     whenStocked:(m)=>`مخزونه كبير: يكفيه حوالي ${m} أشهر بوتيرته، فلا حاجة لطلبية الآن.`, whenLapsed:(n)=>`لم يطلب منذ ${n} يوم: اعرض عليه طلبيته المعتادة لاستعادته.`,
-    alsoOffer:"اعرض أيضاً:", alsoOfferN:(n)=>`اعرض أيضاً (${n} كرتونة):`, offerH:"اعرض أيضاً", withOffers:"المجموع مع العروض", flavoursN:(n)=>`${n} نكهات للتجربة`, noOffer:"لا شيء للإضافة", orderPlusOffer:(a,b)=>`${a} طلبية + ${b} عرض`, hasAtShop:(n)=>`لديه ${n}`, availNow:(n)=>`المتوفر الآن ${n} فقط: الطلبيات الأكثر إلحاحاً أولاً`, canCover:(n)=>`يمكن للمستودع توفير ${n} كرتونة من هذه الطلبية اليوم.`, lastOrdWas:(d,x)=>`آخر طلبية ${d}: ${x}`, nothingYet:"لا حاجة بعد: مخزونه يكفي.", sihOpen:"اضغط للعرض",
+    alsoOffer:"اعرض أيضاً:",
+    anWs:"التحليل", anWsSub:(d)=>`من دفتر الحركات حتى ${d}؛ السوق = كل التجار في سوريا`, aBought:"اشترى منذ أول طلبية (كرتونة)", aSince:(d,n)=>`منذ ${d} · ${n === 1 ? "طلبية واحدة" : n + " طلبيات"}`,
+    aShare:"حصته من كل المبيعات", aRank:(r,n)=>`المرتبة ${r} من ${n} تاجر`, aUsual:"طلبيته المعتادة (كرتونة)", aEvery:(d)=>`كل ~${d} يوم`, aDaysSince:"أيام منذ آخر طلبية", aOverdue:"متأخر",
+    aTrend:"آخر 90 يوماً مقابل الـ90 قبلها", aTrendSub:(a,b)=>`${a} مقابل ${b} كرتونة`, insTitle:"أهم الملاحظات", monthByMonth:"شهراً بشهر", monthH:"الشهر", hisMc:"مشترياته", ordersN:"الطلبيات", mktMc:"السوق", hisShare:"حصته",
+    mixVsMkt:"تشكيلته مقارنة بالسوق", productLine:"الصنف", ofHis:"من مشترياته", ofMktSales:"من مبيعات السوق", vsMktH:"مقارنة بالسوق", lastBoughtH:"آخر شراء", atShop:"في محله",
+    mixNote:"مقارنة بالسوق: حصته من الصنف مقسومة على حصة السوق. ×2 تعني أنه يشتري هذا الصنف ضعف متوسط التجار؛ قوي من ×1.3، ضعيف حتى ×0.5؛ الأصناف التي تقل عن 3% من السوق لا تُقيَّم. في محله: آخر جرد زائد ما ورد له بعده.",
+    strong:"قوي", weak:"ضعيف", vsMkt:"مقابل", ofMkt:"من السوق", insNone:"لا مشتريات مسجلة له بعد.",
+    insRank:(r,n,mc,d,p)=>`المرتبة ${r} من ${n} تاجر حسب الكمية: ${mc} كرتونة منذ ${d}، أي ${p} من كل المبيعات.`, insLapsed:(n)=>`منقطع: لم يطلب منذ ${n} يوم. يستحق اتصالاً لاستعادته.`,
+    insOverdue:(n,g)=>`متأخر: ${n} يوماً منذ آخر طلبية، وعادته كل ~${g} يوم.`, insDue:(n,g)=>`حان موعده: ${n} يوماً منذ آخر طلبية، وعادته كل ~${g} يوم.`, insOnTime:(n,g)=>`في إيقاعه: ${n} يوماً منذ آخر طلبية، وعادته كل ~${g} يوم.`,
+    insDown:(a,b,p)=>`يشتري أقل: ${a} كرتونة في آخر 90 يوماً مقابل ${b} في الـ90 قبلها (${p}).`, insUp:(a,b,p)=>`يشتري أكثر: ${a} كرتونة في آخر 90 يوماً مقابل ${b} في الـ90 قبلها (${p}).`,
+    insNew:(d)=>`تاجر جديد: أول طلبية ${d}.`, insQuiet:"لا طلبيات في آخر 90 يوماً.",
+    insBigger:(a,b)=>`طلبياته تكبر: متوسط آخر ثلاث ${a} كرتونة مقابل ${b} قبلها.`, insSmaller:(a,b)=>`طلبياته تصغر: متوسط آخر ثلاث ${a} كرتونة مقابل ${b} قبلها.`,
+    insTop:(l,p,m)=>`${l} يشكّل ${p} مما يشتريه (${m} من السوق).`, insGap:(x)=>`فرصة للنمو، أصناف رائجة يشتري منها القليل: ${x}.`,
+    insNoCount:"لم يُجرد محله بعد: اجرده لمعرفة مخزونه وسرعة بيعه.", insOut:(d)=>`نفد مخزونه في المحل (جرد ${d}).`,
+    insOverstock:(mc,m)=>`مخزونه كبير: ${mc} كرتونة في محله، تكفيه حوالي ${m} أشهر بوتيرته.`, insLow:(mc,d)=>`مخزونه ينخفض: ${mc} كرتونة في محله، تكفيه حوالي ${d} أيام.`,
+    insStock:(mc,d)=>`${mc} كرتونة في محله، تكفيه حوالي ${d} يوماً بوتيرته.`, insSell:(p,mc)=>`حسب جرده، بيع ${p} من الـ${mc} كرتونة التي وردت له.`,
+    stockSec:"المخزون في محله (من الجرد)", byOrder:"حسب الطلبية", productsN:"الأصناف", daysSincePrev:"أيام منذ السابقة", whatH:"التفاصيل",
+    wsExportBtn:"تصدير التحليل (Excel)", expByWs:"التحليل حسب التاجر", expWsBtn:"تصدير التحليل",
+    expByWsSub:"تاجر واحد: ملف فيه ملخصه وأهم الملاحظات، شهراً بشهر، الأصناف مقارنة بالسوق، الطلبيات، سطور الطلبيات، الجرد والطلبية القادمة. كل التجار: ورقة عامة بسطر لكل تاجر، ثم ورقة لكل تاجر.", alsoOfferN:(n)=>`اعرض أيضاً (${n} كرتونة):`, offerH:"اعرض أيضاً", withOffers:"المجموع مع العروض", flavoursN:(n)=>`${n} نكهات للتجربة`, noOffer:"لا شيء للإضافة", orderPlusOffer:(a,b)=>`${a} طلبية + ${b} عرض`, hasAtShop:(n)=>`لديه ${n}`, availNow:(n)=>`المتوفر الآن ${n} فقط: الطلبيات الأكثر إلحاحاً أولاً`, canCover:(n)=>`يمكن للمستودع توفير ${n} كرتونة من هذه الطلبية اليوم.`, lastOrdWas:(d,x)=>`آخر طلبية ${d}: ${x}`, nothingYet:"لا حاجة بعد: مخزونه يكفي.", sihOpen:"اضغط للعرض",
     lapsedSub:"لم يطلبوا منذ مدة طويلة. الاقتراح هو طلبيته المعتادة كعرض لاستعادته.",
     nextMethod2:(d)=>`طريقة الحساب. طلبيته المعتادة هي الوسط بين آخر خمس طلبيات، وفترته المعتادة هي الوسط بين آخر أربع فترات بين طلبياته؛ ومنهما نعرف كم يأخذ يومياً. الجرد يخبرنا فقط بما بقي لديه: الصفر يعني أن مخزونه نفد، لا أنه توقف عن البيع. يحين موعد الطلبية عندما ينزل مخزونه إلى مبيعات ${d} أيام (فوراً إذا نفد)، أو بعد فترته المعتادة إذا لم يُجرد محله. الكمية تكفيه، صنفاً صنفاً وحسب ما يشتريه، حتى طلبيته المعتادة التالية زائد ${d} أيام. النكهات التي لا يشتريها تظهر تحت "اعرض أيضاً". توزَّع الطلبيات من مخزون المستودع المتوفر، الأكثر إلحاحاً أولاً.`,
     kCallNow:"تجار للاتصال الآن", kOnTrack:"تجار في موعدهم", kLapsed:"تجار منقطعون", kNextMc:"الطلبيات المقترحة (كرتونة)", kTrials:"تجارب نكهات جديدة",
@@ -699,6 +738,201 @@ function viewList(main) {
 }
 
 /* ---------- wholesaler page (log) ---------- */
+/* ---------- wholesaler analysis ---------- */
+// A product line is flavour + pack size, the LB-warning pack counted with its parent (the SSOF IMS line).
+// a share, with a decimal when it is under 10%
+const pctS = (x) => (x == null || !isFinite(x) ? "—" : (x < 0.1 ? Math.round(x * 1000) / 10 : Math.round(x * 100)) + "%");
+const lineKeyOf = (s) => `${flavourOf(s)}|${fmtOf(s)}`;
+const lineLabel = (k) => { const [f, m] = k.split("|"); return `${LANG === "ar" ? FLAV_AR[f] || f : f} ${t("f_" + m)}`; };
+// Everything we know about one wholesaler, worked out once per recompute (and language) for the page and the export.
+function wsAnalysis(w) {
+  if (!E._wsa) E._wsa = new Map();
+  const ck = w.id + "|" + LANG;
+  if (E._wsa.has(ck)) return E._wsa.get(ck);
+  const today = todayISO(), M = E.months;
+  const sales = E.rows.filter((r) => r[2] === "Sales Invoice" && r[6] > 0);
+  const ls = S.ledger ? S.ledger.skus : [];
+  // the market: every wholesaler's purchases, for share, rank and mix
+  if (!E._mkt) {
+    const byWs = new Map(), byLine = new Map(), byMonth = M.map(() => 0);
+    for (const r of sales) {
+      const n = aliasOf(r[3]); byWs.set(n, (byWs.get(n) || 0) + r[6]);
+      const k = lineKeyOf(ls[r[0]]); byLine.set(k, (byLine.get(k) || 0) + r[6]);
+      const i = M.indexOf(r[1].slice(0, 7)); if (i >= 0) byMonth[i] += r[6];
+    }
+    const total = [...byWs.values()].reduce((a, v) => a + v, 0);
+    E._mkt = { total, byWs, byLine, byMonth, ranked: E.wsList.map((x) => [x.id, byWs.get(x.name) || 0]).sort((a, b) => b[1] - a[1]) };
+  }
+  const mk = E._mkt;
+  const lines = purchaseLines(w).slice().reverse();                          // oldest first
+  const byDate = new Map();
+  for (const l of lines) { const o = byDate.get(l.date) || { date: l.date, qty: 0, items: [] }; o.qty += l.qty; o.items.push(l); byDate.set(l.date, o); }
+  const orders = [...byDate.values()];
+  orders.forEach((o, i) => { o.gap = i ? dayDiff(orders[i - 1].date, o.date) : null; });
+  const total = lines.reduce((a, l) => a + l.qty, 0);
+  const first = orders[0]?.date || null, last = orders.at(-1)?.date || null, since = last ? dayDiff(last, today) : null;
+  const o = E.wsList.length ? nextOrders().byId.get(w.id) : null;
+  const usual = o ? o.usual : null, gap = o ? o.gap : null, pace = o ? o.sells : 0;
+  const rank = mk.ranked.findIndex((x) => x[0] === w.id) + 1;
+  // the last 90 days against the 90 before
+  const d90 = addDays(today, -90), d180 = addDays(today, -180);
+  let last90 = 0, prev90 = 0;
+  for (const l of lines) { if (l.date > d90) last90 += l.qty; else if (l.date > d180) prev90 += l.qty; }
+  const trend = prev90 ? (last90 - prev90) / prev90 : null;
+  // are his orders getting bigger or smaller: the last three against the ones before
+  const recentAvg = orders.length >= 6 ? orders.slice(-3).reduce((a, x) => a + x.qty, 0) / 3 : null;
+  const earlierAvg = orders.length >= 6 ? orders.slice(0, -3).reduce((a, x) => a + x.qty, 0) / (orders.length - 3) : null;
+  // month by month, his against the market
+  const monthly = M.map((m, i) => { const mine = lines.filter((l) => l.date.slice(0, 7) === m); const qty = mine.reduce((a, l) => a + l.qty, 0);
+    const byFmt = Object.fromEntries(FORMATS.map((f) => [f, mine.filter((l) => fmtOf(l.sku) === f).reduce((a, l) => a + l.qty, 0)]));
+    return { month: m, qty, orders: new Set(mine.map((l) => l.date)).size, market: mk.byMonth[i], share: mk.byMonth[i] ? qty / mk.byMonth[i] : null, byFmt }; });
+  // his stock at the shop per product line, from his latest count plus what he got since
+  const shopBy = new Map(); let countDate = null;
+  for (const r of w.skuRows) { if (!r.counted) continue; const p = r.series.at(-1), k = lineKeyOf(r.sku); shopBy.set(k, (shopBy.get(k) || 0) + p.v + (r.delSince || 0)); if (!countDate || p.date > countDate) countDate = p.date; }
+  const stock = shopBy.size ? [...shopBy.values()].reduce((a, v) => a + v, 0) : null;
+  // product mix: every line the market buys, his share against the market's
+  const his = new Map();
+  for (const l of lines) { const k = lineKeyOf(l.sku), p = his.get(k) || { qty: 0, last: null, orders: new Set() }; p.qty += l.qty; p.last = l.date; p.orders.add(l.date); his.set(k, p); }
+  const products = [...new Set([...mk.byLine.keys(), ...his.keys()])].map((k) => {
+    const h = his.get(k), mine = h ? h.qty : 0, ms = mk.total ? (mk.byLine.get(k) || 0) / mk.total : 0, hs = total ? mine / total : 0;
+    return { key: k, qty: mine, hisShare: hs, mktShare: ms, index: ms ? hs / ms : null, last: h ? h.last : null, orders: h ? h.orders.size : 0, shop: shopBy.has(k) ? shopBy.get(k) : null };
+  }).sort((a, b) => b.qty - a.qty || b.mktShare - a.mktShare);
+  const top = products[0] && products[0].qty ? products[0] : null;
+  const gaps = products.filter((p) => p.mktShare >= 0.05 && p.hisShare < p.mktShare * 0.4).sort((a, b) => b.mktShare - a.mktShare).slice(0, 3);
+  // plain-language findings, most important first
+  const ins = [];
+  if (!orders.length) ins.push(t("insNone"));
+  else {
+    ins.push(t("insRank", rank, E.wsList.length, fmt(total), fmtShort(first), pctS(mk.total ? total / mk.total : null)));
+    if (o && o.status === "lapsed") ins.push(t("insLapsed", since));
+    else if (gap && since > 1.3 * gap) ins.push(t("insOverdue", since, gap));
+    else if (gap && since > gap) ins.push(t("insDue", since, gap));
+    else if (gap && orders.length > 1) ins.push(t("insOnTime", since, gap));
+    if (o && o.status === "lapsed") { /* the lapse already says it */ }
+    else if (trend != null && trend <= -0.25) ins.push(t("insDown", fmt(last90), fmt(prev90), pct(trend)));
+    else if (trend != null && trend >= 0.25) ins.push(t("insUp", fmt(last90), fmt(prev90), "+" + pct(trend)));
+    else if (trend == null && last90 && first > d180) ins.push(t("insNew", fmtShort(first)));
+    else if (!last90) ins.push(t("insQuiet"));
+    if (recentAvg != null && earlierAvg && Math.abs(recentAvg / earlierAvg - 1) >= 0.3) ins.push(t(recentAvg > earlierAvg ? "insBigger" : "insSmaller", fmt(Math.round(recentAvg)), fmt(Math.round(earlierAvg))));
+    if (top && top.hisShare >= 0.5) ins.push(t("insTop", lineLabel(top.key), pctS(top.hisShare), pctS(top.mktShare)));
+    if (gaps.length) ins.push(t("insGap", gaps.map((p) => `${lineLabel(p.key)} (${p.qty ? pctS(p.hisShare) + " " + t("vsMkt") + " " + pctS(p.mktShare) : t("neverBought2") + (LANG === "ar" ? "، " : ", ") + pctS(p.mktShare) + " " + t("ofMkt")})`).join(" · ")));
+    if (stock == null) ins.push(t("insNoCount"));
+    else if (stock < 5) ins.push(t("insOut", fmtShort(countDate)));
+    else if (pace > 0 && stock / pace > 90) ins.push(t("insOverstock", fmt(Math.round(stock)), Math.round(stock / pace / 30)));
+    else if (pace > 0 && stock / pace < settings().lowDays) ins.push(t("insLow", fmt(Math.round(stock)), Math.max(0, Math.round(stock / pace))));
+    else if (pace > 0) ins.push(t("insStock", fmt(Math.round(stock)), Math.round(stock / pace)));
+    if (w.delTo > 0 && w.lastCount && !w.flags) ins.push(t("insSell", pct(w.offToDate / w.delTo), fmt(w.delTo)));
+  }
+  const A = { w, o, lines, orders, total, first, last, since, usual, gap, pace, rank, nWs: E.wsList.length, share: mk.total ? total / mk.total : null,
+    last90, prev90, trend, recentAvg, earlierAvg, monthly, products, top, gaps, stock, countDate, insights: ins };
+  E._wsa.set(ck, A);
+  return A;
+}
+// The analysis block at the top of the wholesaler's page.
+function wsAnalysisSection(w) {
+  const A = wsAnalysis(w);
+  if (!A.orders.length) return `<section class="stack"><h3>${esc(t("anWs"))}</h3><p class="muted">${esc(t("insNone"))}</p></section>`;
+  const tile = (v, k, sub) => `<div class="kpi"><b class="num">${esc(v)}</b><span>${esc(k)}</span><div class="h">${esc(sub)}</div></div>`;
+  const overdue = A.gap && A.since > 1.3 * A.gap;
+  const vs = (p) => p.mktShare < 0.03 ? (p.qty ? "" : "—") : !p.qty ? `<span class="chip c-crit">${esc(t("neverBought2"))}</span>` : p.index == null ? "—" : p.index >= 1.3 ? `<span class="chip c-good">${esc(t("strong"))} ×${fmt1(p.index)}</span>` : p.index <= 0.5 ? `<span class="chip c-warn">${esc(t("weak"))} ×${fmt1(p.index)}</span>` : `×${fmt1(p.index)}`;
+  const mRows = A.monthly.map((m) => `<tr><td class="num">${esc(monthLabel(m.month))} ${m.month.slice(0, 4)}</td><td class="r num"><b>${m.qty ? fmt(m.qty) : "—"}</b></td><td class="r num">${m.orders || "—"}</td><td class="r num">${fmt(m.market)}</td><td class="r num">${m.qty ? pctS(m.share) : "—"}</td></tr>`).join("");
+  const pRows = A.products.map((p) => `<tr><td><span dir="auto">${esc(lineLabel(p.key))}</span></td><td class="r num"><b>${p.qty ? fmt(p.qty) : "—"}</b></td><td class="r num">${p.qty ? pctS(p.hisShare) : "—"}</td><td class="r num">${pctS(p.mktShare)}</td><td class="r">${vs(p)}</td><td class="small num">${p.last ? fmtShort(p.last) : "—"}</td><td class="r num">${p.shop == null ? "—" : fmt(Math.round(p.shop))}</td></tr>`).join("");
+  return `<section class="stack wsa">
+    <div class="head"><h3>${esc(t("anWs"))}</h3><span class="small muted">${esc(t("anWsSub", fmtShort(E.ledgerEnd)))}</span></div>
+    <div class="kpis">
+      ${tile(fmt(A.total), t("aBought"), t("aSince", fmtShort(A.first), A.orders.length))}
+      ${tile(pctS(A.share), t("aShare"), t("aRank", A.rank, A.nWs))}
+      ${tile(A.usual ? fmt(A.usual) : "—", t("aUsual"), A.gap ? t("aEvery", A.gap) : t("oneOrder"))}
+      ${tile(String(A.since), t("aDaysSince"), fmtShort(A.last) + (overdue ? " · " + t("aOverdue") : ""))}
+      ${tile(A.trend == null ? "—" : (A.trend > 0 ? "+" : "") + pct(A.trend), t("aTrend"), t("aTrendSub", fmt(A.last90), fmt(A.prev90)))}
+      ${tile(A.stock == null ? "—" : fmt(Math.round(A.stock)), t("mStock"), A.stock == null ? t("notCounted") : t("countedOn", fmtShort(A.countDate)))}
+    </div>
+    <div class="panel stack ins"><h3>${esc(t("insTitle"))}</h3><ul>${A.insights.map((x) => `<li>${esc(x)}</li>`).join("")}</ul></div>
+    <div class="wsa-2">
+      <div class="stack"><h3>${esc(t("monthByMonth"))}</h3><div class="panel flush scroll"><table>
+        <thead><tr><th>${esc(t("monthH"))}</th><th class="r">${esc(t("hisMc"))}</th><th class="r">${esc(t("ordersN"))}</th><th class="r">${esc(t("mktMc"))}</th><th class="r">${esc(t("hisShare"))}</th></tr></thead>
+        <tbody>${mRows}</tbody><tfoot><tr><td>${esc(t("total"))}</td><td class="r num">${fmt(A.total)}</td><td class="r num">${A.orders.length}</td><td class="r num">${fmt(E._mkt.total)}</td><td class="r num">${pctS(A.share)}</td></tr></tfoot></table></div></div>
+      <div class="stack"><h3>${esc(t("mixVsMkt"))}</h3><div class="panel flush scroll"><table>
+        <thead><tr><th>${esc(t("productLine"))}</th><th class="r">${esc(t("hisMc"))}</th><th class="r">${esc(t("ofHis"))}</th><th class="r">${esc(t("ofMktSales"))}</th><th class="r">${esc(t("vsMktH"))}</th><th>${esc(t("lastBoughtH"))}</th><th class="r">${esc(t("atShop"))}</th></tr></thead>
+        <tbody>${pRows}</tbody></table></div><p class="small muted">${esc(t("mixNote"))}</p></div>
+    </div>
+  </section>`;
+}
+
+/* ---------- export: the analysis of one or every wholesaler ---------- */
+// The analysis as sheets, in English (the rest of the workbook is English too).
+function wsAnalysisSheets(w) {
+  const keep = LANG; LANG = "en";
+  try {
+    const A = wsAnalysis(w), o = A.o, ls = (k) => lineLabel(k);
+    const summary = [["Wholesaler", w.name], ["Rank by purchases", A.orders.length ? `#${A.rank} of ${A.nWs}` : ""], ["Bought since first order (MC)", A.total], ["Share of all sales", A.share == null ? "" : Math.round(A.share * 1000) / 10 + "%"],
+      ["First order", A.first || ""], ["Last order", A.last || ""], ["Days since last order", A.since ?? ""], ["Orders", A.orders.length], ["Average order (MC)", A.orders.length ? Math.round(A.total / A.orders.length) : ""],
+      ["Usual order (MC)", A.usual ?? ""], ["Usually orders every (days)", A.gap ?? ""], ["Last 90 days (MC)", A.last90], ["Previous 90 days (MC)", A.prev90], ["Change", A.trend == null ? "" : (A.trend > 0 ? "+" : "") + Math.round(A.trend * 100) + "%"],
+      ["Stock at his shop (MC)", A.stock == null ? "not counted" : Math.round(A.stock)], ["Stock count date", A.countDate || ""],
+      ["Sold through, from his counts", w.delTo && w.lastCount ? Math.round((w.offToDate / w.delTo) * 100) + "%" : ""],
+      ["Next order", o ? STATUS_EN[o.status] : ""], ["Next order due", o?.nextDue || ""], ["Suggested next order (MC)", o ? o.wantTotal : ""], ["Also offer (MC)", o ? o.extraTotal : ""],
+      [], ["Findings"], ...A.insights.map((x) => ["", x])];
+    const monthly = [["Month", "His purchases (MC)", "Orders", "Market (MC)", "His share", ...FORMATS.map((f) => FMT_EN[f] + " (MC)")],
+      ...A.monthly.map((m) => [m.month, m.qty, m.orders, m.market, m.share == null || !m.qty ? "" : Math.round(m.share * 1000) / 10 + "%", ...FORMATS.map((f) => m.byFmt[f])]),
+      ["TOTAL", A.total, A.orders.length, E._mkt.total, A.share == null ? "" : Math.round(A.share * 1000) / 10 + "%", ...FORMATS.map((f) => A.monthly.reduce((a, m) => a + m.byFmt[f], 0))]];
+    const products = [["Product line", "His purchases (MC)", "Share of his purchases", "Share of market sales", "vs market (x)", "Last bought", "Orders with it", "Stock at his shop (MC)"],
+      ...A.products.map((p) => [ls(p.key), p.qty, p.qty ? Math.round(p.hisShare * 1000) / 10 + "%" : "", Math.round(p.mktShare * 1000) / 10 + "%", p.mktShare < 0.03 ? "" : !p.qty ? "never" : p.index == null ? "" : Math.round(p.index * 10) / 10, p.last || "", p.orders, p.shop == null ? "" : Math.round(p.shop)])];
+    const orders = [["Date", "Order (MC)", "Products", "Days since previous order", "What"],
+      ...A.orders.slice().reverse().map((x) => [x.date, x.qty, x.items.length, x.gap ?? "", x.items.map((l) => `${l.sku.en} ${l.qty}`).join(", ")])];
+    const lines = [["Date", "SKU (EN)", "SKU (AR)", "Format", "Ref", "MC"], ...A.lines.slice().reverse().map((l) => [l.date, l.sku.en, l.sku.ar, FMT_EN[fmtOf(l.sku)], l.ref || "", l.qty])];
+    const counts = [["Count date", "SKU (EN)", "SKU (AR)", "Previous count", "Received since", "Counted", "Sold (offtake)", "Days"]];
+    for (const c of [...w.counts].reverse()) for (const r of w.skuRows) { const p = r.series.find((x) => x.id === c.id); if (p) counts.push([c.date, r.sku.en, r.sku.ar, p.base ? 0 : p.prevV, p.rec, p.v, p.off, p.days ?? ""]); }
+    const next = [["Status", o ? STATUS_EN[o.status] : ""], ["Why", o ? whyTxt(o) : ""], ["When", o ? whenTxt(o) : ""], [], ["SKU (EN)", "SKU (AR)", "Suggested (MC)", "Warehouse can supply now (MC)", "Type", "He has at his shop (MC)"],
+      ...(o ? [...o.lines.map((l) => [l.sku.en, l.sku.ar, l.want, l.qty, "His usual products", l.has == null ? "" : Math.round(l.has)]), ...o.extras.map((l) => [l.sku.en, l.sku.ar, l.want, l.qty, "Also offer", ""])] : [])];
+    return { A, sheets: [["Summary", summary], ["Month by month", monthly], ["Products vs market", products], ["Orders", orders], ["Order lines", lines], ["Stock counts", counts], ["Next order", next]] };
+  } finally { LANG = keep; }
+}
+// One row per wholesaler, for the overview sheet.
+function wsOverviewRows(list) {
+  const keep = LANG; LANG = "en";
+  try {
+    const head = ["Wholesaler", "Rank", "Bought since first order (MC)", "Share of all sales", "Orders", "Usual order (MC)", "Every (days)", "First order", "Last order", "Days since last order",
+      "Last 90 days (MC)", "Previous 90 days (MC)", "Change", "Stock at his shop (MC)", "Count date", "Next order", "Suggested next order (MC)", "Also offer (MC)", "Top product line", "Top line share", "Big sellers he under-buys"];
+    const rows = list.map((w) => { const A = wsAnalysis(w), o = A.o;
+      return [w.name, A.orders.length ? A.rank : "", A.total, A.share == null ? "" : Math.round(A.share * 1000) / 10 + "%", A.orders.length, A.usual ?? "", A.gap ?? "", A.first || "", A.last || "", A.since ?? "",
+        A.last90, A.prev90, A.trend == null ? "" : (A.trend > 0 ? "+" : "") + Math.round(A.trend * 100) + "%", A.stock == null ? "" : Math.round(A.stock), A.countDate || "", o ? STATUS_EN[o.status] : "", o ? o.wantTotal : "", o ? o.extraTotal : "",
+        A.top ? lineLabel(A.top.key) : "", A.top ? Math.round(A.top.hisShare * 1000) / 10 + "%" : "", A.gaps.map((p) => lineLabel(p.key)).join(", ")]; })
+      .sort((a, b) => (a[1] || 999) - (b[1] || 999));
+    return [head, ...rows];
+  } finally { LANG = keep; }
+}
+// One wholesaler: a sheet per part. Several: an overview, then one sheet each with the parts one under another.
+async function exportWsAnalysis(ids) {
+  if (!S.dl) { toast(t("err") + "downloads unavailable"); return; }
+  try {
+    const XLSX = await loadXLSX();
+    const wb = XLSX.utils.book_new(), used = new Set();
+    const nameOf = (n) => { let b = String(n).replace(/[\[\]:*?\/\\]/g, " ").trim().slice(0, 31) || "Sheet", x = b, i = 2; while (used.has(x.toLowerCase())) { const sfx = " " + i++; x = b.slice(0, 31 - sfx.length) + sfx; } used.add(x.toLowerCase()); return x; };
+    const add = (name, aoa) => {
+      const rows = aoa.map((r) => r.map((v) => (typeof v === "number" && !Number.isInteger(v) ? Math.round(v * 100) / 100 : v)));
+      const ws = XLSX.utils.aoa_to_sheet(rows.length ? rows : [[""]]);
+      const width = Math.max(1, ...rows.map((r) => r.length));
+      ws["!cols"] = Array.from({ length: width }, (_, c) => ({ wch: Math.min(60, Math.max(8, ...rows.slice(0, 400).map((r) => String(r[c] ?? "").length)) + 2) }));
+      XLSX.utils.book_append_sheet(wb, ws, nameOf(name));
+    };
+    const list = ids.map((id) => E.wsById.get(id)).filter(Boolean);
+    if (!list.length) return;
+    if (list.length === 1) for (const [n, aoa] of wsAnalysisSheets(list[0]).sheets) add(n, aoa);
+    else {
+      add("Overview", wsOverviewRows(list));
+      for (const w of list) {
+        const all = [];
+        for (const [n, aoa] of wsAnalysisSheets(w).sheets) { if (all.length) all.push([]); all.push([n.toUpperCase()]); all.push(...aoa); }
+        add(w.name, all);
+      }
+    }
+    const fname = list.length === 1 ? `WS analysis - ${list[0].name} - ${todayISO()}.xlsx` : `WS analysis - all wholesalers - ${todayISO()}.xlsx`;
+    const buf = XLSX.write(wb, { type: "array", bookType: "xlsx" });
+    await S.dl.save({ filename: fname, data: new Blob([buf]) });
+    toast(t("exported"));
+  } catch (err) { if (err?.code !== "declined") toast(t("err") + (err?.code || err?.message || err)); }
+}
+
 function viewWs(main, id) {
   const w = E.wsById.get(id);
   if (!w) { main.innerHTML = `<div class="notice">${esc(t("notCounted"))}</div>`; return; }
@@ -708,20 +942,23 @@ function viewWs(main, id) {
     <div class="crumbs"><a href="#">${esc(t("back"))}</a><span>/</span></div>
     <div class="wshead"><div class="stack" style="gap:4px"><h2><span dir="auto">${esc(w.name)}</span></h2>
       <p class="small muted">${w.lastCount ? `${esc(t("lastCount"))}: ${fmtDate(w.lastCount.date)} · ${esc(t("daysAgo", w.daysSinceCount))}` : esc(t("never"))} · ${esc(t("lastDel"))}: ${w.lastDel ? `${fmtDate(w.lastDel)} · ${esc(t("daysAgo", w.daysSinceDel))}` : esc(t("neverDel"))}</p></div>
-      <a class="btn pri big" href="#ws/${w.id}/count">${esc(t("countNow"))}</a></div>
-    ${w.lastCount ? `<div class="kpis">
-      <div class="kpi"><b class="num">${fmt(w.delTo)}</b><span>${esc(t("delToDate"))}</span></div>
-      <div class="kpi"><b class="num">${fmt(w.stock)}</b><span>${esc(t("stock"))}</span></div>
-      <div class="kpi"><b class="num">${fmt(w.offToDate)}</b><span>${esc(t("offtake"))}</span></div>
-      <div class="kpi"><b class="num">${pct(w.delTo ? w.offToDate / w.delTo : null)}</b><span>${esc(t("sellThrough"))}</span></div>
-      <div class="kpi"><b class="num">${fmt1(w.rate)}</b><span>${esc(t("perDay"))}</span></div></div>` : ""}
-    ${w.lastCount && w.uncounted ? `<p class="small muted">${esc(t("partial", w.uncounted))}</p>` : ""}
-    ${w.flags ? `<div class="notice warn">${esc(t("flags"))}: ${w.flags} — ${esc(t("checkNeg"))}</div>` : ""}
-    ${fmtTiles.length ? `<section class="stack"><h3>${esc(t("byFmtWs"))}</h3><div class="kpis">${fmtTiles.map((x) => `<div class="kpi"><b class="num">${fmt(x.a.off)}</b><span><span class="nt">${esc(t("f_" + x.f))}</span> · ${esc(t("stock"))} ${fmt(x.a.stock)} · ${pct(x.a.delTo ? x.a.off / x.a.delTo : null)}</span></div>`).join("")}</div></section>` : ""}
-    ${w.lastCount ? `<section class="stack"><h3>${esc(t("byProduct"))}</h3><div class="panel flush scroll">${skuTable(w, counted)}</div><p class="small muted">${esc(t("estNote"))}</p></section>` : ""}
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button class="btn" type="button" id="wsExport">${esc(t("wsExportBtn"))}</button><a class="btn pri big" href="#ws/${w.id}/count">${esc(t("countNow"))}</a></div></div>
+    ${wsAnalysisSection(w)}
     ${nextBlock(w)}
     ${purchaseSection(w)}
+    ${w.lastCount ? `<section class="stack"><h3>${esc(t("stockSec"))}</h3>
+      <div class="kpis">
+        <div class="kpi"><b class="num">${fmt(w.delTo)}</b><span>${esc(t("delToDate"))}</span></div>
+        <div class="kpi"><b class="num">${fmt(w.stock)}</b><span>${esc(t("stock"))}</span></div>
+        <div class="kpi"><b class="num">${fmt(w.offToDate)}</b><span>${esc(t("offtake"))}</span></div>
+        <div class="kpi"><b class="num">${pct(w.delTo ? w.offToDate / w.delTo : null)}</b><span>${esc(t("sellThrough"))}</span></div>
+        <div class="kpi"><b class="num">${fmt1(w.rate)}</b><span>${esc(t("perDay"))}</span></div></div>
+      ${w.uncounted ? `<p class="small muted">${esc(t("partial", w.uncounted))}</p>` : ""}
+      ${w.flags ? `<div class="notice warn">${esc(t("flags"))}: ${w.flags} — ${esc(t("checkNeg"))}</div>` : ""}
+      ${fmtTiles.length ? `<h3>${esc(t("byFmtWs"))}</h3><div class="kpis">${fmtTiles.map((x) => `<div class="kpi"><b class="num">${fmt(x.a.off)}</b><span><span class="nt">${esc(t("f_" + x.f))}</span> · ${esc(t("stock"))} ${fmt(x.a.stock)} · ${pct(x.a.delTo ? x.a.off / x.a.delTo : null)}</span></div>`).join("")}</div>` : ""}
+      <h3>${esc(t("byProduct"))}</h3><div class="panel flush scroll">${skuTable(w, counted)}</div><p class="small muted">${esc(t("estNote"))}</p></section>` : ""}
     <section class="stack"><h3>${esc(t("history"))}</h3><div class="panel flush hist" id="hist">${histHTML(w)}</div></section>`;
+  document.getElementById("wsExport").addEventListener("click", () => exportWsAnalysis([w.id]));
   bindPurchases(w);
   bindHistory(w);
 }
@@ -748,13 +985,18 @@ function purchaseLines(w) {
 function purchaseSection(w) {
   const rows = purchaseLines(w);
   if (!rows.length) return "";
-  const mode = S.phMode || "date";
+  const mode = S.phMode || "order";
   const total = rows.reduce((a, r) => a + r.qty, 0);
   const days = [...new Set(rows.map((r) => r.date))];
   const gaps = days.slice().sort().slice(1).map((d, i) => dayDiff(days.slice().sort()[i], d));
   const avgGap = gaps.length ? Math.round(gaps.reduce((a, b) => a + b, 0) / gaps.length) : null;
   let body;
-  if (mode === "date") {
+  if (mode === "order") {
+    const A = wsAnalysis(w);
+    body = `<table><thead><tr><th>${esc(t("date"))}</th><th class="r">${esc(t("units"))}</th><th class="r">${esc(t("productsN"))}</th><th class="r">${esc(t("daysSincePrev"))}</th><th>${esc(t("whatH"))}</th></tr></thead><tbody>`
+      + A.orders.slice().reverse().map((o) => `<tr><td class="small num" style="white-space:nowrap">${fmtDate(o.date)}</td><td class="r num"><b>${fmt(o.qty)}</b></td><td class="r num">${o.items.length}</td><td class="r num">${o.gap == null ? "—" : o.gap}</td><td class="small">${esc(o.items.map((l) => `${skuName(l.sku)} ${fmt(l.qty)}`).join(" · "))}</td></tr>`).join("")
+      + `</tbody><tfoot><tr><td>${esc(t("total"))} · ${A.orders.length}</td><td class="r num">${fmt(total)}</td><td colspan="3"></td></tr></tfoot></table>`;
+  } else if (mode === "date") {
     body = `<table><thead><tr><th>${esc(t("date"))}</th><th>${esc(t("product"))}</th><th>${esc(t("format"))}</th><th>${esc(t("ref"))}</th><th class="r">${esc(t("units"))}</th></tr></thead><tbody>`;
     let last = null;
     for (const r of rows) {
@@ -775,7 +1017,7 @@ function purchaseSection(w) {
       + `</tbody><tfoot><tr><td colspan="5">${esc(t("total"))}</td><td class="r num">${fmt(total)}</td><td></td></tr></tfoot></table>`;
   }
   return `<section class="stack"><div class="head"><h3>${esc(t("purchases"))}</h3>
-      <div class="seg" role="group"><button type="button" data-ph="date" aria-pressed="${mode === "date"}">${esc(t("byDate"))}</button><button type="button" data-ph="sku" aria-pressed="${mode === "sku"}">${esc(t("byProductT"))}</button></div></div>
+      <div class="seg" role="group"><button type="button" data-ph="order" aria-pressed="${mode === "order"}">${esc(t("byOrder"))}</button><button type="button" data-ph="date" aria-pressed="${mode === "date"}">${esc(t("byDate"))}</button><button type="button" data-ph="sku" aria-pressed="${mode === "sku"}">${esc(t("byProductT"))}</button></div></div>
     <p class="small muted">${esc(t("purchasesSub"))} · ${rows.length} ${esc(t("linesN"))} · ${days.length} ${esc(t("orderDays"))}${avgGap ? " · " + esc(t("everyDays", avgGap)) : ""} · ${fmt(total)} ${esc(t("units"))}</p>
     <div class="panel chart stack"><h3>${esc(t("monthlyBuy"))}</h3><div id="cBuy"></div></div>
     <div class="panel flush scroll">${body}</div></section>`;
@@ -1698,7 +1940,11 @@ function viewExport(main) {
       <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" type="button" data-sel="all">${esc(t("expAll"))}</button><button class="btn" type="button" data-sel="none">${esc(t("expNone"))}</button></div></div>
     ${groups.map((g) => `<section class="stack"><h3>${esc(t("expG_" + g))}</h3><div class="panel flush">${sheets.filter((x) => x.group === g).map((x) => `
       <label class="exrow"><input type="checkbox" data-key="${x.key}" ${S.expSel.has(x.key) ? "checked" : ""}><span><span class="name">${esc(x.title[L])}</span><span class="sub2">${esc(x.desc[L])}</span></span><span class="small muted num">${esc(t("expRows", fmt(Math.max(0, x.aoa.length - 1))))}</span></label>`).join("")}</div></section>`).join("")}
+    <section class="stack"><h3>${esc(t("expByWs"))}</h3><div class="panel stack"><p class="small muted" style="max-width:80ch">${esc(t("expByWsSub"))}</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><select class="inp" id="exWs" style="min-width:240px"><option value="all">${esc(t("allWs"))}</option>${[...E.wsList].sort((a, b) => a.name.localeCompare(b.name, "ar")).map((w) => `<option value="${w.id}">${esc(w.name)}</option>`).join("")}</select>
+      <button class="btn" type="button" id="exWsGo">${esc(t("expWsBtn"))}</button></div></div></section>
     <div class="sticky-save"><span class="small ink2" id="exSum"></span><button class="btn pri big" type="button" id="exGo"></button></div>`;
+  document.getElementById("exWsGo").addEventListener("click", () => { const v = document.getElementById("exWs").value; exportWsAnalysis(v === "all" ? E.wsList.map((w) => w.id) : [v]); });
   const sync = () => { const n = S.expSel.size, b = document.getElementById("exGo"); b.textContent = t("expBtn", n); b.disabled = !n; document.getElementById("exSum").textContent = t("expFile", `WS Tracker ${todayISO()}.xlsx`); };
   main.querySelectorAll("[data-key]").forEach((c) => c.addEventListener("change", () => { if (c.checked) S.expSel.add(c.dataset.key); else S.expSel.delete(c.dataset.key); sync(); }));
   main.querySelectorAll("[data-sel]").forEach((b) => b.addEventListener("click", () => { S.expSel = new Set(b.dataset.sel === "all" ? sheets.map((x) => x.key) : []); render(); }));
