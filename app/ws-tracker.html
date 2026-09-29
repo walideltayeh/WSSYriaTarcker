@@ -360,7 +360,7 @@ const T = {
     whenOut:"Out of stock: order now.", whenLow:"His stock is down to the low-stock level: order now.", whenDue:(d)=>`Was due ${d}: order now.`, whenOn:(d)=>`Next order around ${d}.`,
     whenStocked:(m)=>`Well stocked: about ${m} months of stock at his pace, so no order is needed for now.`, whenLapsed:(n)=>`No order for ${n} days: offer his usual order to win him back.`,
     alsoOffer:"Also offer:",
-    sellNowH:"Sell him now (definitely)", pctStock:"% of his stock", allWhHas:"· all the warehouse has", whCheckH:"Warehouse check", shortBy:(n)=>`short by ${n}`,
+    sellNowH:"Sell him now (definitely)", pctStock:"% of his stock", exNextWs:"Export next orders (Excel)", allWhHas:"· all the warehouse has", whCheckH:"Warehouse check", shortBy:(n)=>`short by ${n}`,
     shortLine:(p,a,b,c)=>`${p}: ${a} MC recommended to all wholesalers, ${b} MC in the warehouse, short by ${c}. The orders placed first take it.`,
     noneLine:(x)=>`Needed but none in the warehouse: ${x}.`, wsN:(n)=>`${n} wholesaler${n === 1 ? "" : "s"}`, whStockH:"Warehouse stock (MC)", delToCount:"Delivered to count date (MC)", stockMc:"Stock (MC)", flagH:"Flag", recH:"Recommended order", chipSell:"Sell", chipMaybe:"Potential", chipNo:"Do not sell", chipCount:"Count needed",
     whNone:"warehouse has none", optionalW:"optional", ofWanted:(n)=>`of ${n} (warehouse short)`, recTot:(a,b)=>`Recommended order: ${a} MC to sell now · ${b} MC optional`, packOld:"old pack", packLB:"LB pack", sinceCountS:"since count",
@@ -469,7 +469,7 @@ const T = {
     whenOut:"نفد مخزونه: اطلب الآن.", whenLow:"مخزونه وصل إلى حد النقص: اطلب الآن.", whenDue:(d)=>`كان موعده ${d}: اطلب الآن.`, whenOn:(d)=>`الطلبية القادمة حوالي ${d}.`,
     whenStocked:(m)=>`مخزونه كبير: يكفيه حوالي ${m} أشهر بوتيرته، فلا حاجة لطلبية الآن.`, whenLapsed:(n)=>`لم يطلب منذ ${n} يوم: اعرض عليه طلبيته المعتادة لاستعادته.`,
     alsoOffer:"اعرض أيضاً:",
-    sellNowH:"بِعه الآن (مؤكد)", pctStock:"% من مخزونه", allWhHas:"· كل ما في المستودع", whCheckH:"فحص المستودع", shortBy:(n)=>`نقص ${n}`,
+    sellNowH:"بِعه الآن (مؤكد)", pctStock:"% من مخزونه", exNextWs:"تصدير الطلبيات القادمة (Excel)", allWhHas:"· كل ما في المستودع", whCheckH:"فحص المستودع", shortBy:(n)=>`نقص ${n}`,
     shortLine:(p,a,b,c)=>`${p}: ${a} كرتونة مقترحة لكل التجار، و${b} كرتونة في المستودع، أي نقص ${c}. الطلبيات التي تُنفَّذ أولاً تأخذها.`,
     noneLine:(x)=>`مطلوبة لكن غير متوفرة في المستودع: ${x}.`, wsN:(n)=>n === 1 ? "تاجر واحد" : `${n} تجار`, whStockH:"مخزون المستودع (كرتونة)", delToCount:"ورد حتى تاريخ الجرد (كرتونة)", stockMc:"المخزون (كرتونة)", flagH:"التقييم", recH:"الطلبية المقترحة", chipSell:"بِع", chipMaybe:"محتمل", chipNo:"لا تبِع", chipCount:"يحتاج جرد",
     whNone:"غير متوفر في المستودع", optionalW:"اختياري", ofWanted:(n)=>`من ${n} (نقص في المستودع)`, recTot:(a,b)=>`الطلبية المقترحة: ${a} كرتونة للبيع الآن · ${b} كرتونة اختياري`, packOld:"العبوة القديمة", packLB:"عبوة تحذير لبنان", sinceCountS:"بعد الجرد",
@@ -750,8 +750,10 @@ function viewList(main) {
   const q = store.get("wst_q") || "";
   main.innerHTML = `
     <div class="head"><div><h2>${esc(t("wsTitle"))}</h2><p class="sub">${esc(t("wsSub"))}</p></div>
+      <button class="btn" type="button" id="exNextWs">${esc(t("exNextWs"))}</button>
       <input class="inp search" id="q" type="search" placeholder="${esc(t("search"))}" value="${esc(q)}" autocomplete="off"></div>
     <div class="panel flush"><div class="wslist" id="wslist"></div></div>`;
+  document.getElementById("exNextWs").addEventListener("click", () => exportNextByWs());
   const draw = () => {
     const qq = document.getElementById("q").value.trim().toLowerCase();
     const list = E.wsList.filter((w) => !qq || w.name.toLowerCase().includes(qq)).sort((a, b) => (b.due - a.due) || ((b.daysSinceCount ?? 1e9) - (a.daysSinceCount ?? 1e9)) || (b.totalDel - a.totalDel));
@@ -1806,6 +1808,73 @@ function viewData(main) {
 function loadXLSX() {
   if (window.XLSX) return Promise.resolve(window.XLSX);
   return new Promise((res, rej) => { const s = document.createElement("script"); s.src = "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"; s.onload = () => res(window.XLSX); s.onerror = () => rej(new Error("xlsx library failed to load")); document.head.appendChild(s); });
+}
+function loadExcelJS() {
+  if (window.ExcelJS) return Promise.resolve(window.ExcelJS);
+  return new Promise((res, rej) => { const s = document.createElement("script"); s.src = "https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"; s.onload = () => res(window.ExcelJS); s.onerror = () => rej(new Error("excel library failed to load")); document.head.appendChild(s); });
+}
+// Every wholesaler's next order on one sheet: his block starts with a coloured name bar, each product
+// row is highlighted by its flag (green sell, yellow potential, red do not sell), and a gap follows.
+async function exportNextByWs() {
+  const keep = LANG;
+  if (!S.dl) { toast(t("err") + "downloads unavailable"); return; }
+  try {
+    const ExcelJS = await loadExcelJS();
+    LANG = "en";
+    const N = nextOrders(), wb = new ExcelJS.Workbook();
+    const ws = wb.addWorksheet("Next orders", { views: [{ state: "frozen", ySplit: 3 }] });
+    const COLS = [["Format", 9], ["SKU (AR)", 36], ["SKU (EN)", 30], ["Last count", 12], ["Delivered to count date (MC)", 16], ["Stock (MC)", 11], ["% of his stock", 12], ["Flag", 24], ["Recommended order (MC)", 15], ["Warehouse stock (MC)", 14]];
+    ws.columns = COLS.map(([, w]) => ({ width: w }));
+    const n = COLS.length, fill = (argb) => ({ type: "pattern", pattern: "solid", fgColor: { argb } });
+    const thin = { style: "thin", color: { argb: "FFBFBFBF" } }, box = { top: thin, left: thin, bottom: thin, right: thin };
+    const FLAG = {
+      sell: { label: "Sell", row: "FFE2F0D9", cell: "FF70AD47", font: "FFFFFFFF" },
+      maybe: { label: "Potential sell (optional)", row: "FFFFF2CC", cell: "FFFFC000", font: "FF000000" },
+      no: { label: "Do not sell", row: "FFF8D7DA", cell: "FFC00000", font: "FFFFFFFF" },
+      count: { label: "Count needed", row: "FFEDEDED", cell: "FFA6A6A6", font: "FFFFFFFF" },
+    };
+    const title = ws.addRow([`Next orders by wholesaler — ${fmtDate(todayISO())}`]);
+    title.font = { bold: true, size: 14 }; ws.mergeCells(title.number, 1, title.number, n);
+    const legend = ws.addRow(["% of his stock = his stock at the last count ÷ everything delivered to him up to that count. Up to 30%: Sell · 31–50%: Potential (optional) · above 50%: Do not sell. At 0% the order is double his usual quantity. Recommended orders never exceed the warehouse stock."]);
+    legend.font = { italic: true, size: 9, color: { argb: "FF595959" } }; legend.alignment = { wrapText: true, vertical: "top" }; legend.height = 30; ws.mergeCells(legend.number, 1, legend.number, n);
+    ws.addRow([]);
+    for (const o of N.list) {
+      const rows = nextRows(o);
+      if (o.status === "none" || !rows.length) continue;
+      // his name bar
+      const bar = ws.addRow([`${o.w.name}   ·   ${STATUS_EN[o.status]}   ·   last order ${o.last || "—"}${o.since != null ? ` (${o.since} days ago)` : ""}   ·   usually ${o.usual || "—"} MC every ~${o.gap || o.G} days   ·   stock at his shop ${o.shop == null ? "not counted" : fmt(Math.round(o.shop)) + " MC"}`]);
+      ws.mergeCells(bar.number, 1, bar.number, n);
+      bar.height = 22; bar.font = { bold: true, size: 12, color: { argb: "FFFFFFFF" } }; bar.alignment = { vertical: "middle", readingOrder: "rtl" };
+      for (let c = 1; c <= n; c++) bar.getCell(c).fill = fill("FF1F3A5F");
+      // column heads
+      const head = ws.addRow(COLS.map(([h]) => h));
+      head.font = { bold: true, size: 10 }; head.alignment = { wrapText: true, vertical: "middle" }; head.height = 30;
+      head.eachCell((c) => { c.fill = fill("FFD9E1F2"); c.border = box; });
+      // his products, highlighted by flag
+      for (const l of rows) {
+        const F = FLAG[l.flag] || FLAG.count;
+        const label = (l.flag == null ? "Usual order" : F.label) + (l.none ? " — warehouse has none" : "");
+        const r = ws.addRow([FMT_EN[fmtOf(l.sku)], l.sku.ar, l.sku.en, l.countDate || "", l.delTo ?? "", l.stock ?? "", l.pct == null ? "" : l.pct, label, recOf(l), whStockOf(l)]);
+        r.eachCell({ includeEmpty: true }, (c) => { c.fill = fill(F.row); c.border = box; });
+        r.getCell(2).alignment = { horizontal: "right", readingOrder: "rtl" };
+        [5, 6, 9, 10].forEach((i) => { r.getCell(i).numFmt = "#,##0"; });
+        r.getCell(7).numFmt = "0%";
+        const fc = r.getCell(8); fc.fill = fill(F.cell); fc.font = { bold: true, color: { argb: F.font } };
+        r.getCell(9).font = { bold: true };
+      }
+      // his total
+      const sell = o.lines.reduce((a, l) => a + recOf(l), 0), opt = o.optional.reduce((a, l) => a + recOf(l), 0);
+      const tot = ws.addRow(["", "", "", "", "", "", "", `Sell now ${fmt(sell)} MC · optional ${fmt(opt)} MC`, sell, ""]);
+      tot.font = { bold: true }; tot.getCell(9).numFmt = "#,##0";
+      tot.eachCell({ includeEmpty: true }, (c) => { c.border = { top: { style: "medium" }, bottom: { style: "thick", color: { argb: "FF1F3A5F" } } }; });
+      // a gap before the next wholesaler
+      ws.addRow([]); ws.addRow([]);
+    }
+    LANG = keep;
+    const buf = await wb.xlsx.writeBuffer();
+    await S.dl.save({ filename: `Next orders by wholesaler ${todayISO()}.xlsx`, data: new Blob([buf]) });
+    toast(t("exported"));
+  } catch (err) { LANG = keep; if (err?.code !== "declined") toast(t("err") + (err?.code || err?.message || err)); }
 }
 async function onImportFile(e) {
   const file = e.target.files?.[0]; if (!file) return;
