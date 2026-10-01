@@ -319,7 +319,7 @@ const T = {
     edit:"Edit", del:"Delete", delConfirm:"Tap again to delete", deleted:"Count deleted", by:"by", someone:"Someone", supName:"Supervisor name (saved on this device)",
     product:"Product", stock:"Stock", delivered:"Delivered", offtake:"Offtake", sellThrough:"Sell-through", perDay:"Per day", daysLeft:"Days left",
     suggested:"Suggested order", prevCount:"Previous", received:"Delivered", counted:"Counted", period:"Period",
-    offTitle:"Offtake", offSub:"Offtake = stock at previous count + delivered since − stock counted now. At a wholesaler's first count, previous stock is taken as 0 (before their first delivery).",
+    offTitle:"Offtake", offSub:"Offtake = stock at previous count + delivered since − stock counted now. At a wholesaler's first count, previous stock is taken as 0 (before their first delivery). The old and LB Warn packs of a product are one product here: both are delivered and counted together.",
     allProducts:"All products", counted_n:(a,b)=>`${a} of ${b}`, kWs:"Wholesalers counted", kDel:"Delivered MC (to count dates)", kStock:"Stock at wholesalers (MC)", kOff:"Offtake (MC)", kST:"Sell-through",
     wholesaler:"Wholesaler", allWs:"All wholesalers", notCounted:"Not counted yet", flags:"Checks", estNote:"Days left = estimated stock today ÷ offtake per day (from the latest period).",
     bySku:"By product — all wholesalers", anTitle:"Deliveries analysis", anSub:r=>`From the warehouse ledger: ${r}.`, monthly:"Deliveries per month by product family",
@@ -339,7 +339,7 @@ const T = {
     addWs:"Add a wholesaler not in the ledger", addWsBtn:"Add", wsAdded:"Wholesaler added", method:"How offtake is calculated",
     methodTxt:"For each wholesaler and product: offtake between two counts = previous count + deliveries in between (sales invoices from the ledger) − the new count. The first count uses 0 as the previous stock, so it shows offtake since that wholesaler's first delivery. A negative result is flagged “Check”: a counting mistake, or stock that came from somewhere the ledger doesn't show. All quantities are mastercases (MC), so totals across products and formats add up correctly.",
     err:"Something went wrong: ", noWrite:"Your access can't save here.", units:"MC", wa:"Send on WhatsApp",
-    countHint:"Count in mastercases (MC). Use decimals for opened cases, e.g. 2.5.",
+    countHint:"Count in mastercases (MC). Use decimals for opened cases, e.g. 2.5. Count the old and LB Warn packs of a product together on its one line.",
     nothingPush:"Nothing urgent right now.", lastDel:"Last delivery", neverDel:"No deliveries in the ledger", enterOne:"Enter at least one stock count.",
     partial:n=>`Totals cover the products counted. ${n} other product${n>1?"s were":" was"} delivered to this wholesaler but ${n>1?"haven't":"hasn't"} been counted yet.`,
     f_cruz:"50g", f_kf:"250g", f_kilo:"Kg", format:"Format", show:"Show", allOf:"all flavours", total:"Total", marketTotal:"Market total",
@@ -428,7 +428,7 @@ const T = {
     edit:"تعديل", del:"حذف", delConfirm:"اضغط مرة أخرى للحذف", deleted:"تم حذف الجرد", by:"بواسطة", someone:"مستخدم", supName:"اسم المشرف (يُحفظ على هذا الجهاز)",
     product:"الصنف", stock:"المخزون", delivered:"المورَّد", offtake:"التصريف", sellThrough:"نسبة التصريف", perDay:"يومياً", daysLeft:"أيام متبقية",
     suggested:"طلبية مقترحة", prevCount:"السابق", received:"المورَّد", counted:"المجرود", period:"الفترة",
-    offTitle:"التصريف", offSub:"التصريف = مخزون الجرد السابق + المورَّد منذه − المخزون المجرود الآن. في أول جرد للتاجر يُعتبر المخزون السابق صفراً (قبل أول توريد).",
+    offTitle:"التصريف", offSub:"التصريف = مخزون الجرد السابق + المورَّد منذه − المخزون المجرود الآن. في أول جرد للتاجر يُعتبر المخزون السابق صفراً (قبل أول توريد). العبوة القديمة وعبوة تحذير لبنان من الصنف نفسه صنف واحد هنا: تُحسب توريداتهما وجردهما معاً.",
     allProducts:"كل الأصناف", counted_n:(a,b)=>`${a} من ${b}`, kWs:"التجار المجرودون", kDel:"المورَّد بالكرتونة (حتى تواريخ الجرد)", kStock:"المخزون لدى التجار (كرتونة)", kOff:"التصريف (كرتونة)", kST:"نسبة التصريف",
     wholesaler:"التاجر", allWs:"كل التجار", notCounted:"لم يُجرد بعد", flags:"للتحقق", estNote:"الأيام المتبقية = المخزون المقدّر اليوم ÷ التصريف اليومي (من آخر فترة).",
     bySku:"حسب الصنف — كل التجار", anTitle:"تحليل التوريدات", anSub:r=>`من دفتر المستودع: ${r}.`, monthly:"التوريدات الشهرية حسب عائلة المنتج",
@@ -448,7 +448,7 @@ const T = {
     addWs:"إضافة تاجر غير موجود في الدفتر", addWsBtn:"إضافة", wsAdded:"تمت إضافة التاجر", method:"طريقة حساب التصريف",
     methodTxt:"لكل تاجر وصنف: التصريف بين جردين = الجرد السابق + التوريدات بينهما (فواتير البيع من الدفتر) − الجرد الجديد. أول جرد يعتبر المخزون السابق صفراً، فيظهر التصريف منذ أول توريد للتاجر. النتيجة السالبة تُعلَّم «تحقق»: خطأ في العد أو بضاعة من مصدر غير موجود في الدفتر. كل الكميات بالكرتونة الماستر (MC)، لذلك المجاميع بين الأصناف والعبوات صحيحة.",
     err:"حدث خطأ: ", noWrite:"صلاحيتك لا تسمح بالحفظ هنا.", units:"كرتونة", wa:"إرسال عبر واتساب",
-    countHint:"العدّ بالكرتونة الماستر (MC). استخدم الكسور للكراتين المفتوحة، مثل 2.5.",
+    countHint:"العدّ بالكرتونة الماستر (MC). استخدم الكسور للكراتين المفتوحة، مثل 2.5. عُدّ العبوة القديمة وعبوة تحذير لبنان من الصنف نفسه معاً في سطره الواحد.",
     nothingPush:"لا شيء عاجل الآن.", lastDel:"آخر توريد", neverDel:"لا توريدات في الدفتر", enterOne:"أدخل جرد صنف واحد على الأقل.",
     partial:n=>`المجاميع تشمل الأصناف المجرودة فقط. ${n} صنف آخر ورِّد لهذا التاجر ولم يُجرد بعد.`,
     f_cruz:"50غ", f_kf:"250غ", f_kilo:"كغ", format:"العبوة", show:"عرض", allOf:"كل النكهات", total:"المجموع", marketTotal:"إجمالي السوق",
@@ -577,7 +577,13 @@ function recompute() {
   const today = todayISO();
   const ledgerEnd = rows.reduce((m, r) => (r[1] > m ? r[1] : m), "");
   const ledgerStart = rows.reduce((m, r) => (!m || r[1] < m ? r[1] : m), "");
-  const del = new Map(); // wsId -> Map(skuId -> [[date, qty]])
+  // Wholesaler side: the old and LB Warn packs of a product are one product (supervisors count them together).
+  // The plain pack stands for both; the warehouse side keeps the packs apart.
+  const lineHead = new Map();
+  for (const x of skus) { const k = lineOf(x), cur = lineHead.get(k); if (!cur || (/LB Warn/i.test(cur.en) && !/LB Warn/i.test(x.en))) lineHead.set(k, x); }
+  const canon = new Map(skus.map((x) => [x.id, lineHead.get(lineOf(x)).id]));
+  const members = new Map(); for (const x of skus) { const c = canon.get(x.id); if (!members.has(c)) members.set(c, []); members.get(c).push(x.id); }
+  const del = new Map(); // wsId -> Map(product id -> [[date, qty]]), both packs under the product
   const wsMap = new Map();
   for (const r of rows) {
     const [si, date, type, ws, , , out] = r;
@@ -585,7 +591,7 @@ function recompute() {
     const name = aliasOf(ws);
     const id = wsIdOf(name);
     if (!wsMap.has(id)) wsMap.set(id, { id, name: name.trim(), extra: false });
-    const sid = skus[si].id;
+    const sid = canon.get(skus[si].id);
     if (!del.has(id)) del.set(id, new Map());
     const m = del.get(id);
     if (!m.has(sid)) m.set(sid, []);
@@ -602,10 +608,11 @@ function recompute() {
   for (const c of S.counts) { if (!c.ws || !c.date) continue; const cw = countWs(c); if (!countsByWs.has(cw)) countsByWs.set(cw, []); countsByWs.get(cw).push(c); if (!wsMap.has(cw) && c.wsName) wsMap.set(cw, { id: cw, name: aliasOf(c.wsName).trim(), extra: true }); }
   for (const a of countsByWs.values()) a.sort((x, y) => (x.date < y.date ? -1 : x.date > y.date ? 1 : String(x.savedAt || "").localeCompare(String(y.savedAt || ""))));
 
+  const stockOf = (c, sid) => { const ids = members.get(sid); if (!ids) return null; let v = null; for (const p of ids) { const x = c.stock?.[p]; if (typeof x === "number" && isFinite(x)) v = (v ?? 0) + x; } return v; };
   const series = (wsId, sid) => {
     const out = []; let prev = null;
     for (const c of countsByWs.get(wsId) || []) {
-      const v = c.stock?.[sid];
+      const v = stockOf(c, sid);
       if (typeof v !== "number" || !isFinite(v)) continue;
       const delTo = cum(wsId, sid, c.date);
       if (prev) {
@@ -683,7 +690,9 @@ function recompute() {
   const buyers = months.map(() => new Set());
   for (const r of rows) { if (r[2] !== "Sales Invoice" || !r[6]) continue; const mi = months.indexOf(r[1].slice(0, 7)); if (mi < 0) continue; monthly[famOf(skus[r[0]])][mi] += r[6]; if (r[3]) buyers[mi].add(aliasOf(r[3])); }
 
-  E = { skus: skuOrder, rows, entered: manual.length, wsList, wsById: new Map(wsList.map((w) => [w.id, w])), cum, firstDel, del, wh, whById, months, monthly, buyers: buyers.map((b) => b.size), totalDel, ledgerStart, ledgerEnd, salesLines: rows.filter((r) => r[2] === "Sales Invoice").length };
+  const wsSkus = skuOrder.filter((x) => canon.get(x.id) === x.id);
+  const lineOnHand = (x) => (members.get(canon.get(x.id)) || [x.id]).reduce((a, p) => a + Math.max(0, whById.get(p)?.onHand || 0), 0);
+  E = { skus: skuOrder, canon, wsSkus, lineOnHand, rows, entered: manual.length, wsList, wsById: new Map(wsList.map((w) => [w.id, w])), cum, firstDel, del, wh, whById, months, monthly, buyers: buyers.map((b) => b.size), totalDel, ledgerStart, ledgerEnd, salesLines: rows.filter((r) => r[2] === "Sales Invoice").length };
 }
 function settings() {
   const s = { ...DEFAULTS, ...S.settings };
@@ -1114,7 +1123,8 @@ function viewCount(main, id, editId) {
     S.form.ws = id; S.form.editId = editId || null;
   }
   const f = S.form;
-  const skus = E.skus.filter((s) => S.showAllSkus || (w.skuRows.find((r) => r.sku.id === s.id).everDel > 0) || f.stock[s.id] != null || w.skuRows.find((r) => r.sku.id === s.id).counted);
+  for (const [k, v] of Object.entries(f.stock)) { const c = E.canon.get(k); if (c && c !== k) { if (typeof v === "number" && isFinite(v)) f.stock[c] = (f.stock[c] ?? 0) + v; delete f.stock[k]; } }
+  const skus = E.wsSkus.filter((s) => S.showAllSkus || (w.skuRows.find((r) => r.sku.id === s.id).everDel > 0) || f.stock[s.id] != null || w.skuRows.find((r) => r.sku.id === s.id).counted);
   main.innerHTML = `
     <div class="crumbs"><a href="#">${esc(t("back"))}</a><span>/</span><a href="#ws/${w.id}" class="ar" dir="auto"></a></div>
     <div class="head"><h2>${esc(t("countTitle"))}</h2>
@@ -1204,7 +1214,7 @@ const allRows = (pred) => E.wsList.flatMap((w) => w.skuRows.filter(pred));
 const wsCountFor = (pred) => E.wsList.filter((w) => w.skuRows.some((r) => r.counted && pred(r))).length;
 
 function viewOfftake(main) {
-  const sel = S.sku, pred = predOf(sel), lowD = settings().lowDays;
+  const sel = E.canon.get(S.sku) || S.sku, pred = predOf(sel), lowD = settings().lowDays;
   const list = E.wsList.map((w) => ({ w, v: agg(w.skuRows.filter(pred)) })).filter((x) => x.v.counted || x.v.everDel > 0);
   const c = list.filter((x) => x.v.counted).sort((a, b) => b.v.off - a.v.off);
   const nc = list.filter((x) => !x.v.counted).sort((a, b) => b.v.everDel - a.v.everDel);
@@ -1215,7 +1225,7 @@ function viewOfftake(main) {
       <div class="field"><label for="skuSel">${esc(t("show"))}</label><select class="inp" id="skuSel" style="min-width:240px">
         <option value="all">${esc(t("allProducts"))}</option>
         <optgroup label="${esc(t("format"))}">${FORMATS.map((f) => `<option value="fmt:${f}" ${sel === "fmt:" + f ? "selected" : ""}>${esc(t("f_" + f))}</option>`).join("")}</optgroup>
-        <optgroup label="${esc(t("product"))}">${E.skus.map((s) => `<option value="${s.id}" ${sel === s.id ? "selected" : ""}>${esc(skuName(s))}</option>`).join("")}</optgroup>
+        <optgroup label="${esc(t("product"))}">${E.wsSkus.map((s) => `<option value="${s.id}" ${sel === s.id ? "selected" : ""}>${esc(skuName(s))}</option>`).join("")}</optgroup>
       </select></div></div>
     <div class="kpis">
       <div class="kpi"><b class="num">${esc(t("counted_n", c.length, list.length))}</b><span>${esc(t("kWs"))}</span></div>
@@ -1765,12 +1775,12 @@ function flavourLabel(s) {
   return s.en.replace(/\(LB Warn\)/i, "").replace(/\b(Cruz|KF|Kilo|1\s*Kg|Kg|50g|250g)\b/gi, "").replace(/\s+/g, " ").trim() + (lb ? " · LB" : "");
 }
 function drawMatrix() {
-  const groups = FORMATS.map((f) => ({ f, items: E.skus.filter((s) => fmtOf(s) === f) })).filter((g) => g.items.length);
+  const groups = FORMATS.map((f) => ({ f, items: E.wsSkus.filter((s) => fmtOf(s) === f) })).filter((g) => g.items.length);
   const flat = groups.flatMap((g) => g.items);
   const bin = (v) => (v >= 1000 ? 5 : v >= 500 ? 4 : v >= 200 ? 3 : v >= 50 ? 2 : 1);
   const short = (v) => (v >= 1000 ? (v / 1000).toFixed(1).replace(/\.0$/, "") + "k" : fmt(v));
   const list = E.wsList.filter((w) => w.totalDel > 0);
-  let h = `<thead><tr><th></th>${groups.map((g) => `<th class="grp" colspan="${g.items.length}">${esc(t("f_" + g.f))}</th>`).join("")}</tr><tr><th></th>${flat.map((s) => `<th title="${esc(skuName(s))}">${esc(flavourLabel(s))}<span class="dot ${E.whById.get(s.id).onHand > 0 ? "in" : "out"}"></span></th>`).join("")}</tr></thead><tbody>`;
+  let h = `<thead><tr><th></th>${groups.map((g) => `<th class="grp" colspan="${g.items.length}">${esc(t("f_" + g.f))}</th>`).join("")}</tr><tr><th></th>${flat.map((s) => `<th title="${esc(skuName(s))}">${esc(flavourLabel(s))}<span class="dot ${E.lineOnHand(s) > 0 ? "in" : "out"}"></span></th>`).join("")}</tr></thead><tbody>`;
   h += list.map((w) => `<tr><th class="rowh ar" dir="auto" scope="row" data-n="${w.id}"></th>${flat.map((s) => { const v = w.skuRows.find((r) => r.sku.id === s.id).everDel; return v ? `<td class="b${bin(v)} num" title="${esc(skuName(s))}: ${fmt(v)} MC">${short(v)}</td>` : `<td title="${esc(t("mxNever"))}">·</td>`; }).join("")}</tr>`).join("") + "</tbody>";
   const tb = document.getElementById("mx"); tb.innerHTML = h;
   tb.querySelectorAll("th[data-n]").forEach((th) => (th.textContent = E.wsById.get(th.dataset.n).name));
