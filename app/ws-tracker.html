@@ -312,7 +312,10 @@ const T = {
     never:"Never counted", lastCount:"Last count", daysAgo:d=>d===0?"today":d===1?"1 day ago":`${d} days ago`,
     due:"Count due", ok:"Up to date", delSince:"Delivered since", delToDate:"Delivered to date", countNow:"Count stock now",
     back:"Wholesalers", countTitle:"Stock count", date:"Count date", note:"Note (optional)", showAll:"Show all products",
-    showMine:"Only products delivered to this wholesaler", last:"Last", none:"—", offPreview:"Offtake", checkNeg:"Higher than delivered — check",
+    showMine:"Only products delivered to this wholesaler", last:"Last", none:"—", offPreview:"Offtake", checkNeg:"Higher than delivered — check", checkHow:"What to do: check this count, the count before it, or a delivery that was not entered.",
+    checkLine:(p,v,d,pv,pd,rec,x)=>`${p}: ${v} MC counted on ${d}, but he had ${pv} MC on ${pd} and received ${rec} MC since then. That is ${x} MC more than possible.`,
+    checkLineBase:(p,v,d,rec,x)=>`${p}: ${v} MC counted on ${d}, but only ${rec} MC was ever delivered to him. That is ${x} MC more than delivered.`,
+    checkOver:(x,max)=>`${x} MC more than he can have (at most ${max}) — check`,
     save:"Save count", saving:"Saving…", saved:"Count saved", cancel:"Cancel", blankWarn:n=>`${n} delivered product${n>1?"s have":" has"} no count. Enter 0 if none is left.`,
     overwrite:"A count for this date exists — saving replaces it.", readOnly:"You can view but not save counts. Ask the owner for \"Can interact\" access.",
     byProduct:"Offtake by product", history:"Count history", noHistory:"No counts yet. Tap “Count stock now” to record the first one.",
@@ -421,7 +424,10 @@ const T = {
     never:"لم يُجرد بعد", lastCount:"آخر جرد", daysAgo:d=>d===0?"اليوم":d===1?"منذ يوم":`منذ ${d} يوم`,
     due:"الجرد مستحق", ok:"محدّث", delSince:"المورَّد منذ آخر جرد", delToDate:"المورَّد حتى الآن", countNow:"جرد المخزون الآن",
     back:"تجار الجملة", countTitle:"جرد المخزون", date:"تاريخ الجرد", note:"ملاحظة (اختياري)", showAll:"عرض كل الأصناف",
-    showMine:"الأصناف المورَّدة لهذا التاجر فقط", last:"آخر جرد", none:"—", offPreview:"التصريف", checkNeg:"أعلى من المورَّد — تحقق",
+    showMine:"الأصناف المورَّدة لهذا التاجر فقط", last:"آخر جرد", none:"—", offPreview:"التصريف", checkNeg:"أعلى من المورَّد — تحقق", checkHow:"المطلوب: راجع هذا الجرد، أو الجرد الذي قبله، أو توريداً لم يُسجَّل.",
+    checkLine:(p,v,d,pv,pd,rec,x)=>`${p}: جُرد ${v} كرتونة في ${d}، لكن كان لديه ${pv} كرتونة في ${pd} وورد له ${rec} كرتونة بعدها. أي ${x} كرتونة أكثر من الممكن.`,
+    checkLineBase:(p,v,d,rec,x)=>`${p}: جُرد ${v} كرتونة في ${d}، لكن كل ما ورد له ${rec} كرتونة فقط. أي ${x} كرتونة أكثر من المورَّد.`,
+    checkOver:(x,max)=>`${x} كرتونة أكثر مما يمكن أن يكون لديه (الحد الأقصى ${max}) — تحقق`,
     save:"حفظ الجرد", saving:"جارٍ الحفظ…", saved:"تم حفظ الجرد", cancel:"إلغاء", blankWarn:n=>`${n} من الأصناف المورَّدة بدون جرد. أدخل 0 إن لم يبقَ شيء.`,
     overwrite:"يوجد جرد بهذا التاريخ — الحفظ سيستبدله.", readOnly:"يمكنك العرض فقط. اطلب من المالك صلاحية \"Can interact\".",
     byProduct:"التصريف حسب الصنف", history:"سجل الجرد", noHistory:"لا يوجد جرد بعد. اضغط «جرد المخزون الآن» لتسجيل أول جرد.",
@@ -1003,7 +1009,7 @@ function viewWs(main, id) {
         <div class="kpi"><b class="num">${pct(w.delTo ? w.offToDate / w.delTo : null)}</b><span>${esc(t("sellThrough"))}</span></div>
         <div class="kpi"><b class="num">${fmt1(w.rate)}</b><span>${esc(t("perDay"))}</span></div></div>
       ${w.uncounted ? `<p class="small muted">${esc(t("partial", w.uncounted))}</p>` : ""}
-      ${w.flags ? `<div class="notice warn">${esc(t("flags"))}: ${w.flags} — ${esc(t("checkNeg"))}</div>` : ""}
+      ${w.flags ? `<div class="notice warn"><b>${esc(t("flags"))}: ${w.flags}</b>${w.skuRows.filter((r) => r.flag).map((r) => `<div style="margin-top:6px" dir="auto">${esc(checkText(r))}</div>`).join("")}<div class="small" style="margin-top:6px">${esc(t("checkHow"))}</div></div>` : ""}
       ${fmtTiles.length ? `<h3>${esc(t("byFmtWs"))}</h3><div class="kpis">${fmtTiles.map((x) => `<div class="kpi"><b class="num">${fmt(x.a.off)}</b><span><span class="nt">${esc(t("f_" + x.f))}</span> · ${esc(t("stock"))} ${fmt(x.a.stock)} · ${pct(x.a.delTo ? x.a.off / x.a.delTo : null)}</span></div>`).join("")}</div>` : ""}
       <h3>${esc(t("byProduct"))}</h3><div class="panel flush scroll">${skuTable(w, counted)}</div><p class="small muted">${esc(t("estNote"))}</p></section>` : ""}
     <section class="stack"><h3>${esc(t("history"))}</h3><div class="panel flush hist" id="hist">${histHTML(w)}</div></section>`;
@@ -1159,7 +1165,7 @@ function viewCount(main, id, editId) {
       if (v == null) { pv.textContent = ""; pv.className = "pv"; if (rec > 0 || (prev && prev.v > 0)) blanks++; continue; }
       const o = (prev ? prev.v : 0) + rec - v;
       off += Math.max(0, o);
-      pv.textContent = o < 0 ? t("checkNeg") : `${t("offPreview")}: ${fmt(o)}`;
+      pv.textContent = o < 0 ? t("checkOver", fmt(-o), fmt((prev ? prev.v : 0) + rec)) : `${t("offPreview")}: ${fmt(o)}`;
       pv.className = "pv" + (o < 0 ? " neg" : " muted");
     }
     const exists = w.counts.find((c) => c.date === f.date && c.id !== editId);
@@ -1198,6 +1204,10 @@ function viewCount(main, id, editId) {
 
 /* ---------- offtake ---------- */
 // Sum a set of wholesaler×SKU rows into one offtake figure (only rows that have a count).
+// What exactly to check on a flagged product: its last count is higher than he could have had.
+const checkText = (r) => { const p = r.series.at(-1); return p.base
+  ? t("checkLineBase", skuName(r.sku), fmt(p.v), fmtDate(p.date), fmt(p.rec), fmt(-p.off))
+  : t("checkLine", skuName(r.sku), fmt(p.v), fmtDate(p.date), fmt(p.prevV), fmtDate(p.prevDate), fmt(p.rec), fmt(-p.off)); };
 function agg(rows) {
   const c = rows.filter((r) => r.counted);
   return {
@@ -1240,7 +1250,7 @@ function viewOfftake(main) {
     <div class="panel flush scroll"><table>
       <thead><tr><th>${esc(t("wholesaler"))}</th><th>${esc(t("lastCount"))}</th><th class="r">${esc(t("delivered"))}</th><th class="r">${esc(t("stock"))}</th><th class="r">${esc(t("offtake"))}</th><th class="r">${esc(t("sellThrough"))}</th><th class="r">${esc(t("perDay"))}</th><th class="r">${esc(t("daysLeft"))}</th></tr></thead>
       <tbody>${c.map(({ w, v }) => { const dl = v.rate > 0 ? v.est / v.rate : null; return `<tr class="click" data-go="#ws/${w.id}">
-        <td><span class="name" dir="auto">${esc(w.name)}</span>${v.flags ? ` <span class="chip c-crit">${esc(t("flags"))} ${v.flags}</span>` : ""}</td>
+        <td><span class="name" dir="auto">${esc(w.name)}</span>${v.flags ? ` <span class="chip c-crit" title="${esc(w.skuRows.filter((r) => r.flag && pred(r)).map(checkText).join(" · "))}">${esc(t("flags"))} ${v.flags}</span>` : ""}</td>
         <td class="small">${fmtShort(v.last)}</td>
         <td class="r num">${fmt(v.delTo)}</td><td class="r num">${fmt(v.stock)}</td>
         <td class="r num"><span class="inbar"><i style="width:${Math.max(2, (Math.max(0, v.off) / max) * 90)}px"></i><b>${fmt(v.off)}</b></span></td>
@@ -2115,7 +2125,7 @@ function exportSheets() {
   out.push(sheet("offFmt", "offtake", "WS by format", { en: "Offtake per wholesaler by format", ar: "تصريف كل تاجر حسب العبوة" },
     { en: "Offtake of each counted wholesaler split into 50g, 250g and Kg, with the market total.", ar: "تصريف كل تاجر مجرود موزعاً على 50غ و250غ والكيلو، مع إجمالي السوق." }, byFmt));
   const bySku = [["Wholesaler", "Format", "SKU (EN)", "SKU (AR)", "Last count", "Delivered to count date (MC)", "Stock (MC)", "Offtake to date (MC)", "Offtake last period (MC)", "Days in period", "Per day (MC)", "Est. days left", "Check"]];
-  for (const w of E.wsList) for (const r of w.skuRows) if (r.counted) bySku.push([w.name, FMT_EN[fmtOf(r.sku)], r.sku.en, r.sku.ar, r.lastDate, r.delTo, r.stock, r.offToDate, r.lastOff, r.lastDays, r.rate, r.daysLeft, r.flag ? "CHECK" : ""]);
+  for (const w of E.wsList) for (const r of w.skuRows) if (r.counted) bySku.push([w.name, FMT_EN[fmtOf(r.sku)], r.sku.en, r.sku.ar, r.lastDate, r.delTo, r.stock, r.offToDate, r.lastOff, r.lastDays, r.rate, r.daysLeft, r.flag ? checkText(r) : ""]);
   out.push(sheet("offSku", "offtake", "Offtake WS x SKU", { en: "Offtake per wholesaler and product", ar: "التصريف لكل تاجر وصنف" },
     { en: "Every counted wholesaler and product: stock, offtake, per day, days left, and counts to check.", ar: "كل تاجر مجرود وكل صنف: المخزون، التصريف، اليومي، الأيام المتبقية، وما يحتاج تحقق." }, bySku));
   const log = [["Wholesaler", "Count date", "SKU (EN)", "SKU (AR)", "Previous count (MC)", "Delivered in period (MC)", "Counted (MC)", "Offtake (MC)", "Days", "Note", "Supervisor"]];
