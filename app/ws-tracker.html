@@ -1847,7 +1847,8 @@ function loadExcelJS() {
   return new Promise((res, rej) => { const s = document.createElement("script"); s.src = "https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"; s.onload = () => res(window.ExcelJS); s.onerror = () => rej(new Error("excel library failed to load")); document.head.appendChild(s); });
 }
 // Every wholesaler's next order on one sheet: his block starts with a coloured name bar, each product
-// row is highlighted by its flag (green sell, yellow potential, red do not sell), and a gap follows.
+// row is highlighted by its flag (green sell, yellow potential, red do not sell), then his stock count
+// history with dates. The sheet is outlined so a wholesaler, or just his history, can be folded away.
 async function exportNextByWs() {
   const keep = LANG;
   if (!S.dl) { toast(t("err") + "downloads unavailable"); return; }
@@ -1858,6 +1859,9 @@ async function exportNextByWs() {
     const ws = wb.addWorksheet("Next orders", { views: [{ state: "frozen", ySplit: 3 }] });
     const COLS = [["Format", 9], ["SKU (AR)", 36], ["SKU (EN)", 30], ["Last count", 12], ["Delivered to count date (MC)", 16], ["Stock (MC)", 11], ["% of his stock", 12], ["Flag", 24], ["Recommended order (MC)", 15], ["Warehouse stock (MC)", 14]];
     ws.columns = COLS.map(([, w]) => ({ width: w }));
+    // outline: a wholesaler's block folds under his name bar, his count history under its own heading (the + sits on the row above)
+    ws.properties.outlineLevelRow = 2; ws.properties.outlineProperties = { summaryBelow: false, summaryRight: false };
+    const HIST = ["Format", "SKU (AR)", "SKU (EN)", "Count date", "Stock at previous count (MC)", "Delivered since then (MC)", "Stock counted (MC)", "Offtake (MC)", "Days since previous count", "Offtake per day (MC)"];
     const n = COLS.length, fill = (argb) => ({ type: "pattern", pattern: "solid", fgColor: { argb } });
     const thin = { style: "thin", color: { argb: "FFBFBFBF" } }, box = { top: thin, left: thin, bottom: thin, right: thin };
     const FLAG = {
@@ -1868,8 +1872,8 @@ async function exportNextByWs() {
     };
     const title = ws.addRow([`Next orders by wholesaler — ${fmtDate(todayISO())}`]);
     title.font = { bold: true, size: 14 }; ws.mergeCells(title.number, 1, title.number, n);
-    const legend = ws.addRow(["% of his stock = his stock at the last count ÷ everything delivered to him up to that count. Up to 30%: Sell · 31–50%: Potential (optional) · above 50%: Do not sell. At 0% the order is double his usual quantity. Recommended orders never exceed the warehouse stock."]);
-    legend.font = { italic: true, size: 9, color: { argb: "FF595959" } }; legend.alignment = { wrapText: true, vertical: "top" }; legend.height = 30; ws.mergeCells(legend.number, 1, legend.number, n);
+    const legend = ws.addRow(["% of his stock = his stock at the last count ÷ everything delivered to him up to that count. Up to 30%: Sell · 31–50%: Potential (optional) · above 50%: Do not sell. At 0% the order is double his usual quantity. Recommended orders never exceed the warehouse stock. Each wholesaler also has his stock count history, newest first: offtake = stock at the previous count + delivered since then − stock counted (at a first count the previous stock is 0). Use the + and − at the left, or the 1 2 3 buttons at the top left, to open or close a wholesaler and his history."]);
+    legend.font = { italic: true, size: 9, color: { argb: "FF595959" } }; legend.alignment = { wrapText: true, vertical: "top" }; legend.height = 44; ws.mergeCells(legend.number, 1, legend.number, n);
     ws.addRow([]);
     for (const o of N.list) {
       const rows = nextRows(o);
@@ -1882,7 +1886,7 @@ async function exportNextByWs() {
       // column heads
       const head = ws.addRow(COLS.map(([h]) => h));
       head.font = { bold: true, size: 10 }; head.alignment = { wrapText: true, vertical: "middle" }; head.height = 30;
-      head.eachCell((c) => { c.fill = fill("FFD9E1F2"); c.border = box; });
+      head.eachCell((c) => { c.fill = fill("FFD9E1F2"); c.border = box; }); head.outlineLevel = 1;
       // his products, highlighted by flag
       for (const l of rows) {
         const F = FLAG[l.flag] || FLAG.count;
@@ -1893,15 +1897,48 @@ async function exportNextByWs() {
         [5, 6, 9, 10].forEach((i) => { r.getCell(i).numFmt = "#,##0"; });
         r.getCell(7).numFmt = "0%";
         const fc = r.getCell(8); fc.fill = fill(F.cell); fc.font = { bold: true, color: { argb: F.font } };
-        r.getCell(9).font = { bold: true };
+        r.getCell(9).font = { bold: true }; r.outlineLevel = 1;
       }
       // his total
       const sell = o.lines.reduce((a, l) => a + recOf(l), 0), opt = o.optional.reduce((a, l) => a + recOf(l), 0);
       const tot = ws.addRow(["", "", "", "", "", "", "", `Sell now ${fmt(sell)} MC · optional ${fmt(opt)} MC`, sell, ""]);
       tot.font = { bold: true }; tot.getCell(9).numFmt = "#,##0";
-      tot.eachCell({ includeEmpty: true }, (c) => { c.border = { top: { style: "medium" }, bottom: { style: "thick", color: { argb: "FF1F3A5F" } } }; });
+      tot.eachCell({ includeEmpty: true }, (c) => { c.border = { top: { style: "medium" }, bottom: { style: "thick", color: { argb: "FF1F3A5F" } } }; }); tot.outlineLevel = 1;
+      // his stock counts, newest first, folded away under one heading (opened with the + at the left)
+      const cs = [...o.w.counts].reverse().map((c) => ({ c, ls: o.w.skuRows.map((r) => ({ r, p: r.series.find((x) => x.id === c.id) })).filter((x) => x.p) })).filter((x) => x.ls.length);
+      if (cs.length) {
+        const hh = ws.addRow([`Stock count history   ·   ${cs.length} count${cs.length === 1 ? "" : "s"}   ·   ${cs.at(-1).c.date}${cs.length > 1 ? ` to ${cs[0].c.date}` : ""}   ·   open with the + at the left`]);
+        ws.mergeCells(hh.number, 1, hh.number, n); hh.outlineLevel = 1;
+        hh.font = { bold: true, size: 10, color: { argb: "FF1F3A5F" } };
+        for (let c = 1; c <= n; c++) hh.getCell(c).fill = fill("FFE4EAF3");
+        const fold = (r) => { r.outlineLevel = 2; r.hidden = true; return r; };
+        const num = (cell, v) => { if (typeof v === "number") cell.numFmt = Number.isInteger(v) ? "#,##0" : "#,##0.0#"; };
+        const hd = fold(ws.addRow(HIST));
+        hd.font = { bold: true, size: 10 }; hd.alignment = { wrapText: true, vertical: "middle" }; hd.height = 30;
+        hd.eachCell((c) => { c.fill = fill("FFEDEDED"); c.border = box; });
+        for (const { c, ls } of cs) {
+          const sum = (f) => ls.reduce((a, x) => a + f(x.p), 0);
+          const off = sum((p) => p.off);
+          // one line for the count as a whole, then a line per product
+          const st = fold(ws.addRow([`Count of ${c.date}${c.supervisorName ? `   ·   by ${c.supervisorName}` : ""}`, "", "", c.date, sum((p) => (p.base ? 0 : p.prevV)), sum((p) => p.rec), sum((p) => p.v), off, "", ""]));
+          ws.mergeCells(st.number, 1, st.number, 3); st.font = { bold: true };
+          st.eachCell({ includeEmpty: true }, (cell) => { cell.fill = fill("FFF5F5F5"); cell.border = { ...box, top: { style: "medium", color: { argb: "FF7F7F7F" } } }; });
+          [5, 6, 7, 8].forEach((i) => num(st.getCell(i), st.getCell(i).value));
+          for (const { r, p } of ls) {
+            const x = fold(ws.addRow([FMT_EN[fmtOf(r.sku)], r.sku.ar, r.sku.en, c.date, p.base ? 0 : p.prevV, p.rec, p.v, p.off, p.days ?? "", p.days > 0 && p.off >= 0 ? p.off / p.days : ""]));
+            x.eachCell({ includeEmpty: true }, (cell) => { cell.border = box; });
+            x.getCell(2).alignment = { horizontal: "right", readingOrder: "rtl" };
+            [5, 6, 7, 8].forEach((i) => num(x.getCell(i), x.getCell(i).value));
+            x.getCell(7).font = { bold: true };
+            if (typeof x.getCell(10).value === "number") x.getCell(10).numFmt = "0.0";
+            // a count higher than he could have had: mark it
+            if (p.off < 0) { const oc = x.getCell(8); oc.fill = fill("FFF8D7DA"); oc.font = { bold: true, color: { argb: "FFC00000" } }; }
+          }
+          if (c.note) { const nr = fold(ws.addRow([`Note: ${c.note}`])); ws.mergeCells(nr.number, 1, nr.number, n); nr.font = { italic: true, size: 9, color: { argb: "FF595959" } }; nr.alignment = { wrapText: true }; }
+        }
+      }
       // a gap before the next wholesaler
-      ws.addRow([]); ws.addRow([]);
+      for (let g = 0; g < 2; g++) { const gap = ws.addRow([]); gap.height = 15; gap.outlineLevel = 1; }
     }
     LANG = keep;
     const buf = await wb.xlsx.writeBuffer();
