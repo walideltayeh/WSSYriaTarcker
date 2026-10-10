@@ -322,7 +322,7 @@ const T = {
     edit:"Edit", del:"Delete", delConfirm:"Tap again to delete", deleted:"Count deleted", by:"by", someone:"Someone", supName:"Supervisor name (saved on this device)",
     product:"Product", stock:"Stock", delivered:"Delivered", offtake:"Offtake", sellThrough:"Sell-through", perDay:"Per day", daysLeft:"Days left",
     suggested:"Suggested order", prevCount:"Previous", received:"Delivered", counted:"Counted", period:"Period",
-    offTitle:"Offtake", offSub:"Offtake = stock at previous count + delivered since − stock counted now. At a wholesaler's first count, previous stock is taken as 0 (before their first delivery). The old and LB Warn packs of a product are one product here: both are delivered and counted together.",
+    offTitle:"Offtake", offSub:"Offtake = stock at previous count + delivered since − stock counted now. At a wholesaler's first count, previous stock is taken as 0 (before their first delivery). The old and LB Warn packs of a product are one product: both are delivered and counted together.",
     allProducts:"All products", counted_n:(a,b)=>`${a} of ${b}`, kWs:"Wholesalers counted", kDel:"Delivered MC (to count dates)", kStock:"Stock at wholesalers (MC)", kOff:"Offtake (MC)", kST:"Sell-through",
     wholesaler:"Wholesaler", allWs:"All wholesalers", notCounted:"Not counted yet", flags:"Checks", estNote:"Days left = estimated stock today ÷ offtake per day (from the latest period).",
     bySku:"By product — all wholesalers", anTitle:"Deliveries analysis", anSub:r=>`From the warehouse ledger: ${r}.`, monthly:"Deliveries per month by product family",
@@ -353,7 +353,7 @@ const T = {
     mxHelp:"Each row is a wholesaler and each column a product, grouped by pack size (50g, 250g, Kg). The number in a cell is the total mastercases delivered to that wholesaler since February (1.5k = 1,500 MC); the darker the cell, the more they took. A “·” means that wholesaler has never received that product: a gap you can sell into. The dot under each product name is today's warehouse stock: filled green = in stock, empty circle = sold out. “LB” = Lebanon-warning pack.",
     mxIn:"in stock at warehouse", mxOut:"sold out", mxNever:"never delivered", mcDel:"MC delivered",
     byFmtWs:"Offtake by format",
-    merged:"Merged or renamed wholesalers",
+    merged:"Merged or renamed wholesalers", packsMerged:"Combined products", packsMergedNote:"The name before the arrow is counted under the product after it everywhere: warehouse, entry, offtake, analysis, next order and exports. The ledger and your warehouse Excel keep both names.",
     salesTitle:"Analysis", an_next:"Next orders", an_sales:"Sales",
     nextSub:"Every wholesaler, most urgent first. Each card puts their last order next to the order we suggest: their usual products, then every other flavour the warehouse has, so each wholesaler carries the full range. Orders are shared out from the stock in hand. All quantities in mastercases.", nextOrderH:"Suggested next order", dueOn:(d)=>`Due ${d}`, wasDue:(d)=>`Was due ${d}`, newTry:"Flavours to add", mStock:"Stock at his shop", mSells:"Sells", perDayV:(n)=>`≈ ${n} MC/day`, coverV:(d,c)=>`≈ ${d} days · counted ${c}`, countedOn:(c)=>`counted ${c}`, fromCountV:"from his stock count", fromBuysV:"from his purchases", aroundV:(d)=>`around ${d}`, dueNowV:"due now", hasStock:(n,d)=>`he has ${n}, ≈ ${d} days`, neverBought2:"never bought", lastBought:(d)=>`last bought ${d}`, cutFrom:(n)=>`wanted ${n}, cut to fit warehouse stock`, noStockLeft:"none left after other orders", stockedNote:(x)=>`Already stocked, from his count: ${x}`, sihTitle:"Stock in hand · main warehouse", sihSub:(d)=>`In hand = received into the main warehouse − sold, from the ledger up to ${d}. The next orders below are shared out from this stock.`, colSold:"Sold", colInHand:"In hand", colWanted:"Next orders want", colAlloc:"Allocated", colLeft:"Left after", otherOutNote:(x)=>`Also left the warehouse, not as sales: ${x}.`, kInHand:"Warehouse stock in hand (MC)", hCallNow:"low stock, overdue or due now", hOnTrack:"next order not due yet", hLapsed:"no order for over 90 days", hInHand:(d)=>`received − sold, as of ${d}`, hNext:(n,m)=>`all ${n} wholesalers · ${m} MC of it due now`, boughtTotal:(n,d)=>`${n} MC bought since ${d}`, trendLine:(a,p)=>`last 60 days: ${a} MC, ${p} on the 60 days before`, trendNewLine:(a)=>`last 60 days: ${a} MC, a new buyer`, trendNone:"nothing bought in the last 120 days", upW:"up", downW:"down",
     st_now:"Sell now", st_maybe:"Potential sell", st_week:"Due this week", st_later:"Later", st_lapsed:"Lapsed", st_none:"No orders yet",
@@ -407,7 +407,7 @@ const T = {
     pivotTitle:"Month by month", pivotNote:"Rows add up to the market total; a dot means nothing sold that month.",
     league:"Wholesaler league", cumulative:"Cumulative", biggest:"Biggest product", otherN:(n)=>`${n} others`, mergedNote:"The name before the arrow is counted under the name after it, with his stock counts, including after a new Excel import.", purchases:"Purchase history", purchasesSub:"Every sales invoice line delivered to this wholesaler, from the ledger", byDate:"By date", byProductT:"By product",
     linesN:"lines", orderDays:"order days", everyDays:d=>`about every ${d} days`, firstOrder:"First", lastOrder:"Last", shareOfWs:"Share", monthlyBuy:"Purchases per month by format (MC)",
-    t_wh:"Warehouse", whTitle:"Warehouse: inbound & stock", whSub2:"Everything received into the warehouse according to the ledger (transfers from Lattakia, goods receipts, purchase invoices, adjustments) and what is left. Outbound is what was sold to wholesalers: the same number as Sales in the Analysis tab.",
+    t_wh:"Warehouse", whTitle:"Warehouse: inbound & stock", whSub2:"Everything received into the warehouse according to the ledger (transfers from Lattakia, goods receipts, purchase invoices, adjustments) and what is left. Outbound is what was sold to wholesalers: the same number as Sales in the Analysis tab. The old and LB Warn packs of a product are one product.",
     kIn:"Inbound (MC)", kOut:"Outbound (MC)", kAdj:"Stock adjustments (MC)", adjNote:(n)=>`after −${n} adjustment`,
     adjLine:(x)=>`Stock adjustments, not sales: ${x}. They are not in Outbound and are taken off On hand.`, kOnHand:"On hand (MC)", kInMoves:"Inbound movements", lastIn:"last", inMonthly:"Inbound per month by format (MC)", inLog:"Inbound log", type:"Type", ref:"Ref", allMonths:"All months", monthShown:(m)=>`Showing ${m}`
   },
@@ -466,7 +466,7 @@ const T = {
     mxHelp:"كل سطر تاجر وكل عمود صنف، مجمّعة حسب حجم العبوة (50غ، 250غ، كغ). الرقم في الخانة هو مجموع الكراتين الماستر المورَّدة لهذا التاجر منذ شباط (1.5k = 1,500 كرتونة)؛ كلما كانت الخانة أغمق كانت الكمية أكبر. الرمز «·» يعني أن التاجر لم يستلم هذا الصنف أبداً: فرصة للبيع. النقطة تحت اسم الصنف تبيّن مخزون المستودع اليوم: أخضر ممتلئ = متوفر، دائرة فارغة = نفد. «لبنان» = عبوة التحذير اللبناني.",
     mxIn:"متوفر في المستودع", mxOut:"نفد", mxNever:"لم يُورَّد", mcDel:"كرتونة مورَّدة",
     byFmtWs:"التصريف حسب العبوة",
-    merged:"تجار مدمجون أو أُعيدت تسميتهم",
+    merged:"تجار مدمجون أو أُعيدت تسميتهم", packsMerged:"أصناف مدمجة", packsMergedNote:"الاسم قبل السهم يُحسب تحت الصنف بعده في كل مكان: المستودع والإدخال والتصريف والتحليل والطلبية القادمة والتصدير. الدفتر وملف Excel للمستودع يحتفظان بالاسمين.",
     salesTitle:"التحليل", an_next:"الطلبيات القادمة", an_sales:"المبيعات",
     nextSub:"كل التجار، الأكثر إلحاحاً أولاً. كل بطاقة تضع آخر طلبية للتاجر بجانب الطلبية التي نقترحها: أصنافه المعتادة، ثم كل نكهة أخرى متوفرة في المستودع ليحمل كل تاجر التشكيلة الكاملة. الطلبيات موزعة من المخزون المتوفر. كل الكميات بالكرتونة.", nextOrderH:"الطلبية القادمة المقترحة", dueOn:(d)=>`موعدها ${d}`, wasDue:(d)=>`كان موعدها ${d}`, newTry:"نكهات لإكمال التشكيلة", mStock:"المخزون لديه", mSells:"يبيع", perDayV:(n)=>`≈ ${n} كرتونة/يوم`, coverV:(d,c)=>`≈ ${d} يوم · جرد ${c}`, countedOn:(c)=>`جرد ${c}`, fromCountV:"من جرده", fromBuysV:"من مشترياته", aroundV:(d)=>`حوالي ${d}`, dueNowV:"مستحقة الآن", hasStock:(n,d)=>`لديه ${n}، ≈ ${d} يوم`, neverBought2:"لم يشترها من قبل", lastBought:(d)=>`آخر شراء ${d}`, cutFrom:(n)=>`المطلوب ${n}، خُفّض حسب مخزون المستودع`, noStockLeft:"لم يبقَ منه بعد الطلبيات الأخرى", stockedNote:(x)=>`متوفر لديه حسب الجرد: ${x}`, sihTitle:"المخزون المتوفر · المستودع الرئيسي", sihSub:(d)=>`المتوفر = ما دخل المستودع الرئيسي − ما بيع، حسب الدفتر حتى ${d}. الطلبيات القادمة أدناه موزعة من هذا المخزون.`, colSold:"المباع", colInHand:"المتوفر", colWanted:"تطلبه الطلبيات", colAlloc:"الموزَّع", colLeft:"المتبقي بعدها", otherOutNote:(x)=>`خرج أيضاً من المستودع بغير البيع: ${x}.`, kInHand:"مخزون المستودع المتوفر (كرتونة)", hCallNow:"مخزون منخفض أو متأخر أو حان موعده", hOnTrack:"لم يحن موعد طلبيته بعد", hLapsed:"لا طلبيات منذ أكثر من 90 يوماً", hInHand:(d)=>`المستلم − المباع، حتى ${d}`, hNext:(n,m)=>`كل التجار (${n}) · منها ${m} كرتونة مستحقة الآن`, boughtTotal:(n,d)=>`اشترى ${n} كرتونة منذ ${d}`, trendLine:(a,p)=>`آخر 60 يوماً: ${a} كرتونة، ${p} مقارنة بالـ60 يوماً السابقة`, trendNewLine:(a)=>`آخر 60 يوماً: ${a} كرتونة، مشترٍ جديد`, trendNone:"لم يشترِ شيئاً في آخر 120 يوماً", upW:"ارتفاع", downW:"انخفاض",
     st_now:"بِع الآن", st_maybe:"بيع محتمل", st_week:"خلال هذا الأسبوع", st_later:"لاحقاً", st_lapsed:"منقطع", st_none:"لا طلبيات بعد",
@@ -520,7 +520,7 @@ const T = {
     pivotTitle:"شهراً بشهر", pivotNote:"مجموع الأسطر يساوي إجمالي السوق؛ النقطة تعني لا مبيعات في ذلك الشهر.",
     league:"ترتيب التجار", cumulative:"التراكمي", biggest:"أكبر صنف", otherN:(n)=>`${n} أخرى`, mergedNote:"الاسم قبل السهم يُحسب تحت الاسم بعده، مع جرد مخزونه، وحتى بعد أي استيراد جديد.", purchases:"سجل المشتريات", purchasesSub:"كل أسطر فواتير البيع المورَّدة لهذا التاجر من الدفتر", byDate:"حسب التاريخ", byProductT:"حسب الصنف",
     linesN:"سطر", orderDays:"يوم طلب", everyDays:d=>`كل ${d} يوم تقريباً`, firstOrder:"الأول", lastOrder:"الأخير", shareOfWs:"الحصة", monthlyBuy:"المشتريات الشهرية حسب العبوة (كرتونة)",
-    t_wh:"المستودع", whTitle:"المستودع: الوارد والمخزون", whSub2:"كل ما دخل المستودع حسب الدفتر (تحويلات من اللاذقية، استلامات، فواتير شراء، تعديلات) وما تبقى منه. الصادر هو ما بيع للتجار: نفس رقم المبيعات في تبويب التحليل.",
+    t_wh:"المستودع", whTitle:"المستودع: الوارد والمخزون", whSub2:"كل ما دخل المستودع حسب الدفتر (تحويلات من اللاذقية، استلامات، فواتير شراء، تعديلات) وما تبقى منه. الصادر هو ما بيع للتجار: نفس رقم المبيعات في تبويب التحليل. العبوة القديمة وعبوة تحذير لبنان من الصنف نفسه صنف واحد.",
     kIn:"الوارد (كرتونة)", kOut:"الصادر (كرتونة)", kAdj:"تعديلات المخزون (كرتونة)", adjNote:(n)=>`بعد تعديل −${n}`,
     adjLine:(x)=>`تعديلات مخزون وليست مبيعات: ${x}. لا تدخل في الصادر وتُخصم من المتوفر.`, kOnHand:"المتوفر (كرتونة)", kInMoves:"حركات الوارد", lastIn:"آخرها", inMonthly:"الوارد الشهري حسب العبوة (كرتونة)", inLog:"سجل الوارد", type:"النوع", ref:"المرجع", allMonths:"كل الأشهر", monthShown:(m)=>`عرض ${m}`
   }
@@ -565,6 +565,21 @@ const S = { db: null, user: null, dl: null, aliases: {}, sup: store.get("wst_sup
 let E = null; // derived model
 
 /* ============================== engine ============================== */
+// The old and LB Warn packs of a product are one product everywhere, under the plain name. The stored ledger keeps
+// both names (the warehouse Excel is imported as it is); here the LB Warn pack is folded into the plain one.
+// alias: every stored product id -> the id it is counted under; merged: [stored name, product name] for the Data tab.
+function mergePacks(skus, rows) {
+  const isLB = (x) => /LB Warn/i.test(x.en), head = new Map();
+  for (const x of skus) { const k = lineOf(x), cur = head.get(k); if (!cur || (isLB(cur) && !isLB(x))) head.set(k, x); }
+  const out = [], ix = new Map(), alias = new Map(), map = [], merged = [];
+  skus.forEach((x, i) => {
+    const h = head.get(lineOf(x));
+    if (!ix.has(h.id)) { ix.set(h.id, out.length); out.push(isLB(h) ? { ...h, en: h.en.replace(/\s*\(LB Warn\)/i, ""), ar: h.ar.replace(/\s*تحذير\s*لبن?ان/, "") } : h); }
+    map[i] = ix.get(h.id); alias.set(x.id, h.id);
+    if (x.id !== h.id) merged.push([x.en, h.en]);
+  });
+  return { skus: out, rows: rows.map((r) => (map[r[0]] === r[0] ? r : [map[r[0]], ...r.slice(1)])), alias, merged };
+}
 function recompute() {
   if (!S.ledger) { E = null; return; }
   const { skus } = S.ledger;
@@ -574,7 +589,7 @@ function recompute() {
   for (const m of S.moves) {
     if (!m || !m.date || !Array.isArray(m.lines)) continue;
     for (const l of m.lines) {
-      const i = skuIx.get(l.sku), q = +l.qty;
+      const i = skuIx.get(S.ledger.alias.get(l.sku) || l.sku), q = +l.qty;
       if (i == null || !(q > 0)) continue;
       manual.push(m.kind === "out"
         ? [i, m.date, "Sales Invoice", (m.ws || "").trim(), m.ref || "", 0, q, m.id]
@@ -585,12 +600,10 @@ function recompute() {
   const today = todayISO();
   const ledgerEnd = rows.reduce((m, r) => (r[1] > m ? r[1] : m), "");
   const ledgerStart = rows.reduce((m, r) => (!m || r[1] < m ? r[1] : m), "");
-  // Wholesaler side: the old and LB Warn packs of a product are one product (supervisors count them together).
-  // The plain pack stands for both; the warehouse side keeps the packs apart.
-  const lineHead = new Map();
-  for (const x of skus) { const k = lineOf(x), cur = lineHead.get(k); if (!cur || (/LB Warn/i.test(cur.en) && !/LB Warn/i.test(x.en))) lineHead.set(k, x); }
-  const canon = new Map(skus.map((x) => [x.id, lineHead.get(lineOf(x)).id]));
-  const members = new Map(); for (const x of skus) { const c = canon.get(x.id); if (!members.has(c)) members.set(c, []); members.get(c).push(x.id); }
+  // canon: every stored product id (an LB Warn pack included) -> the product it is counted under;
+  // members: a product -> the stored ids whose count entries add up to it.
+  const canon = new Map(skus.map((x) => [x.id, x.id])); for (const [raw, c] of S.ledger.alias) canon.set(raw, c);
+  const members = new Map(); for (const [raw, c] of canon) { if (!members.has(c)) members.set(c, []); members.get(c).push(raw); }
   const del = new Map(); // wsId -> Map(product id -> [[date, qty]]), both packs under the product
   const wsMap = new Map();
   for (const r of rows) {
@@ -1821,6 +1834,7 @@ function viewData(main) {
         <div class="field"><label for="s3">${esc(t("targetDays"))}</label><input class="inp" id="s3" type="number" min="1" value="${st.targetDays}" ${S.admin ? "" : "disabled"}></div></div>
       ${S.admin ? `<div><button class="btn" type="button" id="saveSet">${esc(t("saveSettings"))}</button></div>` : ""}</section>
     ${S.admin ? `<section class="panel stack"><h3>${esc(t("addWs"))}</h3><div style="display:flex;gap:8px;flex-wrap:wrap"><input class="inp" id="newWs" dir="auto" style="max-width:320px"><button class="btn" type="button" id="addWs">${esc(t("addWsBtn"))}</button></div></section>` : ""}
+    ${S.ledger?.merged?.length ? `<section class="panel stack"><h3>${esc(t("packsMerged"))}</h3><div class="small ink2">${S.ledger.merged.map(([from, to]) => `<div style="padding:4px 0;border-bottom:1px solid var(--hair)"><span dir="auto">${esc(from)}</span> → <b dir="auto">${esc(to)}</b></div>`).join("")}</div><p class="small muted">${esc(t("packsMergedNote"))}</p></section>` : ""}
     ${Object.keys(S.aliases).length ? `<section class="panel stack"><h3>${esc(t("merged"))}</h3><div class="small ink2">${Object.entries(S.aliases).map(([from, to]) => `<div style="padding:4px 0;border-bottom:1px solid var(--hair)"><span dir="auto">${esc(from)}</span> → <b dir="auto">${esc(to)}</b></div>`).join("")}</div><p class="small muted">${esc(t("mergedNote"))}</p></section>` : ""}
     <section class="panel stack"><h3>${esc(t("method"))}</h3><p class="ink2" style="max-width:75ch">${esc(t("methodTxt"))}</p></section>`;
   document.getElementById("ledInfo").textContent = m && E ? t("ledgerInfo", fmt(m.rowCount), m.source || "Excel", fmtDate(E.ledgerStart), fmtDate(E.ledgerEnd)) : "";
@@ -1997,7 +2011,7 @@ const flavourLabelOf = (f) => (LANG === "ar" ? FLAV_AR[f] || f : f);
 const moveTotal = (m) => (m.lines || []).reduce((a, l) => a + (+l.qty || 0), 0);
 function moveSummary(m) {
   const by = new Map(E.skus.map((s) => [s.id, s]));
-  return (m.lines || []).filter((l) => +l.qty > 0).map((l) => `${by.get(l.sku) ? skuName(by.get(l.sku)) : l.sku} ${fmt(+l.qty)}`).join(" · ");
+  return (m.lines || []).filter((l) => +l.qty > 0).map((l) => `${by.get(E.canon.get(l.sku) || l.sku) ? skuName(by.get(E.canon.get(l.sku) || l.sku)) : l.sku} ${fmt(+l.qty)}`).join(" · ");
 }
 const ENTRY_HASH = "541acf8c36a0ec1f893f43d4b7aaaa65df6be71d988a1f05266b4ba05fb97ee4";
 const sha256Hex = async (v) => [...new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(v)))].map((b) => b.toString(16).padStart(2, "0")).join("");
@@ -2246,7 +2260,7 @@ async function boot() {
     const ver = m.importedAt + "|" + m.chunks; if (ver === chunkVer) return; chunkVer = ver;
     try {
       const parts = await Promise.all(Array.from({ length: m.chunks || 1 }, (_, i) => db.doc("ledger/rows-" + i).get()));
-      S.ledger = { skus: m.skus, rows: parts.flatMap((p) => (p.exists ? p.data().rows || [] : [])) };
+      S.ledger = mergePacks(m.skus, parts.flatMap((p) => (p.exists ? p.data().rows || [] : [])));
       recompute(); render();
     } catch (err) { S.loadErr = err.code || err.message; render(); }
   }, (err) => { S.loadErr = err.code; render(); });
