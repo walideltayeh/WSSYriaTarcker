@@ -236,6 +236,7 @@ tr.click{cursor:pointer} tr.click:hover td{background:var(--sunk)}
 .mlegend>span{display:inline-flex;align-items:center;gap:6px}
 .mkt tr.grp td{background:var(--sunk);font-weight:500}
 .mkt .ind{display:block;padding-inline-start:18px}
+.wsx td:first-child{min-width:150px}.wsx th.grp{text-align:center;border-inline-start:1px solid var(--hair)}
 .skel{height:12px;border-radius:2px;background:var(--sunk);margin:10px 0}
 @media (prefers-reduced-motion: no-preference){.row-link,.btn,.tabs a{transition:background .15s,color .15s,border-color .15s}}
 .nt{text-transform:none;letter-spacing:0}
@@ -405,7 +406,9 @@ const T = {
     kSales:"Sales (MC)", kPerMonth:"Average month", kBest:"Best month", kMom:"Last month vs previous", kTop:"Biggest",
     byMonth:"Sales per month", dim_flavour:"Flavour", dim_format:"Format", dim_imsline:"IMS line", dim_sku:"Product", dim_ws:"Wholesaler", imsNote:"IMS line = flavour and format together, with the Lebanon-warning pack counted as its parent product. This is exactly what the SSOF planning system reads as Syria IMS.",
     pivotTitle:"Month by month", pivotNote:"Rows add up to the market total; a dot means nothing sold that month.",
-    league:"Wholesaler league", cumulative:"Cumulative", biggest:"Biggest product", otherN:(n)=>`${n} others`, mergedNote:"The name before the arrow is counted under the name after it, with his stock counts, including after a new Excel import.", purchases:"Purchase history", purchasesSub:"Every sales invoice line delivered to this wholesaler, from the ledger", byDate:"By date", byProductT:"By product",
+    league:"Wholesaler league", mtdTitle:"Who purchased this month", kMtdWs:"Wholesalers who purchased this month", kMtdMc:"Sales this month so far (MC)", kMtdNo:"Not purchased yet this month", kPrevMonth:"Last month, whole month (MC)",
+    mtdYes:(n)=>`Purchased this month (${n})`, mtdNo:(n)=>`Not yet this month (${n})`, colMtd:"This month (MC)", colPrevM:"Last month (MC)", colDaysSince:"Days since", lastPurch:"Last purchase", mtdNone:"Nobody has purchased yet this month.",
+    wsSkuTitle:"Sales by wholesaler and product", wsSkuSub:"Mastercases sold from the warehouse to each wholesaler, product by product, for the period you choose. A dot means nothing sold. Tap a wholesaler to open his page.", perMtd:(a,b)=>`Month to date (${a} – ${b})`, noSalesPer:"No sales in this period.", cumulative:"Cumulative", biggest:"Biggest product", otherN:(n)=>`${n} others`, mergedNote:"The name before the arrow is counted under the name after it, with his stock counts, including after a new Excel import.", purchases:"Purchase history", purchasesSub:"Every sales invoice line delivered to this wholesaler, from the ledger", byDate:"By date", byProductT:"By product",
     linesN:"lines", orderDays:"order days", everyDays:d=>`about every ${d} days`, firstOrder:"First", lastOrder:"Last", shareOfWs:"Share", monthlyBuy:"Purchases per month by format (MC)",
     t_wh:"Warehouse", whTitle:"Warehouse: inbound & stock", whSub2:"Everything received into the warehouse according to the ledger (transfers from Lattakia, goods receipts, purchase invoices, adjustments) and what is left. Outbound is what was sold to wholesalers: the same number as Sales in the Analysis tab. The old and LB Warn packs of a product are one product.",
     kIn:"Inbound (MC)", kOut:"Outbound (MC)", kAdj:"Stock adjustments (MC)", adjNote:(n)=>`after −${n} adjustment`,
@@ -518,7 +521,9 @@ const T = {
     kSales:"المبيعات (كرتونة)", kPerMonth:"متوسط الشهر", kBest:"أفضل شهر", kMom:"الشهر الأخير مقارنة بسابقه", kTop:"الأكبر",
     byMonth:"المبيعات الشهرية", dim_flavour:"النكهة", dim_format:"العبوة", dim_imsline:"سطر IMS", dim_sku:"الصنف", dim_ws:"التاجر", imsNote:"سطر IMS = النكهة والعبوة معاً، مع احتساب عبوة تحذير لبنان ضمن الصنف الأصلي. هذا بالضبط ما يقرأه نظام SSOF كـ IMS لسوريا.",
     pivotTitle:"شهراً بشهر", pivotNote:"مجموع الأسطر يساوي إجمالي السوق؛ النقطة تعني لا مبيعات في ذلك الشهر.",
-    league:"ترتيب التجار", cumulative:"التراكمي", biggest:"أكبر صنف", otherN:(n)=>`${n} أخرى`, mergedNote:"الاسم قبل السهم يُحسب تحت الاسم بعده، مع جرد مخزونه، وحتى بعد أي استيراد جديد.", purchases:"سجل المشتريات", purchasesSub:"كل أسطر فواتير البيع المورَّدة لهذا التاجر من الدفتر", byDate:"حسب التاريخ", byProductT:"حسب الصنف",
+    league:"ترتيب التجار", mtdTitle:"من اشترى هذا الشهر", kMtdWs:"تجار اشتروا هذا الشهر", kMtdMc:"مبيعات الشهر حتى اليوم (كرتونة)", kMtdNo:"لم يشتروا بعد هذا الشهر", kPrevMonth:"الشهر الماضي كاملاً (كرتونة)",
+    mtdYes:(n)=>`اشتروا هذا الشهر (${n})`, mtdNo:(n)=>`لم يشتروا بعد (${n})`, colMtd:"هذا الشهر (كرتونة)", colPrevM:"الشهر الماضي (كرتونة)", colDaysSince:"أيام منذ آخر شراء", lastPurch:"آخر شراء", mtdNone:"لم يشترِ أحد بعد هذا الشهر.",
+    wsSkuTitle:"المبيعات حسب التاجر والصنف", wsSkuSub:"الكراتين المباعة من المستودع لكل تاجر، صنفاً صنفاً، للفترة التي تختارها. النقطة تعني لا مبيعات. اضغط على التاجر لفتح صفحته.", perMtd:(a,b)=>`الشهر حتى اليوم (${a} – ${b})`, noSalesPer:"لا مبيعات في هذه الفترة.", cumulative:"التراكمي", biggest:"أكبر صنف", otherN:(n)=>`${n} أخرى`, mergedNote:"الاسم قبل السهم يُحسب تحت الاسم بعده، مع جرد مخزونه، وحتى بعد أي استيراد جديد.", purchases:"سجل المشتريات", purchasesSub:"كل أسطر فواتير البيع المورَّدة لهذا التاجر من الدفتر", byDate:"حسب التاريخ", byProductT:"حسب الصنف",
     linesN:"سطر", orderDays:"يوم طلب", everyDays:d=>`كل ${d} يوم تقريباً`, firstOrder:"الأول", lastOrder:"الأخير", shareOfWs:"الحصة", monthlyBuy:"المشتريات الشهرية حسب العبوة (كرتونة)",
     t_wh:"المستودع", whTitle:"المستودع: الوارد والمخزون", whSub2:"كل ما دخل المستودع حسب الدفتر (تحويلات من اللاذقية، استلامات، فواتير شراء، تعديلات) وما تبقى منه. الصادر هو ما بيع للتجار: نفس رقم المبيعات في تبويب التحليل. العبوة القديمة وعبوة تحذير لبنان من الصنف نفسه صنف واحد.",
     kIn:"الوارد (كرتونة)", kOut:"الصادر (كرتونة)", kAdj:"تعديلات المخزون (كرتونة)", adjNote:(n)=>`بعد تعديل −${n}`,
@@ -1676,6 +1681,7 @@ function viewSales(main) {
       <div class="kpi"><b class="num">${mom == null ? "—" : (mom > 0 ? "+" : "") + Math.round(mom * 100) + "%"}</b><span>${esc(t("kMom"))} · <span class="nt">${esc(monthLabel(M[lastIdx]))}</span></span></div>
       <div class="kpi"><b class="num" dir="auto">${esc(top ? top.key : "—")}</b><span>${esc(t("kTop"))} · ${pct(top ? top.total / total : null)}</span></div>
     </div>
+    ${wsSkuSection()}
     <section class="stack"><div class="head"><h3>${esc(t("byMonth"))}</h3>
       <div class="seg" role="group">${DIMS.map((d) => `<button type="button" data-dim="${d}" aria-pressed="${d === dim}">${esc(t("dim_" + d))}</button>`).join("")}</div></div>
       <div class="panel chart stack"><ul class="legend" id="lgSales"></ul><div id="cSales"></div></div></section>
@@ -1694,8 +1700,71 @@ function viewSales(main) {
   document.getElementById("lgSales").innerHTML = series.map((s) => `<li><span class="sw" style="background:var(${s.color})"></span><span dir="auto">${esc(s.label)}</span></li>`).join("");
   drawStacked(document.getElementById("cSales"), M, series, t("byMonth"));
   main.querySelectorAll("[data-dim]").forEach((b) => b.addEventListener("click", () => { S.dim = b.dataset.dim; render(); }));
+  document.getElementById("wsPer").addEventListener("change", (e) => { S.wsPer = e.target.value; render(); });
   main.querySelectorAll("tr[data-go]").forEach((tr) => tr.addEventListener("click", () => go(tr.dataset.go)));
   drawMatrix(); bindAnSeg(main);
+}
+/* ---------- sales by wholesaler and product, and who bought this month ---------- */
+// Sales (warehouse outbound) per wholesaler and product for a period: "mtd" (this calendar month so far),
+// "all", or one month "YYYY-MM". Biggest buyer first.
+function salesByWsSku(period) {
+  const ls = S.ledger.skus, month = period === "mtd" ? todayISO().slice(0, 7) : period, by = new Map();
+  for (const r of E.rows) {
+    if (r[2] !== "Sales Invoice" || !(r[6] > 0)) continue;
+    if (period !== "all" && r[1].slice(0, 7) !== month) continue;
+    const n = r[3] ? aliasOf(r[3]).trim() : "—";
+    let x = by.get(n); if (!x) by.set(n, (x = { name: n, total: 0, bySku: new Map(), days: new Set(), last: "" }));
+    const id = ls[r[0]].id;
+    x.bySku.set(id, (x.bySku.get(id) || 0) + r[6]); x.total += r[6]; x.days.add(r[1]); if (r[1] > x.last) x.last = r[1];
+  }
+  return [...by.values()].sort((a, b) => b.total - a.total);
+}
+// Who bought this month so far and who has not, out of every wholesaler that ever bought.
+function mtdBuyers() {
+  const today = todayISO(), month = today.slice(0, 7), prevMonth = addDays(month + "-01", -1).slice(0, 7);
+  const mtd = salesByWsSku("mtd"), prevList = salesByWsSku(prevMonth), prev = new Map(prevList.map((x) => [x.name, x.total]));
+  const byName = new Map(E.wsList.map((w) => [w.name, w])), bought = new Set(mtd.map((x) => x.name));
+  const all = E.wsList.filter((w) => w.totalDel > 0);
+  const yes = mtd.map((x) => ({ ...x, w: byName.get(x.name) || null, prev: prev.get(x.name) || 0 }));
+  const no = all.filter((w) => !bought.has(w.name)).map((w) => ({ w, name: w.name, last: w.lastDel, since: w.lastDel ? dayDiff(w.lastDel, today) : null, prev: prev.get(w.name) || 0 }))
+    .sort((a, b) => b.prev - a.prev || (a.since ?? 1e9) - (b.since ?? 1e9));
+  return { today, month, prevMonth, total: mtd.reduce((a, x) => a + x.total, 0), prevTotal: prevList.reduce((a, x) => a + x.total, 0), all: all.length, yes, no };
+}
+// The products as columns: grouped by pack size, the same order everywhere.
+const wsSkuCols = () => FORMATS.map((f) => ({ f, items: E.wsSkus.filter((s) => fmtOf(s) === f) })).filter((g) => g.items.length);
+function wsSkuSection() {
+  const B = mtdBuyers(), M = E.months, go = (w) => (w ? ` class="click" data-go="#ws/${w.id}"` : "");
+  const per = S.wsPer === "all" || (M.includes(S.wsPer) && S.wsPer !== B.month) ? S.wsPer : "mtd";
+  const perLabel = (p) => (p === "mtd" ? t("perMtd", fmtShort(B.month + "-01"), fmtShort(B.today)) : p === "all" ? t("allMonths") : `${monthLabel(p)} ${p.slice(0, 4)}`);
+  const rows = salesByWsSku(per), groups = wsSkuCols(), flat = groups.flatMap((g) => g.items), byName = new Map(E.wsList.map((w) => [w.name, w]));
+  const colTot = flat.map((s) => rows.reduce((a, x) => a + (x.bySku.get(s.id) || 0), 0)), total = rows.reduce((a, x) => a + x.total, 0);
+  const cell = (v) => (v ? fmt(v) : '<span class="muted">·</span>');
+  return `
+    <section class="stack"><h3>${esc(t("mtdTitle"))} · <span class="nt">${esc(perLabel("mtd"))}</span></h3>
+      <div class="kpis">
+        <div class="kpi"><b class="num">${esc(t("counted_n", B.yes.length, B.all))}</b><span>${esc(t("kMtdWs"))}</span></div>
+        <div class="kpi"><b class="num">${fmt(B.total)}</b><span>${esc(t("kMtdMc"))}</span></div>
+        <div class="kpi"><b class="num">${B.no.length}</b><span>${esc(t("kMtdNo"))}</span></div>
+        <div class="kpi"><b class="num">${fmt(B.prevTotal)}</b><span>${esc(t("kPrevMonth"))} · <span class="nt">${esc(monthLabel(B.prevMonth))}</span></span></div>
+      </div>
+      <div class="grid2">
+        <div class="stack"><h3>${esc(t("mtdYes", B.yes.length))}</h3><div class="panel flush scroll"><table>
+          <thead><tr><th>#</th><th>${esc(t("wholesaler"))}</th><th class="r">${esc(t("colMtd"))}</th><th class="r">${esc(t("shareOfWs"))}</th><th class="r">${esc(t("orderDays"))}</th><th>${esc(t("lastPurch"))}</th><th class="r">${esc(t("colPrevM"))}</th></tr></thead>
+          <tbody>${B.yes.map((x, i) => `<tr${go(x.w)}><td class="num muted">${i + 1}</td><td><span class="name" dir="auto">${esc(x.name)}</span></td><td class="r num"><b>${fmt(x.total)}</b></td><td class="r num">${pct(x.total / B.total)}</td><td class="r num">${x.days.size}</td><td class="small num">${fmtShort(x.last)}</td><td class="r num">${x.prev ? fmt(x.prev) : '<span class="muted">·</span>'}</td></tr>`).join("") || `<tr><td colspan="7" class="muted">${esc(t("mtdNone"))}</td></tr>`}</tbody>
+          ${B.yes.length ? `<tfoot><tr><td></td><td>${esc(t("total"))}</td><td class="r num">${fmt(B.total)}</td><td class="r num">100%</td><td colspan="2"></td><td class="r num">${fmt(B.yes.reduce((a, x) => a + x.prev, 0))}</td></tr></tfoot>` : ""}</table></div></div>
+        <div class="stack"><h3>${esc(t("mtdNo", B.no.length))}</h3><div class="panel flush scroll"><table>
+          <thead><tr><th>${esc(t("wholesaler"))}</th><th>${esc(t("lastPurch"))}</th><th class="r">${esc(t("colDaysSince"))}</th><th class="r">${esc(t("colPrevM"))}</th></tr></thead>
+          <tbody>${B.no.map((x) => `<tr${go(x.w)}><td><span class="name" dir="auto">${esc(x.name)}</span></td><td class="small num">${x.last ? fmtDate(x.last) : "—"}</td><td class="r num">${x.since ?? "—"}</td><td class="r num">${x.prev ? fmt(x.prev) : '<span class="muted">·</span>'}</td></tr>`).join("") || `<tr><td colspan="4" class="muted">—</td></tr>`}</tbody>
+          ${B.no.length ? `<tfoot><tr><td>${esc(t("total"))}</td><td colspan="2"></td><td class="r num">${fmt(B.no.reduce((a, x) => a + x.prev, 0))}</td></tr></tfoot>` : ""}</table></div></div>
+      </div></section>
+    <section class="stack"><div class="head"><div><h3>${esc(t("wsSkuTitle"))} · <span class="nt">${esc(perLabel(per))}</span></h3><p class="small muted" style="max-width:80ch">${esc(t("wsSkuSub"))}</p></div>
+      <div class="field"><label for="wsPer">${esc(t("period"))}</label><select class="inp" id="wsPer" style="min-width:210px"><option value="mtd" ${per === "mtd" ? "selected" : ""}>${esc(perLabel("mtd"))}</option>${[...M].reverse().filter((m) => m !== B.month).map((m) => `<option value="${m}" ${per === m ? "selected" : ""}>${esc(monthLabel(m))} ${m.slice(0, 4)}</option>`).join("")}<option value="all" ${per === "all" ? "selected" : ""}>${esc(t("allMonths"))}</option></select></div></div>
+      <div class="panel flush scroll"><table class="mkt wsx">
+        <thead><tr><th rowspan="2">${esc(t("wholesaler"))}</th>${groups.map((g) => `<th class="grp" colspan="${g.items.length}">${esc(t("f_" + g.f))}</th>`).join("")}<th class="r" rowspan="2">${esc(t("total"))}</th></tr>
+          <tr>${flat.map((s) => `<th class="r" title="${esc(skuName(s))}">${esc(flavourLabel(s))}</th>`).join("")}</tr></thead>
+        <tbody>${rows.map((x) => `<tr${go(byName.get(x.name))}><td><span class="name" dir="auto">${esc(x.name)}</span></td>${flat.map((s) => `<td class="r num">${cell(x.bySku.get(s.id))}</td>`).join("")}<td class="r num"><b>${fmt(x.total)}</b></td></tr>`).join("") || `<tr><td colspan="${flat.length + 2}" class="muted">${esc(t("noSalesPer"))}</td></tr>`}</tbody>
+        ${rows.length ? `<tfoot><tr><td>${esc(t("total"))} · ${esc(t("wsN", rows.length))}</td>${colTot.map((v) => `<td class="r num">${cell(v)}</td>`).join("")}<td class="r num">${fmt(total)}</td></tr></tfoot>` : ""}
+      </table></div></section>`;
 }
 // Wholesalers ranked, with a share bar and the running concentration.
 function leagueTable() {
@@ -2162,6 +2231,17 @@ function exportSheets() {
     { en: "Mastercases sold per month for each product.", ar: "الكراتين المباعة شهرياً لكل صنف." }, pivot("Product", (r) => ls[r[0]].en)));
   out.push(sheet("sWs", "sales", "Sales by wholesaler", { en: "Sales by wholesaler", ar: "المبيعات حسب التاجر" },
     { en: "Mastercases sold per month to each wholesaler (merged names counted as one).", ar: "الكراتين المباعة شهرياً لكل تاجر (الأسماء المدمجة تُحسب تاجراً واحداً)." }, pivot("Wholesaler", (r) => (r[3] ? aliasOf(r[3]).trim() : ""))));
+  const xCols = wsSkuCols().flatMap((g) => g.items);
+  const wsSkuAoa = (period) => { const rs = salesByWsSku(period), tot = xCols.map((c) => rs.reduce((a, x) => a + (x.bySku.get(c.id) || 0), 0)); return [["Wholesaler", ...xCols.map((c) => c.en), "Total (MC)"], ...rs.map((x) => [x.name, ...xCols.map((c) => x.bySku.get(c.id) || 0), x.total]), ["TOTAL", ...tot, tot.reduce((a, b) => a + b, 0)]]; };
+  const B = mtdBuyers();
+  out.push(sheet("sWsSku", "sales", "Sales WS x product", { en: "Sales by wholesaler and product", ar: "المبيعات حسب التاجر والصنف" },
+    { en: "Mastercases sold to each wholesaler, one column per product, since the first sale.", ar: "الكراتين المباعة لكل تاجر، عمود لكل صنف، منذ أول بيع." }, wsSkuAoa("all")));
+  out.push(sheet("sWsSkuMtd", "sales", "Sales WS x product MTD", { en: "Sales by wholesaler and product — this month", ar: "المبيعات حسب التاجر والصنف — هذا الشهر" },
+    { en: `The same table for this month so far (${B.month}, up to ${B.today}).`, ar: `الجدول نفسه لهذا الشهر حتى اليوم (${B.month}، حتى ${B.today}).` }, wsSkuAoa("mtd")));
+  out.push(sheet("mtdBuyers", "sales", "MTD buyers", { en: "Who purchased this month", ar: "من اشترى هذا الشهر" },
+    { en: `Every wholesaler that ever bought, marked Yes or No for ${B.month} so far, with what he bought and his last purchase.`, ar: `كل تاجر اشترى سابقاً، مع نعم أو لا لشهر ${B.month} حتى اليوم، وما اشتراه وآخر شراء له.` },
+    [["Wholesaler", "Purchased this month", "This month (MC)", "Order days this month", "Last purchase", "Days since last purchase", "Last month (MC)"],
+      ...B.yes.map((x) => [x.name, "Yes", x.total, x.days.size, x.last, dayDiff(x.last, B.today), x.prev]), ...B.no.map((x) => [x.name, "No", 0, 0, x.last || "", x.since ?? "", x.prev])]));
 
   // offtake & stock counts
   const market = [["Format", "SKU (EN)", "SKU (AR)", "Wholesalers counted", "Delivered to count dates (MC)", "Stock at wholesalers (MC)", "Offtake to date (MC)", "Sell-through", "Offtake per day (MC)"]];
