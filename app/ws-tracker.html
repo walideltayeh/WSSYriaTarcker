@@ -303,7 +303,8 @@ const T = {
     brand:"WS Tracker", brandsub:"Syria · Wholesale", t_ws:"Wholesalers", t_off:"Offtake", t_an:"Analysis", t_next:"Next order", t_data:"Data", t_exp:"Export", t_entry:"Entry", e_lockT:"Entry is password protected", e_lockS:"Ask the owner for the password that opens this tab.", e_lockPw:"Entry password", e_unlock:"Unlock", e_wrongPw:"Wrong password. Try again.", e_locked:"Locked again", entryTitle:"Enter movements", entrySub:"For the accountant: goods received into the Lattakia warehouse, and sales to wholesalers by product and date. Everything in mastercases (MC), and every screen counts it straight away.",
     e_in:"Inbound · Lattakia warehouse", e_out:"Outbound · sale to a wholesaler", e_in_short:"Inbound", e_out_short:"Outbound",
     e_date:"Date", e_ws:"Wholesaler", e_newWs:"Add a wholesaler",  e_needWsName:"Type the wholesaler's name first.", e_wsExists:"That wholesaler is already in the list.", e_newWsName:"Name of the new wholesaler", e_ref:"Reference (optional)", e_note:"Note (optional)", e_by:"Entered by (saved on this device)",
-    e_products:"Products", e_hint:"Put the quantity in mastercases next to each product and leave the rest empty.",
+    e_products:"Products", e_hint:"Put the quantity in mastercases next to each product and leave the rest empty.", ssofTag:"New · SSOF", e_ssofNote:(n)=>`${n} product${n === 1 ? " comes" : "s come"} from SSOF's active list and ${n === 1 ? "is" : "are"} not in the ledger yet.`,
+    ssofList:"Products from SSOF", ssofListInfo:(n,d)=>`SSOF lists ${n} active products for Syria (last received ${d}).`, ssofNew:(n)=>`${n} not in the ledger yet, offered in the Entry tab:`, ssofNoNew:"All of them are already products here.", ssofListNote:"SSOF sends this list by itself whenever a product is added or changed there. A new product shows in the other tabs once a movement is entered for it.",
     e_save:"Save movement", e_saving:"Saving…", e_saved:"Movement saved", e_needLines:"Enter a quantity for at least one product.", e_needWs:"Choose the wholesaler.",
     e_total:(n,l)=>`${n} MC · ${l} product${l==1?"":"s"}`, e_recent:"Movements entered here", e_none:"Nothing entered yet. What you save appears here and counts in every screen.",
     e_del:"Delete", e_delConfirm:"Tap again to delete", e_deleted:"Movement deleted",
@@ -418,7 +419,8 @@ const T = {
     brand:"متتبع تجار الجملة", brandsub:"سوريا · الجملة", t_ws:"تجار الجملة", t_off:"التصريف", t_an:"التحليل", t_next:"الطلبية القادمة", t_data:"البيانات", t_exp:"تصدير", t_entry:"الإدخال", e_lockT:"الإدخال محمي بكلمة مرور", e_lockS:"اطلب من المالك كلمة المرور التي تفتح هذا التبويب.", e_lockPw:"كلمة مرور الإدخال", e_unlock:"فتح", e_wrongPw:"كلمة المرور خاطئة. حاول مرة أخرى.", e_locked:"أُقفل من جديد", entryTitle:"إدخال الحركات", entrySub:"للمحاسب: البضاعة الواردة إلى مستودع اللاذقية، والمبيعات للتجار حسب الصنف والتاريخ. كل الكميات بالكرتونة، وتُحتسب في كل الشاشات فوراً.",
     e_in:"وارد · مستودع اللاذقية", e_out:"صادر · بيع لتاجر", e_in_short:"وارد", e_out_short:"صادر",
     e_date:"التاريخ", e_ws:"التاجر", e_newWs:"إضافة تاجر",  e_needWsName:"اكتب اسم التاجر أولاً.", e_wsExists:"هذا التاجر موجود في القائمة.", e_newWsName:"اسم التاجر الجديد", e_ref:"المرجع (اختياري)", e_note:"ملاحظة (اختياري)", e_by:"أدخلها (يُحفظ على هذا الجهاز)",
-    e_products:"الأصناف", e_hint:"اكتب الكمية بالكرتونة بجانب كل صنف واترك الباقي فارغاً.",
+    e_products:"الأصناف", e_hint:"اكتب الكمية بالكرتونة بجانب كل صنف واترك الباقي فارغاً.", ssofTag:"جديد · SSOF", e_ssofNote:(n)=>n === 1 ? "صنف واحد من قائمة SSOF الفعّالة وليس في الدفتر بعد." : `${n} أصناف من قائمة SSOF الفعّالة وليست في الدفتر بعد.`,
+    ssofList:"أصناف من SSOF", ssofListInfo:(n,d)=>`في SSOF ${n} صنفاً فعّالاً لسوريا (آخر استلام ${d}).`, ssofNew:(n)=>`${n} ليست في الدفتر بعد، وتظهر في تبويب الإدخال:`, ssofNoNew:"كلها أصناف موجودة هنا.", ssofListNote:"يرسل SSOF هذه القائمة تلقائياً كلما أُضيف صنف أو عُدّل هناك. الصنف الجديد يظهر في بقية التبويبات بعد إدخال أول حركة له.",
     e_save:"حفظ الحركة", e_saving:"جارٍ الحفظ…", e_saved:"تم حفظ الحركة", e_needLines:"أدخل كمية لصنف واحد على الأقل.", e_needWs:"اختر التاجر.",
     e_total:(n,l)=>`${n} كرتونة · ${l} صنف`, e_recent:"الحركات المُدخلة هنا", e_none:"لا حركات بعد. ما تحفظه يظهر هنا ويُحتسب في كل الشاشات.",
     e_del:"حذف", e_delConfirm:"اضغط مرة أخرى للحذف", e_deleted:"تم حذف الحركة",
@@ -549,13 +551,13 @@ const wsIdOf = (name) => "w" + fnv(name.trim());
 // Two ledger names can be the same person; merges live in config/aliases.
 const aliasOf = (n) => (n && S.aliases[n.trim()]) || n;
 const ceil5 = (n) => Math.ceil(n / 5) * 5;
-const skuName = (s) => LANG === "ar" ? s.ar : s.en;
-const skuAlt = (s) => LANG === "ar" ? s.en : s.ar;
+const skuName = (s) => LANG === "ar" ? s.ar || s.en : s.en;
+const skuAlt = (s) => (s.ar ? (LANG === "ar" ? s.en : s.ar) : "");
 const famOf = (s) => /LB Warn/i.test(s.en) ? "lb" : /Two Apple/i.test(s.en) ? "old" : /Red/i.test(s.en) ? "red" : "grape";
 const FAMS = [["old", "--s1"], ["lb", "--s2"], ["red", "--s3"], ["grape", "--s4"]];
 // Pack format. "Two Apple Black" has no size in its name; it was replaced by "Two Apple Blk 50g (LB Warn)", so it is 50g.
 const FORMATS = ["cruz", "kf", "kilo"];
-const fmtOf = (s) => (/(?:\b|\d)Kg\b|Kilo/i.test(s.en) ? "kilo" : /\b250g\b|\bKF\b/i.test(s.en) ? "kf" : "cruz");
+const fmtOf = (s) => s.fmt || (/(?:\b|\d)Kg\b|Kilo/i.test(s.en) ? "kilo" : /\b250g\b|\bKF\b/i.test(s.en) ? "kf" : "cruz");
 // Old ledger names (Cruz/KF/Kilo) and new ones (50g/250g/Kg) are the same product.
 const canonSku = (en) => en.trim().replace(/\bCruz\b/gi, "50g").replace(/\bKF\b/g, "250g").replace(/\bKilo\b/gi, "Kg").replace(/\s+/g, " ");
 function toast(msg) { const el = document.getElementById("toast"); el.textContent = msg; el.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(() => (el.hidden = true), 2600); }
@@ -584,6 +586,24 @@ function mergePacks(skus, rows) {
     if (x.id !== h.id) merged.push([x.en, h.en]);
   });
   return { skus: out, rows: rows.map((r) => (map[r[0]] === r[0] ? r : [map[r[0]], ...r.slice(1)])), alias, merged };
+}
+// SSOF's active Syria SKUs that the ledger does not have yet are added to the product list, so a new SKU can be
+// entered before it ever appears in the warehouse Excel. SSOF says which tracker product each SKU already is
+// (k.tracker = { flavour, format }); the rest are new. A SKU SSOF no longer lists stays if it has movements.
+const fmtOfWeight = (w) => { const m = /(\d+(?:\.\d+)?)\s*(kg|g)\b/i.exec(String(w || "")); const g = m ? +m[1] * (/kg/i.test(m[2]) ? 1000 : 1) : 50; return g <= 100 ? "cruz" : g <= 500 ? "kf" : "kilo"; };
+function withSsofSkus(L, list) {
+  const FM = { cruz: "50g", kf: "250g", kilo: "Kg" }, BACK = { "50g": "cruz", "250g": "kf", Kg: "kilo" };
+  const have = new Set(L.skus.map((x) => flavourOf(x) + "|" + FM[fmtOf(x)])), extra = [], alias = new Map(L.alias);
+  const all = (list || []).filter((k) => k && Number.isInteger(k.id) && k.name && k.weight);
+  for (const k of all) {
+    const tr = k.tracker && k.tracker.flavour && k.tracker.format ? k.tracker : null;
+    if (tr && have.has(tr.flavour + "|" + tr.format)) continue; // already one of the ledger's products
+    const twin = all.some((o) => o !== k && o.name === k.name && o.weight === k.weight);
+    const id = "ssof-" + k.id;
+    extra.push({ id, en: k.name + " " + k.weight + (twin && k.packagingType ? " (" + k.packagingType + ")" : ""), ar: "", flavour: tr ? tr.flavour : k.name, fmt: (tr && BACK[tr.format]) || fmtOfWeight(k.weight), ssofId: k.id, extra: true, active: k.active !== false });
+    alias.set(id, id);
+  }
+  return { ...L, skus: [...L.skus, ...extra], alias };
 }
 function recompute() {
   if (!S.ledger) { E = null; return; }
@@ -664,8 +684,11 @@ function recompute() {
     return { sku: s, inb, out, adj, onHand, perMonth, cover, status };
   });
   const whById = new Map(wh.map((x) => [x.sku.id, x]));
+  // a product that only exists in SSOF's list joins the tabs once it has a movement; until then it is offered in Entry only
+  const used = (x) => !x.extra || whById.get(x.id).inb > 0 || whById.get(x.id).out > 0 || whById.get(x.id).adj > 0;
+  const whUsed = wh.filter((x) => used(x.sku));
   // one product order everywhere: in stock at the warehouse first, then biggest sellers
-  const skuOrder = [...skus].sort((a, b) => (whById.get(b.id).onHand > 0) - (whById.get(a.id).onHand > 0) || whById.get(b.id).out - whById.get(a.id).out);
+  const skuOrder = skus.filter(used).sort((a, b) => (whById.get(b.id).onHand > 0) - (whById.get(a.id).onHand > 0) || whById.get(b.id).out - whById.get(a.id).out);
 
   const st = settings();
   const wsList = [...wsMap.values()].map((w) => {
@@ -719,7 +742,8 @@ function recompute() {
 
   const wsSkus = skuOrder.filter((x) => canon.get(x.id) === x.id);
   const lineOnHand = (x) => (members.get(canon.get(x.id)) || [x.id]).reduce((a, p) => a + Math.max(0, whById.get(p)?.onHand || 0), 0);
-  E = { skus: skuOrder, canon, wsSkus, lineOnHand, rows, entered: manual.length, wsList, wsById: new Map(wsList.map((w) => [w.id, w])), cum, firstDel, del, wh, whById, months, monthly, buyers: buyers.map((b) => b.size), totalDel, ledgerStart, ledgerEnd, salesLines: rows.filter((r) => r[2] === "Sales Invoice").length };
+  const entrySkus = [...skuOrder, ...skus.filter((x) => !used(x) && x.active)];
+  E = { skus: skuOrder, entrySkus, canon, wsSkus, lineOnHand, rows, entered: manual.length, wsList, wsById: new Map(wsList.map((w) => [w.id, w])), cum, firstDel, del, wh: whUsed, whById, months, monthly, buyers: buyers.map((b) => b.size), totalDel, ledgerStart, ledgerEnd, salesLines: rows.filter((r) => r[2] === "Sales Invoice").length };
 }
 function settings() {
   const s = { ...DEFAULTS, ...S.settings };
@@ -1646,7 +1670,7 @@ function nextBlock(w) {
 }
 /* ---------- sales analysis ---------- */
 // Flavour is the marketing line, format the pack size; both are read from the product name.
-const flavourOf = (s) => (/Two Apple/i.test(s.en) ? (/Iced|Frosty/i.test(s.en) ? "Two Apples Frosty" : /Black|Blk/i.test(s.en) ? "Two Apples Black" : "Two Apples") : /Red/i.test(s.en) ? "Red" : /Grape & Mint/i.test(s.en) ? "Grape & Mint" : /Grape/i.test(s.en) ? "Grape" : /Love/i.test(s.en) ? "Love" : "Blueberry");
+const flavourOf = (s) => s.flavour || (/Two Apple/i.test(s.en) ? (/Iced|Frosty/i.test(s.en) ? "Two Apples Frosty" : /Black|Blk/i.test(s.en) ? "Two Apples Black" : "Two Apples") : /Red/i.test(s.en) ? "Red" : /Grape & Mint/i.test(s.en) ? "Grape & Mint" : /Grape/i.test(s.en) ? "Grape" : /Love/i.test(s.en) ? "Love" : "Blueberry");
 const DIMS = ["flavour", "format", "imsline", "sku", "ws"];
 // Sales per month for one dimension, biggest first.
 function salesBy(dim) {
@@ -1903,6 +1927,7 @@ function viewData(main) {
         <div class="field"><label for="s3">${esc(t("targetDays"))}</label><input class="inp" id="s3" type="number" min="1" value="${st.targetDays}" ${S.admin ? "" : "disabled"}></div></div>
       ${S.admin ? `<div><button class="btn" type="button" id="saveSet">${esc(t("saveSettings"))}</button></div>` : ""}</section>
     ${S.admin ? `<section class="panel stack"><h3>${esc(t("addWs"))}</h3><div style="display:flex;gap:8px;flex-wrap:wrap"><input class="inp" id="newWs" dir="auto" style="max-width:320px"><button class="btn" type="button" id="addWs">${esc(t("addWsBtn"))}</button></div></section>` : ""}
+    ${S.ssof ? `<section class="panel stack"><h3>${esc(t("ssofList"))}</h3><p class="small ink2">${esc(t("ssofListInfo", S.ssof.skus.filter((k) => k.active !== false).length, fmtDate(String(S.ssof.receivedAt || "").slice(0, 10))))}</p>${(() => { const x = (S.ledger?.skus || []).filter((k) => k.extra && k.active); return x.length ? `<div class="small ink2">${esc(t("ssofNew", x.length))} ${x.map((k) => `<span dir="auto">${esc(k.en)}</span>`).join(" · ")}</div>` : `<div class="small muted">${esc(t("ssofNoNew"))}</div>`; })()}<p class="small muted">${esc(t("ssofListNote"))}</p></section>` : ""}
     ${S.ledger?.merged?.length ? `<section class="panel stack"><h3>${esc(t("packsMerged"))}</h3><div class="small ink2">${S.ledger.merged.map(([from, to]) => `<div style="padding:4px 0;border-bottom:1px solid var(--hair)"><span dir="auto">${esc(from)}</span> → <b dir="auto">${esc(to)}</b></div>`).join("")}</div><p class="small muted">${esc(t("packsMergedNote"))}</p></section>` : ""}
     ${Object.keys(S.aliases).length ? `<section class="panel stack"><h3>${esc(t("merged"))}</h3><div class="small ink2">${Object.entries(S.aliases).map(([from, to]) => `<div style="padding:4px 0;border-bottom:1px solid var(--hair)"><span dir="auto">${esc(from)}</span> → <b dir="auto">${esc(to)}</b></div>`).join("")}</div><p class="small muted">${esc(t("mergedNote"))}</p></section>` : ""}
     <section class="panel stack"><h3>${esc(t("method"))}</h3><p class="ink2" style="max-width:75ch">${esc(t("methodTxt"))}</p></section>`;
@@ -2079,7 +2104,7 @@ const FLAV_AR = { "Two Apples": "تفاحتين", "Two Apples Black": "تفاح�
 const flavourLabelOf = (f) => (LANG === "ar" ? FLAV_AR[f] || f : f);
 const moveTotal = (m) => (m.lines || []).reduce((a, l) => a + (+l.qty || 0), 0);
 function moveSummary(m) {
-  const by = new Map(E.skus.map((s) => [s.id, s]));
+  const by = new Map(E.entrySkus.map((s) => [s.id, s]));
   return (m.lines || []).filter((l) => +l.qty > 0).map((l) => `${by.get(E.canon.get(l.sku) || l.sku) ? skuName(by.get(E.canon.get(l.sku) || l.sku)) : l.sku} ${fmt(+l.qty)}`).join(" · ");
 }
 const ENTRY_HASH = "541acf8c36a0ec1f893f43d4b7aaaa65df6be71d988a1f05266b4ba05fb97ee4";
@@ -2110,7 +2135,8 @@ function viewEntry(main) {
   const out = st.kind === "out";
   const names = E.wsList.map((w) => w.name).sort((a, b) => a.localeCompare(b, "ar"));
   const groups = [];
-  for (const s of E.skus) { const f = flavourOf(s); let g = groups.find((x) => x.f === f); if (!g) groups.push((g = { f, items: [] })); g.items.push(s); }
+  for (const s of E.entrySkus) { const f = flavourOf(s); let g = groups.find((x) => x.f === f); if (!g) groups.push((g = { f, items: [] })); g.items.push(s); }
+  const fresh = E.entrySkus.filter((x) => x.extra && !E.skus.includes(x));
   const moves = [...S.moves].sort((a, b) => String(b.savedAt || b.date).localeCompare(String(a.savedAt || a.date)));
   main.innerHTML = `
     <div class="head"><div><h2>${esc(t("entryTitle"))}</h2><p class="sub" style="max-width:75ch">${esc(t("entrySub"))}</p></div>
@@ -2124,9 +2150,9 @@ function viewEntry(main) {
       <div class="field"><label for="eRef">${esc(t("e_ref"))}</label><input class="inp" id="eRef" value="${esc(st.ref)}"></div>
       <div class="field"><label for="eBy">${esc(t("e_by"))}</label><input class="inp" id="eBy" dir="auto" value="${esc(S.sup || "")}"></div>
     </div>
-    <section class="stack"><h3>${esc(t("e_products"))}</h3><p class="small muted">${esc(t("e_hint"))}</p>
+    <section class="stack"><h3>${esc(t("e_products"))}</h3><p class="small muted">${esc(t("e_hint"))}${fresh.length ? " " + esc(t("e_ssofNote", fresh.length)) : ""}</p>
       <div class="panel flush">${groups.map((g) => `<div class="fgroup"><div class="fhead">${esc(flavourLabelOf(g.f))}</div>${g.items.map((s) => `
-        <div class="line" data-sku="${s.id}"><div><div class="pn">${esc(skuName(s))}</div><div class="pa">${esc(t("f_" + fmtOf(s)))} · ${esc(skuAlt(s))}</div></div>
+        <div class="line" data-sku="${s.id}"><div><div class="pn">${esc(skuName(s))}${s.extra ? ` <span class="chip c-acc">${esc(t("ssofTag"))}</span>` : ""}</div><div class="pa">${s.extra ? "" : esc(t("f_" + fmtOf(s)))}${skuAlt(s) ? " · " + esc(skuAlt(s)) : ""}</div></div>
           <div class="qty"><input inputmode="decimal" type="number" min="0" step="any" aria-label="${esc(skuName(s))}" data-q="${s.id}" value="${st.qty[s.id] ?? ""}"></div></div>`).join("")}</div>`).join("")}</div></section>
     <div class="field"><label for="eNote">${esc(t("e_note"))}</label><input class="inp" id="eNote" dir="auto" value="${esc(st.note)}"></div>
     <div class="sticky-save"><span class="small ink2" id="eSum"></span><button class="btn pri big" type="button" id="eSave">${esc(t("e_save"))}</button></div>
@@ -2335,18 +2361,20 @@ async function boot() {
   let chunkVer = null;
   db.doc("ledger/meta").onSnapshot(async (snap) => {
     S.loaded = true;
-    if (!snap.exists) { S.meta = null; S.ledger = null; S.loadErr = null; recompute(); render(); return; }
+    if (!snap.exists) { S.meta = null; S.ledger = null; S.ledgerBase = null; S.loadErr = null; recompute(); render(); return; }
     const m = snap.data(); S.meta = m;
     const ver = m.importedAt + "|" + m.chunks; if (ver === chunkVer) return; chunkVer = ver;
     try {
       const parts = await Promise.all(Array.from({ length: m.chunks || 1 }, (_, i) => db.doc("ledger/rows-" + i).get()));
-      S.ledger = mergePacks(m.skus, parts.flatMap((p) => (p.exists ? p.data().rows || [] : [])));
+      S.ledgerBase = mergePacks(m.skus, parts.flatMap((p) => (p.exists ? p.data().rows || [] : [])));
+      S.ledger = withSsofSkus(S.ledgerBase, S.ssof?.skus);
       recompute(); render();
     } catch (err) { S.loadErr = err.code || err.message; render(); }
   }, (err) => { S.loadErr = err.code; render(); });
   db.collection("moves").onSnapshot((snap) => { S.moves = snap.docs.map((d) => ({ id: d.id, ...d.data() })); recompute(); render(); }, (err) => { S.loadErr = err.code; render(); });
   db.collection("counts").onSnapshot((snap) => { S.counts = snap.docs.map((d) => ({ id: d.id, ...d.data() })); recompute(); render(); }, (err) => { S.loadErr = err.code; render(); });
   db.doc("config/settings").onSnapshot((snap) => { S.settings = snap.exists ? snap.data() : {}; recompute(); render(); });
+  db.doc("config/ssofSkus").onSnapshot((snap) => { S.ssof = snap.exists && Array.isArray(snap.data().skus) ? snap.data() : null; if (S.ledgerBase) S.ledger = withSsofSkus(S.ledgerBase, S.ssof?.skus); recompute(); render(); });
   db.doc("config/aliases").onSnapshot((snap) => { S.aliases = snap.exists && snap.data().map && typeof snap.data().map === "object" ? snap.data().map : {}; recompute(); render(); });
   db.doc("config/wholesalers").onSnapshot((snap) => { S.extraWs = snap.exists && Array.isArray(snap.data().extra) ? snap.data().extra : []; recompute(); render(); });
 }
