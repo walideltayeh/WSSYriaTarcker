@@ -170,7 +170,7 @@ export const Route = createFileRoute("/api/ssof")({
         const skus: SsofSku[] = [...clean.values()].map((s) => ({ ...s, active: true, firstSeen: before.get(s.id)?.firstSeen ?? now }));
         for (const p of prev) if (!clean.has(p.id)) skus.push({ ...p, active: false });
         await db().prepare("INSERT INTO docs (path, json, updated_at) VALUES (?, ?, ?) ON CONFLICT(path) DO UPDATE SET json = excluded.json, updated_at = excluded.updated_at")
-          .bind(SSOF_SKUS, JSON.stringify({ country: "Syria", receivedAt: now, skus }), now).run();
+          .bind(SSOF_SKUS, JSON.stringify({ country: "Syria", source: "published", receivedAt: now, skus }), now).run();
         return Response.json({
           ok: true, active: clean.size, inactive: skus.length - clean.size,
           // seen for the first time and not a product the tracker already has: the Entry tab now offers these
