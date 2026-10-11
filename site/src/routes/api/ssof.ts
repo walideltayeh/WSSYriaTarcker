@@ -12,7 +12,8 @@ import { db, feedAuthorized } from "../../lib/ws.server";
  *   Movements the accountant enters in the app count the same as the imported ledger.
  *
  * POST - SSOF sends its active Syria SKUs, so a SKU the ledger does not have yet can be
- *   entered in the Entry tab. Kept in config/ssofSkus. A SKU SSOF stops listing stays
+ *   entered in the Entry tab. Only a list marked source "published" is accepted (a
+ *   development workspace has its own database). Kept in config/ssofSkus. A SKU SSOF stops listing stays
  *   there as inactive, because a movement may refer to it. A movement entered for such
  *   a SKU goes back to SSOF in the feed with its SSOF id (ssofSkuId).
  */
@@ -135,11 +136,13 @@ export const Route = createFileRoute("/api/ssof")({
 
       POST: async ({ request }) => {
         if (!(await feedAuthorized(request))) return Response.json({ error: "feed key required" }, { status: 401 });
-        let body: { country?: unknown; skus?: unknown };
+        let body: { country?: unknown; skus?: unknown; source?: unknown };
         try { body = await request.json(); } catch { return Response.json({ error: "bad json" }, { status: 400 }); }
         if (body?.country !== "Syria" || !Array.isArray(body.skus) || body.skus.length > 1000) {
           return Response.json({ error: "expected { country: \"Syria\", skus: [...] }" }, { status: 400 });
         }
+        // Only the published SSOF app may set the list: a development workspace has its own database and ids.
+        if (body.source !== "published") return Response.json({ error: "only the published SSOF app may send the SKU list" }, { status: 400 });
         const str = (v: unknown, max: number) => (typeof v === "string" ? v.trim().slice(0, max) : "");
         const clean = new Map<number, Omit<SsofSku, "active" | "firstSeen">>();
         for (const raw of body.skus as Record<string, unknown>[]) {
