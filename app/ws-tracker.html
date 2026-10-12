@@ -367,7 +367,7 @@ const T = {
     whenOut:"Out of stock: order now.", whenLow:"His stock is down to the low-stock level: order now.", whenDue:(d)=>`Was due ${d}: order now.`, whenOn:(d)=>`Next order around ${d}.`,
     whenStocked:(m)=>`Well stocked: about ${m} months of stock at his pace, so no order is needed for now.`, whenLapsed:(n)=>`No order for ${n} days: offer his usual order to win him back.`,
     alsoOffer:"Also offer:",
-    sellNowH:"Sell him now (definitely)", pctStock:"% of his stock", exNextWs:"Export next orders (Excel)", allWhHas:"· all the warehouse has", whCheckH:"Warehouse check", shortBy:(n)=>`short by ${n}`,
+    sellNowH:"Sell him now (definitely)", pctStock:"% of his stock", kMcOpt:(a,n)=>`${a} MC optional on ${n} product${n === 1 ? "" : "s"}`, exNextWs:"Export next orders (Excel)", allWhHas:"· all the warehouse has", whCheckH:"Warehouse check", shortBy:(n)=>`short by ${n}`,
     shortLine:(p,a,b,c)=>`${p}: ${a} MC recommended to all wholesalers, ${b} MC in the warehouse, short by ${c}. The orders placed first take it.`,
     noneLine:(x)=>`Needed but none in the warehouse: ${x}.`, wsN:(n)=>`${n} wholesaler${n === 1 ? "" : "s"}`, whStockH:"Warehouse stock (MC)", delToCount:"Delivered to count date (MC)", stockMc:"Stock (MC)", flagH:"Flag", recH:"Recommended order", chipSell:"Sell", chipMaybe:"Potential", chipNo:"Do not sell", chipCount:"Count needed",
     whNone:"warehouse has none", optionalW:"optional", ofWanted:(n)=>`of ${n} (warehouse short)`, recTot:(a,b)=>`Recommended order: ${a} MC to sell now · ${b} MC optional`, packOld:"old pack", packLB:"LB pack", sinceCountS:"since count",
@@ -485,7 +485,7 @@ const T = {
     whenOut:"نفد مخزونه: اطلب الآن.", whenLow:"مخزونه وصل إلى حد النقص: اطلب الآن.", whenDue:(d)=>`كان موعده ${d}: اطلب الآن.`, whenOn:(d)=>`الطلبية القادمة حوالي ${d}.`,
     whenStocked:(m)=>`مخزونه كبير: يكفيه حوالي ${m} أشهر بوتيرته، فلا حاجة لطلبية الآن.`, whenLapsed:(n)=>`لم يطلب منذ ${n} يوم: اعرض عليه طلبيته المعتادة لاستعادته.`,
     alsoOffer:"اعرض أيضاً:",
-    sellNowH:"بِعه الآن (مؤكد)", pctStock:"% من مخزونه", exNextWs:"تصدير الطلبيات القادمة (Excel)", allWhHas:"· كل ما في المستودع", whCheckH:"فحص المستودع", shortBy:(n)=>`نقص ${n}`,
+    sellNowH:"بِعه الآن (مؤكد)", pctStock:"% من مخزونه", kMcOpt:(a,n)=>`${a} كرتونة اختيارية على ${n} ${n === 1 ? "صنف" : "أصناف"}`, exNextWs:"تصدير الطلبيات القادمة (Excel)", allWhHas:"· كل ما في المستودع", whCheckH:"فحص المستودع", shortBy:(n)=>`نقص ${n}`,
     shortLine:(p,a,b,c)=>`${p}: ${a} كرتونة مقترحة لكل التجار، و${b} كرتونة في المستودع، أي نقص ${c}. الطلبيات التي تُنفَّذ أولاً تأخذها.`,
     noneLine:(x)=>`مطلوبة لكن غير متوفرة في المستودع: ${x}.`, wsN:(n)=>n === 1 ? "تاجر واحد" : `${n} تجار`, whStockH:"مخزون المستودع (كرتونة)", delToCount:"ورد حتى تاريخ الجرد (كرتونة)", stockMc:"المخزون (كرتونة)", flagH:"التقييم", recH:"الطلبية المقترحة", chipSell:"بِع", chipMaybe:"محتمل", chipNo:"لا تبِع", chipCount:"يحتاج جرد",
     whNone:"غير متوفر في المستودع", optionalW:"اختياري", ofWanted:(n)=>`من ${n} (نقص في المستودع)`, recTot:(a,b)=>`الطلبية المقترحة: ${a} كرتونة للبيع الآن · ${b} كرتونة اختياري`, packOld:"العبوة القديمة", packLB:"عبوة تحذير لبنان", sinceCountS:"بعد الجرد",
@@ -1640,6 +1640,9 @@ function viewNext(main) {
       ${k === "lapsed" ? `<p class="small muted">${esc(t("lapsedSub"))}</p>` : ""}
       <div class="panel flush nextgrid">${g.map(nextCard).join("")}</div></section>`;
   };
+  // potential (optional) products across every wholesaler, including the ones already under "Sell now"
+  const potWs = N.list.filter((o) => o.optional.some((l) => recOf(l) > 0));
+  const potLines = potWs.reduce((a, o) => a + o.optional.filter((l) => recOf(l) > 0).length, 0), potMc = potWs.reduce((a, o) => a + o.optional.reduce((b, l) => b + recOf(l), 0), 0);
   const mode = S.nxMode || store.get("wst_nx") || "cards";
   const allTable = () => {
     const withRows = N.list.filter((o) => o.status !== "none" && nextRows(o).length);
@@ -1649,7 +1652,7 @@ function viewNext(main) {
     ${anHead("next", t("nextSub2"))}
     <div class="seg" role="group" style="margin-bottom:4px"><button type="button" data-nx="cards" aria-pressed="${mode === "cards"}">${esc(t("nxCards"))}</button><button type="button" data-nx="table" aria-pressed="${mode === "table"}">${esc(t("nxTable"))}</button></div>
     <div class="kpis">
-      ${["now", "maybe", "later"].concat(grp("week").length ? ["week"] : []).map((k) => `<div class="kpi"><b class="num">${grp(k).length}</b><span>${esc(t("st_" + k))}</span><div class="h">${esc(k === "later" ? t("kEnough") : t("kMc", mcOf(grp(k))))}</div></div>`).join("")}
+      ${["now", "maybe", "later"].concat(grp("week").length ? ["week"] : []).map((k) => `<div class="kpi"><b class="num">${k === "maybe" ? potWs.length : grp(k).length}</b><span>${esc(t("st_" + k))}</span><div class="h">${esc(k === "later" ? t("kEnough") : k === "maybe" ? t("kMcOpt", fmt(potMc), potLines) : t("kMc", mcOf(grp(k))))}</div></div>`).join("")}
       <div class="kpi"><b class="num">${fmt(N.stock.reduce((a, x) => a + x.inHand, 0))}</b><span>${esc(t("kInHand"))}</span><div class="h">${esc(t("hInHand", fmtShort(E.ledgerEnd)))}</div></div>
     </div>
     ${mode === "table" ? allTable() : ["now", "maybe", "week", "later", "lapsed", "none"].map(sec).join("")}
