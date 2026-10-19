@@ -318,7 +318,10 @@ const T = {
     h_counts:"Stock counts due", h_countsSub:(n)=>`${n} check${n === 1 ? "" : "s"} to look at`, att_title:"Needs attention", att_reorder:"Reorder at the warehouse", att_notBought:"Not bought yet this month", att_due:"Stock counts due", att_checks:"Checks to look at", att_none:"Nothing here.",
     seeAll:"See all", qa_title:"Quick actions", qa_move:"Record a movement", qa_count:"Count stock at a wholesaler", qa_export:"Export to Excel", coverM:(m)=>`${m} months of cover`, lastMonthMc:(x)=>`${x} MC last month`, checksN:(n)=>`${n} check${n === 1 ? "" : "s"}`,
     countsSub:(d)=>`Every wholesaler's last stock count, the most overdue first. A count is due after ${d} days.`, k_due:"Counts due", k_never:"Never counted", col_days:"Days since", col_counts:"Counts", col_shop:"Stock at his shop (MC)",
-    kInPeriod:"Received (MC)", inPageSub:"Every receipt into the warehouse, by month and product. Pick a month to see only its receipts.", imsSub:"What was sold from the warehouse to wholesalers, in mastercases, per product and month. The old and LB Warn packs of a product are one product. These are the IMS figures the SSOF planning system reads for Syria.",
+    kInPeriod:"Received (MC)", sm_in:"In", sm_sale:"Sale", sm_adj:"Adjustment", smk_all:"All", smk_in:"Inbound", smk_sale:"Sales", smk_adj:"Adjustments",
+    smSub:"Every movement in and out of the warehouse, with the stock after each one", smExport:"Export movements (Excel)", smAll:"All movements", smN:(n)=>`${n} movement${n === 1 ? "" : "s"}`,
+    smNote:"Newest first. Movements entered in the app can be edited from Record movements; the rest come from the warehouse Excel.", smEntered:"Entered here · edit", smLedger:"Ledger (Excel)", smByMonth:"Month by month",
+    colIn:"In (MC)", colOut:"Out (MC)", colBal:"Stock after (MC)", colSource:"Source", colMonth:"Month", colReceived:"Received (MC)", colSold:"Sold (MC)", colClose:"Closing stock (MC)", kBuyers:"Wholesalers who bought it", kLastMove:"Last movement", skuNotFound:"This product isn't in the ledger.", inPageSub:"Every receipt into the warehouse, by month and product. Pick a month to see only its receipts.", imsSub:"What was sold from the warehouse to wholesalers, in mastercases, per product and month. The old and LB Warn packs of a product are one product. These are the IMS figures the SSOF planning system reads for Syria.",
     kImsTotal:"IMS total (MC)", kImsMtd:"This month so far (MC)", kImsPrev:"Last month (MC)", kImsAvg:"Average full month (MC)", imsTable:"IMS by product and month (MC)", imsChart:"IMS per month by pack size (MC)", ssofSkuH:"SSOF SKU", imsToDate:"to date", imsExport:"Export IMS (Excel)", imsLast12:"Last 12 months",
     imsFoot:"A dot means nothing sold that month. Sales come from the warehouse ledger and the Entry tab; stock adjustments are not sales and are not counted. Who bought, and sales by wholesaler, are in the Analysis tab.", t_next:"Next order", t_data:"Data", t_exp:"Export", t_entry:"Entry", e_lockT:"Entry is password protected", e_lockS:"Ask the owner for the password that opens this tab.", e_lockPw:"Entry password", e_unlock:"Unlock", e_wrongPw:"Wrong password. Try again.", e_locked:"Locked again", entryTitle:"Enter movements", entrySub:"For the accountant: goods received into the Lattakia warehouse, and sales to wholesalers by product and date. Everything in mastercases (MC), and every screen counts it straight away.",
     e_in:"Inbound · Lattakia warehouse", e_out:"Outbound · sale to a wholesaler", e_in_short:"Inbound", e_out_short:"Outbound",
@@ -351,7 +354,7 @@ const T = {
     wholesaler:"Wholesaler", allWs:"All wholesalers", notCounted:"Not counted yet", flags:"Checks", estNote:"Days left = estimated stock today ÷ offtake per day (from the latest period).",
     bySku:"By product — all wholesalers", anTitle:"Deliveries analysis", anSub:r=>`From the warehouse ledger: ${r}.`, monthly:"Deliveries per month by product family",
     push:"Push list", pushSub:"Who to call now: low stock from counts, and wholesalers overdue against their own ordering rhythm.",
-    wh:"Stock at the warehouse", whSub:"Cover = on hand ÷ average monthly sales over the last 60 days of the ledger.",
+    wh:"Stock at the warehouse", whSub:"Cover = on hand ÷ average monthly sales over the last 60 days of the ledger. Click a product to see all its movements.",
     conc:"Share of deliveries", cover:"Who carries what: mastercases delivered per wholesaler and product", received_:"Received", shipped:"Shipped", onHand:"On hand", perMonth:"Per month", months:"Months of cover",
     reorder:"Reorder now", reorderSoon:"Reorder soon", watch:"Watch", push_:"Push", okS:"OK", out:"Sold out",
     fam_old:"Two Apples · old packs", fam_lb:"Two Apples · Lebanon pack", fam_red:"Red Cruz", fam_grape:"Grape, Love & Blueberry",
@@ -447,7 +450,10 @@ const T = {
     h_counts:"جرد مستحق", h_countsSub:(n)=>`${n} للتحقق`, att_title:"يحتاج متابعة", att_reorder:"إعادة الطلب للمستودع", att_notBought:"لم يشتروا بعد هذا الشهر", att_due:"جرد مستحق", att_checks:"للتحقق", att_none:"لا شيء هنا.",
     seeAll:"عرض الكل", qa_title:"إجراءات سريعة", qa_move:"تسجيل حركة", qa_count:"جرد مخزون تاجر", qa_export:"تصدير إلى Excel", coverM:(m)=>`تغطية ${m} شهر`, lastMonthMc:(x)=>`${x} كرتونة الشهر الماضي`, checksN:(n)=>`${n} للتحقق`,
     countsSub:(d)=>`آخر جرد لكل تاجر، الأكثر تأخراً أولاً. يستحق الجرد بعد ${d} يوماً.`, k_due:"جرد مستحق", k_never:"لم يُجرد أبداً", col_days:"أيام منذ الجرد", col_counts:"عدد مرات الجرد", col_shop:"المخزون في محله (كرتونة)",
-    kInPeriod:"المستلم (كرتونة)", inPageSub:"كل ما استُلم في المستودع حسب الشهر والصنف. اختر شهراً لترى ما استُلم فيه فقط.", imsSub:"ما بيع من المستودع للتجار، بالكرتونة، لكل صنف وشهر. العبوة القديمة وعبوة تحذير لبنان من الصنف نفسه صنف واحد. هذه هي أرقام IMS التي يقرؤها نظام SSOF لسوريا.",
+    kInPeriod:"المستلم (كرتونة)", sm_in:"وارد", sm_sale:"بيع", sm_adj:"تعديل", smk_all:"الكل", smk_in:"الوارد", smk_sale:"المبيعات", smk_adj:"التعديلات",
+    smSub:"كل حركة دخول وخروج من المستودع، مع المخزون بعد كل حركة", smExport:"تصدير الحركات (Excel)", smAll:"كل الحركات", smN:(n)=>`${n} حركة`,
+    smNote:"الأحدث أولاً. الحركات المُدخلة في التطبيق تُعدَّل من تسجيل الحركات؛ والباقي من ملف Excel للمستودع.", smEntered:"مُدخلة هنا · تعديل", smLedger:"الدفتر (Excel)", smByMonth:"شهراً بشهر",
+    colIn:"وارد (كرتونة)", colOut:"صادر (كرتونة)", colBal:"المخزون بعدها (كرتونة)", colSource:"المصدر", colMonth:"الشهر", colReceived:"المستلم (كرتونة)", colSold:"المباع (كرتونة)", colClose:"مخزون آخر الشهر (كرتونة)", kBuyers:"تجار اشتروه", kLastMove:"آخر حركة", skuNotFound:"هذا الصنف غير موجود في الدفتر.", inPageSub:"كل ما استُلم في المستودع حسب الشهر والصنف. اختر شهراً لترى ما استُلم فيه فقط.", imsSub:"ما بيع من المستودع للتجار، بالكرتونة، لكل صنف وشهر. العبوة القديمة وعبوة تحذير لبنان من الصنف نفسه صنف واحد. هذه هي أرقام IMS التي يقرؤها نظام SSOF لسوريا.",
     kImsTotal:"مجموع IMS (كرتونة)", kImsMtd:"هذا الشهر حتى اليوم (كرتونة)", kImsPrev:"الشهر الماضي (كرتونة)", kImsAvg:"متوسط الشهر الكامل (كرتونة)", imsTable:"IMS حسب الصنف والشهر (كرتونة)", imsChart:"IMS الشهري حسب حجم العبوة (كرتونة)", ssofSkuH:"الصنف في SSOF", imsToDate:"حتى اليوم", imsExport:"تصدير IMS (Excel)", imsLast12:"آخر 12 شهراً",
     imsFoot:"النقطة تعني لا مبيعات في ذلك الشهر. المبيعات من دفتر المستودع وتبويب الإدخال؛ تعديلات المخزون ليست مبيعات ولا تُحسب. من اشترى والمبيعات حسب التاجر في تبويب التحليل.", t_next:"الطلبية القادمة", t_data:"البيانات", t_exp:"تصدير", t_entry:"الإدخال", e_lockT:"الإدخال محمي بكلمة مرور", e_lockS:"اطلب من المالك كلمة المرور التي تفتح هذا التبويب.", e_lockPw:"كلمة مرور الإدخال", e_unlock:"فتح", e_wrongPw:"كلمة المرور خاطئة. حاول مرة أخرى.", e_locked:"أُقفل من جديد", entryTitle:"إدخال الحركات", entrySub:"للمحاسب: البضاعة الواردة إلى مستودع اللاذقية، والمبيعات للتجار حسب الصنف والتاريخ. كل الكميات بالكرتونة، وتُحتسب في كل الشاشات فوراً.",
     e_in:"وارد · مستودع اللاذقية", e_out:"صادر · بيع لتاجر", e_in_short:"وارد", e_out_short:"صادر",
@@ -480,7 +486,7 @@ const T = {
     wholesaler:"التاجر", allWs:"كل التجار", notCounted:"لم يُجرد بعد", flags:"للتحقق", estNote:"الأيام المتبقية = المخزون المقدّر اليوم ÷ التصريف اليومي (من آخر فترة).",
     bySku:"حسب الصنف — كل التجار", anTitle:"تحليل التوريدات", anSub:r=>`من دفتر المستودع: ${r}.`, monthly:"التوريدات الشهرية حسب عائلة المنتج",
     push:"قائمة الدفع", pushSub:"من يجب الاتصال به الآن: مخزون منخفض من الجرد، وتجار متأخرون عن وتيرة طلبهم المعتادة.",
-    wh:"المخزون في المستودع", whSub:"التغطية = المتوفر ÷ متوسط المبيعات الشهرية لآخر 60 يوماً في الدفتر.",
+    wh:"المخزون في المستودع", whSub:"التغطية = المتوفر ÷ متوسط المبيعات الشهرية لآخر 60 يوماً في الدفتر. اضغط على صنف لترى كل حركاته.",
     conc:"حصة التوريدات", cover:"من يحمل ماذا: الكراتين المورَّدة لكل تاجر وصنف", received_:"المستلم", shipped:"المشحون", onHand:"المتوفر", perMonth:"شهرياً", months:"أشهر التغطية",
     reorder:"اطلب الآن", reorderSoon:"اطلب قريباً", watch:"راقب", push_:"ادفع", okS:"جيد", out:"نفد",
     fam_old:"تفاحتين · العبوات القديمة", fam_lb:"تفاحتين · عبوة لبنان", fam_red:"كروز أحمر", fam_grape:"عنب ولوف وبلوبيري",
@@ -795,7 +801,7 @@ const route = () => {
   if (p[0] === "ws" && p[1]) return p[2] === "count" ? { view: "count", id: p[1], edit: p[3] || null } : { view: "ws", id: p[1], sub: ["purchases", "stock", "next"].includes(p[2]) ? p[2] : "overview" };
   const [view, sub] = LEGACY[p[0]] || (SECTIONS[p[0]] && p[0] !== "list" ? [p[0], p[1]] : ["home"]);
   const subs = SECTIONS[view];
-  return { view, sub: subs.length ? (subs.includes(sub) ? sub : subs[0]) : null };
+  return { view, sub: subs.length ? (subs.includes(sub) ? sub : subs[0]) : null, item: LEGACY[p[0]] ? null : p[2] || null };
 };
 const go = (h) => { if (location.hash === h) render(); else location.hash = h; };
 window.addEventListener("hashchange", () => { S.form = null; S.dirty = false; S.pendingDelete = null; render(); window.scrollTo(0, 0); });
@@ -850,7 +856,7 @@ function render() {
   if (r.view === "next") return viewNext(main);
   if (r.view === "sales") return r.sub === "ims" ? viewIms(main) : viewSales(main, r.sub);
   if (r.view === "sellout") return r.sub === "counts" ? viewCounts(main) : viewOfftake(main);
-  if (r.view === "warehouse") return r.sub === "entry" ? viewEntry(main) : viewWarehouse(main, r.sub);
+  if (r.view === "warehouse") return r.sub === "entry" ? viewEntry(main) : r.sub === "stock" && r.item ? viewSkuMoves(main, r.item) : viewWarehouse(main, r.sub);
   if (r.view === "admin") return r.sub === "data" ? viewData(main) : viewExport(main);
 }
 
@@ -877,7 +883,7 @@ function viewHome(main) {
       ${tile("#sellout/counts", due.length, t("h_counts"), t("h_countsSub", checks))}
     </div>
     <section class="stack"><h3>${esc(t("att_title"))}</h3><div class="grid2">
-      ${card(t("att_reorder"), "#warehouse/stock", reorder.slice(0, 6).map((x) => li("#warehouse/stock", skuName(x.sku), x.onHand <= 0 ? t("out") : `${fmt(x.onHand)} MC · ${t("coverM", fmt1(x.onHand / x.perMonth))}`)))}
+      ${card(t("att_reorder"), "#warehouse/stock", reorder.slice(0, 6).map((x) => li(`#warehouse/stock/${x.sku.id}`, skuName(x.sku), x.onHand <= 0 ? t("out") : `${fmt(x.onHand)} MC · ${t("coverM", fmt1(x.onHand / x.perMonth))}`)))}
       ${card(t("att_notBought"), "#sales/ws", B.no.filter((x) => x.prev > 0).slice(0, 6).map((x) => li(x.w ? `#ws/${x.w.id}/purchases` : "#sales/ws", x.name, t("lastMonthMc", fmt(x.prev)))))}
       ${card(t("att_due"), "#sellout/counts", due.slice(0, 6).map((w) => li(`#ws/${w.id}/stock`, w.name, w.lastCount ? t("daysAgo", w.daysSinceCount) : t("never"))))}
       ${card(t("att_checks"), "#sellout/counts", flagged.slice(0, 6).map((w) => li(`#ws/${w.id}/stock`, w.name, t("checksN", w.flags))))}
@@ -2075,7 +2081,7 @@ function viewWarehouse(main, sub = "stock") {
     <section class="panel chart stack"><div class="head"><h3>${esc(t("inMonthly"))}</h3><ul class="legend">${FORMATS.map((f, i) => `<li><span class="sw" style="background:var(--s${i + 1})"></span>${esc(t("f_" + f))}</li>`).join("")}</ul></div><div id="cIn"></div></section>
     <section class="stack"><div class="head"><h3>${esc(t("inLog"))}</h3>${mSel === "all" ? "" : `<span class="small muted">${esc(t("monthShown", monthLabel(mSel) + " " + mSel.slice(0, 4)))}</span>`}</div><div class="panel flush scroll"><table>
       <thead><tr><th>${esc(t("date"))}</th><th>${esc(t("product"))}</th><th>${esc(t("format"))}</th><th>${esc(t("type"))}</th><th>${esc(t("ref"))}</th><th class="r">${esc(t("received_"))} (MC)</th></tr></thead>
-      <tbody>${inRows.map((r) => `<tr><td class="num small" style="white-space:nowrap">${fmtDate(r[1])}</td><td><span class="name">${esc(skuName(ls[r[0]]))}</span><span class="sub2">${esc(skuAlt(ls[r[0]]))}</span></td><td class="small">${esc(t("f_" + fmtOf(ls[r[0]])))}</td><td class="small">${esc(typeName(r[2]))}</td><td class="small muted">${esc(r[4] || "—")}</td><td class="r num"><b>${fmt(r[5])}</b></td></tr>`).join("") || `<tr><td colspan="6" class="muted">—</td></tr>`}</tbody>
+      <tbody>${inRows.map((r) => `<tr><td class="num small" style="white-space:nowrap">${fmtDate(r[1])}</td><td><a class="name" href="#warehouse/stock/${ls[r[0]].id}">${esc(skuName(ls[r[0]]))}</a><span class="sub2">${esc(skuAlt(ls[r[0]]))}</span></td><td class="small">${esc(t("f_" + fmtOf(ls[r[0]])))}</td><td class="small">${esc(typeName(r[2]))}</td><td class="small muted">${esc(r[4] || "—")}</td><td class="r num"><b>${fmt(r[5])}</b></td></tr>`).join("") || `<tr><td colspan="6" class="muted">—</td></tr>`}</tbody>
       <tfoot><tr><td colspan="5">${esc(t("total"))}</td><td class="r num">${fmt(inRows.reduce((a, r) => a + r[5], 0))}</td></tr></tfoot></table></div></section>` : `
     <div class="kpis">
       <div class="kpi"><b class="num">${fmt(tot.inb)}</b><span>${esc(t("kIn"))}</span></div>
@@ -2087,19 +2093,86 @@ function viewWarehouse(main, sub = "stock") {
     <section class="stack"><h3>${esc(t("wh"))}</h3><p class="small muted">${esc(t("whSub"))}</p><div class="panel flush scroll">${whTable(wh)}</div></section>`}`;
   if (inbound) drawStacked(document.getElementById("cIn"), M, FORMATS.map((f, i) => ({ label: t("f_" + f), color: `--s${i + 1}`, values: byF[f] })), t("inMonthly"));
   document.getElementById("whSel").addEventListener("change", (e) => { S.whSel = e.target.value; render(); });
+  main.querySelectorAll("tr[data-go]").forEach((tr) => tr.addEventListener("click", (e) => { if (!e.target.closest("a")) go(tr.dataset.go); }));
   const wm = document.getElementById("whMonth"); if (wm) wm.addEventListener("change", (e) => { S.whMonth = e.target.value; render(); });
+}
+/* ---------- warehouse: every movement of one product (its stock card) ---------- */
+// All of a product's movements, oldest first, each with the stock after it.
+function skuMoves(i) {
+  let bal = 0;
+  return E.rows.filter((r) => r[0] === i && ((r[5] || 0) > 0 || (r[6] || 0) > 0)).sort((a, b) => (a[1] < b[1] ? -1 : a[1] > b[1] ? 1 : 0)).map((r) => {
+    const inb = r[5] || 0, out = r[6] || 0; bal += inb - out;
+    return { r, date: r[1], kind: inb > 0 ? "in" : r[2] === "Sales Invoice" ? "sale" : "adj", inb, out, bal, ws: r[3] ? aliasOf(r[3]).trim() : "", ref: r[4] || "", entered: !!r[7] };
+  });
+}
+function viewSkuMoves(main, id) {
+  const ls = S.ledger.skus, i = ls.findIndex((s) => s.id === id);
+  if (i < 0) { main.innerHTML = `<div class="notice">${esc(t("skuNotFound"))} <a href="#warehouse/stock">${esc(t("sub_warehouse_stock"))}</a></div>`; return; }
+  const sku = ls[i], moves = skuMoves(i), onHand = moves.length ? moves.at(-1).bal : 0;
+  const kind = ["all", "in", "sale", "adj"].includes(S.smKind) ? S.smKind : "all";
+  const months = [...new Set(moves.map((m) => m.date.slice(0, 7)))].sort().reverse(), mSel = months.includes(S.smMonth) ? S.smMonth : "all";
+  const shown = moves.filter((m) => (kind === "all" || m.kind === kind) && (mSel === "all" || m.date.startsWith(mSel))).reverse();
+  const tot = (k, f) => moves.filter((m) => m.kind === k).reduce((a, m) => a + m[f], 0);
+  const adj = tot("adj", "out"), buyers = new Set(moves.filter((m) => m.kind === "sale" && m.ws).map((m) => m.ws));
+  const byName = new Map(E.wsList.map((w) => [w.name, w]));
+  const byM = new Map(); for (const m of moves) { const k = m.date.slice(0, 7), o = byM.get(k) || { in: 0, sale: 0, adj: 0, close: 0 }; if (m.kind === "in") o.in += m.inb; else if (m.kind === "sale") o.sale += m.out; else o.adj += m.out; o.close = m.bal; byM.set(k, o); }
+  const chip = (k) => `<span class="chip ${k === "in" ? "c-good" : k === "sale" ? "c-acc" : "c-warn"}">${esc(t("sm_" + k))}</span>`;
+  const n = (v) => (v ? fmt(v) : "");
+  main.innerHTML = `
+    <div class="crumbs"><a href="#warehouse/stock">${esc(t("sub_warehouse_stock"))}</a><span>/</span></div>
+    <div class="head"><div><h2>${esc(skuName(sku))}</h2><p class="sub">${esc(t("f_" + fmtOf(sku)))}${skuAlt(sku) ? " · " + esc(skuAlt(sku)) : ""}. ${esc(t("smSub"))}</p></div>
+      <button class="btn" type="button" id="smExport">${esc(t("smExport"))}</button></div>
+    <div class="kpis">
+      <div class="kpi"><b class="num">${fmt(tot("in", "inb"))}</b><span>${esc(t("kIn"))}</span></div>
+      <div class="kpi"><b class="num">${fmt(tot("sale", "out"))}</b><span>${esc(t("kOut"))}</span></div>
+      ${adj ? `<div class="kpi"><b class="num">−${fmt(adj)}</b><span>${esc(t("kAdj"))}</span></div>` : ""}
+      <div class="kpi"><b class="num">${fmt(onHand)}</b><span>${esc(t("kOnHand"))}</span></div>
+      <div class="kpi"><b class="num">${buyers.size}</b><span>${esc(t("kBuyers"))}</span></div>
+      <div class="kpi"><b class="num">${moves.length ? esc(fmtShort(moves.at(-1).date)) : "—"}</b><span>${esc(t("kLastMove"))}</span></div></div>
+    <section class="stack"><div class="head"><h3>${esc(t("smAll"))}</h3>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><div class="seg" role="group">${["all", "in", "sale", "adj"].map((k) => `<button type="button" data-smk="${k}" aria-pressed="${k === kind}">${esc(t("smk_" + k))}</button>`).join("")}</div>
+        <select class="inp" id="smMonth" aria-label="${esc(t("period"))}" style="min-width:150px"><option value="all">${esc(t("allMonths"))}</option>${months.map((m) => `<option value="${m}" ${m === mSel ? "selected" : ""}>${esc(monthLabel(m))} ${m.slice(0, 4)}</option>`).join("")}</select></div></div>
+      <div class="panel flush scroll"><table>
+        <thead><tr><th>${esc(t("date"))}</th><th>${esc(t("type"))}</th><th>${esc(t("wholesaler"))}</th><th>${esc(t("ref"))}</th><th class="r">${esc(t("colIn"))}</th><th class="r">${esc(t("colOut"))}</th><th class="r">${esc(t("colBal"))}</th><th>${esc(t("colSource"))}</th></tr></thead>
+        <tbody>${shown.map((m) => { const w = byName.get(m.ws); return `<tr><td class="small num" style="white-space:nowrap">${esc(fmtDate(m.date))}</td><td style="white-space:nowrap">${chip(m.kind)} <span class="small muted">${esc(typeName(m.r[2]))}</span></td>
+          <td>${m.kind === "sale" && m.ws ? (w ? `<a class="name" dir="auto" href="#ws/${w.id}/purchases">${esc(m.ws)}</a>` : `<span class="name" dir="auto">${esc(m.ws)}</span>`) : '<span class="muted">—</span>'}</td>
+          <td class="small muted">${esc(m.ref || "—")}</td><td class="r num">${n(m.inb)}</td><td class="r num">${n(m.out)}</td><td class="r num"><b>${fmt(m.bal)}</b></td>
+          <td class="small">${m.entered ? `<a href="#warehouse/entry" data-smedit="1">${esc(t("smEntered"))}</a>` : `<span class="muted">${esc(t("smLedger"))}</span>`}</td></tr>`; }).join("") || `<tr><td colspan="8" class="muted">—</td></tr>`}</tbody>
+        <tfoot><tr><td colspan="4">${esc(t("total"))} · ${esc(t("smN", shown.length))}</td><td class="r num">${fmt(shown.reduce((a, m) => a + m.inb, 0))}</td><td class="r num">${fmt(shown.reduce((a, m) => a + m.out, 0))}</td><td colspan="2"></td></tr></tfoot></table></div>
+      <p class="small muted">${esc(t("smNote"))}</p></section>
+    <section class="stack"><h3>${esc(t("smByMonth"))}</h3><div class="panel flush scroll"><table>
+      <thead><tr><th>${esc(t("colMonth"))}</th><th class="r">${esc(t("colReceived"))}</th><th class="r">${esc(t("colSold"))}</th>${adj ? `<th class="r">${esc(t("kAdj"))}</th>` : ""}<th class="r">${esc(t("colClose"))}</th></tr></thead>
+      <tbody>${[...byM].reverse().map(([m, o]) => `<tr><td class="num">${esc(monthLabel(m))} ${m.slice(0, 4)}</td><td class="r num">${n(o.in)}</td><td class="r num">${n(o.sale)}</td>${adj ? `<td class="r num">${o.adj ? "−" + fmt(o.adj) : ""}</td>` : ""}<td class="r num"><b>${fmt(o.close)}</b></td></tr>`).join("")}</tbody></table></div></section>`;
+  main.querySelectorAll("[data-smk]").forEach((b) => b.addEventListener("click", () => { S.smKind = b.dataset.smk; render(); }));
+  document.getElementById("smMonth").addEventListener("change", (e) => { S.smMonth = e.target.value; render(); });
+  // an entered movement opens this product in Record movements, ready to edit
+  main.querySelectorAll("[data-smedit]").forEach((a) => a.addEventListener("click", () => { S.entryOpen = id; }));
+  document.getElementById("smExport").addEventListener("click", () => exportSkuMoves(sku, moves));
+}
+async function exportSkuMoves(sku, moves) {
+  if (!S.dl) { toast(t("err") + "downloads unavailable"); return; }
+  try {
+    const XLSX = await loadXLSX();
+    const aoa = [["Date", "Type", "Direction", "Wholesaler", "Ref", "In (MC)", "Out (MC)", "Stock after (MC)", "Source"],
+      ...moves.map((m) => [m.date, m.r[2], m.kind === "in" ? "In" : m.kind === "sale" ? "Sale" : "Adjustment", m.ws, m.ref, m.inb || "", m.out || "", m.bal, m.entered ? "Entered in the app" : "Ledger (Excel)"])];
+    const wb = XLSX.utils.book_new(), ws = XLSX.utils.aoa_to_sheet(aoa);
+    ws["!cols"] = aoa[0].map((_, c) => ({ wch: Math.min(40, Math.max(10, ...aoa.slice(0, 300).map((r) => String(r[c] ?? "").length)) + 2) }));
+    XLSX.utils.book_append_sheet(wb, ws, "Movements");
+    await S.dl.save({ filename: `Movements - ${sku.en} - ${todayISO()}.xlsx`, data: new Blob([XLSX.write(wb, { type: "array", bookType: "xlsx" })]) });
+    toast(t("exported"));
+  } catch (err) { if (err?.code !== "declined") toast(t("err") + (err?.code || err?.message || err)); }
 }
 // Warehouse stock grouped by format: received, shipped, on hand, cover.
 function whTable(list) {
   const cls = { reorder: "c-crit", reorderSoon: "c-serious", watch: "c-warn", okS: "c-mute", push_: "c-good", out: "c-mute" };
   const meter = (x) => (x.onHand > 0 && x.cover != null ? `<div style="display:flex;align-items:center;gap:8px"><div class="meter ${x.cover < 1.25 ? "low" : ""}" style="flex:1"><i style="width:${Math.max(3, Math.min(100, (x.cover / 12) * 100))}%"></i></div><span class="num small">${fmt1(x.cover)}</span></div>` : "");
   const sum = (items) => { const s = items.reduce((a, x) => ({ inb: a.inb + x.inb, out: a.out + x.out, adj: a.adj + (x.adj || 0), onHand: a.onHand + x.onHand, perMonth: a.perMonth + x.perMonth }), { inb: 0, out: 0, adj: 0, onHand: 0, perMonth: 0 }); s.cover = s.perMonth > 0 ? s.onHand / s.perMonth : null; return s; };
-  const line = (label, x, grp) => `<tr class="${grp ? "grp" : ""}"><td>${label}</td><td class="r num">${fmt(x.inb)}</td><td class="r num">${fmt(x.out)}</td><td class="r num"><b>${fmt(x.onHand)}</b>${x.adj ? `<span class="sub2">${esc(t("adjNote", fmt(x.adj)))}</span>` : ""}</td><td class="r num">${fmt(x.perMonth)}</td><td>${meter(x)}</td><td>${x.status ? `<span class="chip ${cls[x.status]}">${esc(t(x.status))}</span>` : ""}</td></tr>`;
+  const line = (label, x, grp) => `<tr class="${grp ? "grp" : x.sku ? "click" : ""}"${!grp && x.sku ? ` data-go="#warehouse/stock/${x.sku.id}"` : ""}><td>${label}</td><td class="r num">${fmt(x.inb)}</td><td class="r num">${fmt(x.out)}</td><td class="r num"><b>${fmt(x.onHand)}</b>${x.adj ? `<span class="sub2">${esc(t("adjNote", fmt(x.adj)))}</span>` : ""}</td><td class="r num">${fmt(x.perMonth)}</td><td>${meter(x)}</td><td>${x.status ? `<span class="chip ${cls[x.status]}">${esc(t(x.status))}</span>` : ""}</td></tr>`;
   let body = "";
   for (const f of FORMATS) {
     const items = list.filter((x) => fmtOf(x.sku) === f); if (!items.length) continue;
     body += line(`<span class="name">${esc(t("f_" + f))}</span> <span class="small muted">${esc(t("allOf"))}</span>`, sum(items), true);
-    body += [...items].sort((a, b) => (a.onHand <= 0) - (b.onHand <= 0) || b.out - a.out).map((x) => line(`<span class="ind">${esc(skuName(x.sku))}<span class="sub2">${esc(skuAlt(x.sku))}</span></span>`, x, false)).join("");
+    body += [...items].sort((a, b) => (a.onHand <= 0) - (b.onHand <= 0) || b.out - a.out).map((x) => line(`<span class="ind"><a class="name" href="#warehouse/stock/${x.sku.id}">${esc(skuName(x.sku))}</a><span class="sub2">${esc(skuAlt(x.sku))}</span></span>`, x, false)).join("");
   }
   return `<table class="mkt"><thead><tr><th>${esc(t("format"))} / ${esc(t("product"))}</th><th class="r">${esc(t("received_"))}</th><th class="r">${esc(t("shipped"))}</th><th class="r">${esc(t("onHand"))}</th><th class="r">${esc(t("perMonth"))}</th><th>${esc(t("months"))}</th><th></th></tr></thead><tbody>${body}</tbody><tfoot>${line(esc(t("total")), sum(list), false)}</tfoot></table>`;
 }
