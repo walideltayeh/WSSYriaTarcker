@@ -127,6 +127,7 @@ main{max-width:1160px;margin:0 auto;padding-inline:16px;padding-block:34px 120px
 .exrow{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;padding:14px 20px;border-bottom:1px solid var(--hair);cursor:pointer}
 .exrow:last-child{border-bottom:0}
 .exrow:hover{background:var(--sunk)}
+.eprod{border-bottom:1px solid var(--hair)}.eprod:last-child{border-bottom:0}.eprod summary{padding:14px 20px;cursor:pointer;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}.eprod summary:hover{background:var(--sunk)}.eprod[open] summary{border-bottom:1px solid var(--hair)}tr.eedit td{background:var(--sunk)}
 .fgroup{border-bottom:2px solid var(--axis)}
 .fgroup:last-child{border-bottom:0}
 .fhead{padding:10px 20px 6px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);background:var(--sunk)}
@@ -308,7 +309,9 @@ const T = {
     e_products:"Products", e_hint:"Put the quantity in mastercases next to each product and leave the rest empty.", ssofTag:"New · SSOF", e_ssofNote:(n)=>`${n} product${n === 1 ? " comes" : "s come"} from SSOF's active list and ${n === 1 ? "is" : "are"} not in the ledger yet.`,
     ssofList:"Products from SSOF", ssofListInfo:(n,d)=>`SSOF lists ${n} active products for Syria (last received ${d}).`, ssofNew:(n)=>`${n} not in the ledger yet, offered in the Entry tab:`, ssofNoNew:"All of them are already products here.", ssofListNote:"SSOF sends this list by itself whenever a product is added or changed there. A new product shows in the other tabs once a movement is entered for it.",
     e_save:"Save movement", e_saving:"Saving…", e_saved:"Movement saved", e_needLines:"Enter a quantity for at least one product.", e_needWs:"Choose the wholesaler.",
-    e_total:(n,l)=>`${n} MC · ${l} product${l==1?"":"s"}`, e_recent:"Movements entered here", e_none:"Nothing entered yet. What you save appears here and counts in every screen.",
+    e_total:(n,l)=>`${n} MC · ${l} product${l==1?"":"s"}`, e_recent:"Movements entered here", e_byProduct:"Entered by product", e_byProductSub:"Click a product to see every movement entered for it: who took it, when and how much. Edit or delete one line. Sales imported from the warehouse Excel are not listed here; they change with the next import.",
+    e_prodSum:(i,o,w,n)=>`in ${i} MC · out ${o} MC to ${w} wholesaler${w === 1 ? "" : "s"} · ${n} entr${n === 1 ? "y" : "ies"}`, e_inOut:"In / out", e_whoTook:"Who took it", e_byShort:"Entered by", e_editLine:"Edit", e_saveLine:"Save",
+    e_zeroNote:"0 removes this product from the movement.", e_alsoIn:(x)=>`This movement also has ${x}; a new date or wholesaler applies to this product only and makes it an entry of its own.`, e_lineSaved:"Updated", e_lineRemoved:"Removed", e_badDate:"Choose a date up to today.", e_badQty:"Enter a quantity of 0 or more.", e_none:"Nothing entered yet. What you save appears here and counts in every screen.",
     e_del:"Delete", e_delConfirm:"Tap again to delete", e_deleted:"Movement deleted",
     e_importNote:"Movements entered on the Entry tab are kept separate from the workbook. If a new workbook already contains them, delete them on that tab first.", expTitle:"Export to Excel", expSub:(d)=>`Tick what you want and download one Excel file, one sheet per item. Data up to ${d}; all quantities in mastercases.`, expAll:"Select all", expNone:"Clear", expBtn:(n)=>`Download Excel · ${n} sheet${n===1?"":"s"}`, expRows:(n)=>`${n} rows`, expFile:(x)=>`File: ${x}`, expG_orders:"Orders & stock", expG_sales:"Sales", expG_offtake:"Offtake & stock counts", expG_raw:"Raw data",
     loading:"Loading…", noLedger:"No data yet. Import the Excel workbook to get started.", goData:"Data & settings", noClaude:"Open this app from its claude.ai link to load the data and log counts.",
@@ -426,7 +429,9 @@ const T = {
     e_products:"الأصناف", e_hint:"اكتب الكمية بالكرتونة بجانب كل صنف واترك الباقي فارغاً.", ssofTag:"جديد · SSOF", e_ssofNote:(n)=>n === 1 ? "صنف واحد من قائمة SSOF الفعّالة وليس في الدفتر بعد." : `${n} أصناف من قائمة SSOF الفعّالة وليست في الدفتر بعد.`,
     ssofList:"أصناف من SSOF", ssofListInfo:(n,d)=>`في SSOF ${n} صنفاً فعّالاً لسوريا (آخر استلام ${d}).`, ssofNew:(n)=>`${n} ليست في الدفتر بعد، وتظهر في تبويب الإدخال:`, ssofNoNew:"كلها أصناف موجودة هنا.", ssofListNote:"يرسل SSOF هذه القائمة تلقائياً كلما أُضيف صنف أو عُدّل هناك. الصنف الجديد يظهر في بقية التبويبات بعد إدخال أول حركة له.",
     e_save:"حفظ الحركة", e_saving:"جارٍ الحفظ…", e_saved:"تم حفظ الحركة", e_needLines:"أدخل كمية لصنف واحد على الأقل.", e_needWs:"اختر التاجر.",
-    e_total:(n,l)=>`${n} كرتونة · ${l} صنف`, e_recent:"الحركات المُدخلة هنا", e_none:"لا حركات بعد. ما تحفظه يظهر هنا ويُحتسب في كل الشاشات.",
+    e_total:(n,l)=>`${n} كرتونة · ${l} صنف`, e_recent:"الحركات المُدخلة هنا", e_byProduct:"الإدخالات حسب الصنف", e_byProductSub:"اضغط على صنف لترى كل حركة أُدخلت له: من أخذه ومتى وكم. عدّل سطراً أو احذفه. المبيعات المستوردة من ملف Excel للمستودع لا تظهر هنا؛ تتغير مع الاستيراد التالي.",
+    e_prodSum:(i,o,w,n)=>`وارد ${i} كرتونة · صادر ${o} كرتونة إلى ${w} ${w === 1 ? "تاجر" : "تجار"} · ${n} ${n === 1 ? "إدخال" : "إدخالات"}`, e_inOut:"وارد / صادر", e_whoTook:"من أخذه", e_byShort:"أدخلها", e_editLine:"تعديل", e_saveLine:"حفظ",
+    e_zeroNote:"الصفر يحذف هذا الصنف من الحركة.", e_alsoIn:(x)=>`في هذه الحركة أيضاً ${x}؛ التاريخ أو التاجر الجديد يخص هذا الصنف فقط ويجعله إدخالاً مستقلاً.`, e_lineSaved:"تم التعديل", e_lineRemoved:"تم الحذف", e_badDate:"اختر تاريخاً حتى اليوم.", e_badQty:"أدخل كمية صفراً أو أكثر.", e_none:"لا حركات بعد. ما تحفظه يظهر هنا ويُحتسب في كل الشاشات.",
     e_del:"حذف", e_delConfirm:"اضغط مرة أخرى للحذف", e_deleted:"تم حذف الحركة",
     e_importNote:"الحركات المُدخلة من تبويب الإدخال تبقى منفصلة عن ملف الإكسل. إذا كان الملف الجديد يحتويها فاحذفها من هناك أولاً.", expTitle:"تصدير إلى Excel", expSub:(d)=>`اختر ما تريد وحمّل ملف Excel واحداً، ورقة لكل بند. البيانات حتى ${d}؛ كل الكميات بالكرتونة.`, expAll:"تحديد الكل", expNone:"إلغاء التحديد", expBtn:(n)=>`تنزيل Excel · ${n} ورقة`, expRows:(n)=>`${n} سطر`, expFile:(x)=>`الملف: ${x}`, expG_orders:"الطلبيات والمخزون", expG_sales:"المبيعات", expG_offtake:"التصريف والجرد", expG_raw:"البيانات الخام",
     loading:"جارٍ التحميل…", noLedger:"لا توجد بيانات بعد. استورد ملف الإكسل للبدء.", goData:"البيانات والإعدادات", noClaude:"افتح التطبيق من رابط claude.ai لتحميل البيانات وتسجيل الجرد.",
@@ -2229,6 +2234,7 @@ function viewEntry(main) {
           <div class="qty"><input inputmode="decimal" type="number" min="0" step="any" aria-label="${esc(skuName(s))}" data-q="${s.id}" value="${st.qty[s.id] ?? ""}"></div></div>`).join("")}</div>`).join("")}</div></section>
     <div class="field"><label for="eNote">${esc(t("e_note"))}</label><input class="inp" id="eNote" dir="auto" value="${esc(st.note)}"></div>
     <div class="sticky-save"><span class="small ink2" id="eSum"></span><button class="btn pri big" type="button" id="eSave">${esc(t("e_save"))}</button></div>
+    ${entryByProductHTML()}
     <section class="stack"><h3>${esc(t("e_recent"))}</h3><div class="panel flush">${moves.length ? moves.slice(0, 40).map((m) => `
       <div class="exrow" style="cursor:default"><span class="chip ${m.kind === "out" ? "c-acc" : "c-good"}">${esc(t(m.kind === "out" ? "e_out_short" : "e_in_short"))}</span>
         <span><span class="name num">${esc(fmtDate(m.date))}${m.kind === "out" ? ` · <span dir="auto">${esc(aliasOf(m.ws || ""))}</span>` : ""}</span>
@@ -2258,6 +2264,7 @@ function viewEntry(main) {
   });
   main.querySelectorAll("[data-q]").forEach((i) => i.addEventListener("input", () => { const v = +i.value; if (i.value.trim() === "" || !(v > 0)) delete st.qty[i.dataset.q]; else st.qty[i.dataset.q] = Math.round(v * 100) / 100; sum(); }));
   sum();
+  bindEntryByProduct(main);
   main.querySelectorAll("[data-del]").forEach((b) => b.addEventListener("click", async () => {
     const id = b.dataset.del;
     if (S.pendingDelete !== id) { S.pendingDelete = id; b.textContent = t("e_delConfirm"); return; }
@@ -2280,6 +2287,99 @@ function viewEntry(main) {
       btn.disabled = false; btn.textContent = t("e_save");
       toast(t("err") + (err?.code || err?.message || err));
     }
+  });
+}
+/* ---------- entry: movements entered, product by product, each line editable ---------- */
+// Every product line of every movement entered in the app, grouped by product (old and LB Warn packs as one).
+function entryByProduct() {
+  const by = new Map();
+  for (const m of S.moves) {
+    if (!m || !m.date || !Array.isArray(m.lines)) continue;
+    for (const l of m.lines) {
+      const q = +l.qty; if (!(q > 0)) continue;
+      const pid = E.canon.get(l.sku) || l.sku;
+      if (!by.has(pid)) by.set(pid, { pid, sku: E.entrySkus.find((s) => s.id === pid) || S.ledger.skus.find((s) => s.id === pid) || { id: pid, en: String(pid), ar: "" }, inQ: 0, outQ: 0, ws: new Set(), rows: [] });
+      const g = by.get(pid);
+      if (m.kind === "out") { g.outQ += q; if (m.ws) g.ws.add(aliasOf(m.ws)); } else g.inQ += q;
+      g.rows.push({ m, raw: l.sku, q });
+    }
+  }
+  const order = new Map(E.entrySkus.map((s, i) => [s.id, i]));
+  for (const g of by.values()) g.rows.sort((a, b) => String(b.m.date).localeCompare(String(a.m.date)) || String(b.m.savedAt || "").localeCompare(String(a.m.savedAt || "")));
+  return [...by.values()].sort((a, b) => (order.get(a.pid) ?? 999) - (order.get(b.pid) ?? 999));
+}
+function entryByProductHTML() {
+  const groups = entryByProduct(); if (!groups.length) return "";
+  const ed = S.entryEdit, names = E.wsList.map((w) => w.name).sort((a, b) => a.localeCompare(b, "ar"));
+  const row = (g, r) => {
+    const { m, raw, q } = r, key = `${m.id}|${raw}`, out = m.kind === "out";
+    const chip = `<span class="chip ${out ? "c-acc" : "c-good"}">${esc(t(out ? "e_out_short" : "e_in_short"))}</span>`;
+    if (ed && ed.key === key) {
+      const others = m.lines.filter((l) => l.sku !== raw && +l.qty > 0);
+      const otherTxt = others.map((l) => { const s = E.entrySkus.find((x) => x.id === (E.canon.get(l.sku) || l.sku)); return `${s ? skuName(s) : l.sku} ${fmt(+l.qty)}`; }).join(", ");
+      const wsNow = aliasOf(m.ws || "");
+      return `<tr class="eedit"><td><input class="inp" type="date" id="eeDate" value="${esc(m.date)}" max="${todayISO()}"></td><td>${chip}</td>
+        <td>${out ? `<select class="inp" id="eeWs">${(names.includes(wsNow) ? names : [wsNow, ...names]).map((n) => `<option ${n === wsNow ? "selected" : ""}>${esc(n)}</option>`).join("")}</select>` : `<span class="small muted">${esc(t("e_in"))}</span>`}</td>
+        <td><input class="inp" type="number" min="0" step="any" inputmode="decimal" id="eeQty" value="${q}" style="max-width:110px"></td>
+        <td colspan="2" class="small muted">${esc(t("e_zeroNote"))}${others.length ? " " + esc(t("e_alsoIn", otherTxt)) : ""}</td>
+        <td style="white-space:nowrap"><button class="btn pri" type="button" id="eeSave">${esc(t("e_saveLine"))}</button> <button class="btn ghost" type="button" id="eeCancel">${esc(t("cancel"))}</button></td></tr>`;
+    }
+    return `<tr><td class="small num" style="white-space:nowrap">${esc(fmtDate(m.date))}</td><td>${chip}</td>
+      <td>${out ? `<span class="name" dir="auto">${esc(aliasOf(m.ws || "—"))}</span>` : `<span class="small muted">${esc(t("e_in"))}</span>`}</td>
+      <td class="r num"><b>${fmt(q)}</b></td><td class="small muted">${esc(m.ref || "—")}</td><td class="small muted" dir="auto">${esc(m.by || "—")}</td>
+      <td style="white-space:nowrap"><button class="btn ghost" type="button" data-eedit="${esc(key)}">${esc(t("e_editLine"))}</button> <button class="btn ghost danger" type="button" data-edel="${esc(key)}">${esc(S.entryDelLine === key ? t("e_delConfirm") : t("e_del"))}</button></td></tr>`;
+  };
+  return `<section class="stack"><h3>${esc(t("e_byProduct"))}</h3><p class="small muted" style="max-width:80ch">${esc(t("e_byProductSub"))}</p>
+    <div class="panel flush">${groups.map((g) => `<details class="eprod" data-prod="${esc(g.pid)}" ${S.entryOpen === g.pid ? "open" : ""}>
+      <summary><span class="name">${esc(skuName(g.sku))}</span> <span class="small muted">${esc(t("e_prodSum", fmt(g.inQ), fmt(g.outQ), g.ws.size, g.rows.length))}</span></summary>
+      <div class="scroll"><table><thead><tr><th>${esc(t("date"))}</th><th>${esc(t("e_inOut"))}</th><th>${esc(t("e_whoTook"))}</th><th class="r">MC</th><th>${esc(t("ref"))}</th><th>${esc(t("e_byShort"))}</th><th></th></tr></thead>
+      <tbody>${g.rows.map((r) => row(g, r)).join("")}</tbody></table></div></details>`).join("")}</div></section>`;
+}
+function bindEntryByProduct(main) {
+  main.querySelectorAll("details.eprod").forEach((d) => d.addEventListener("toggle", () => { if (d.open) S.entryOpen = d.dataset.prod; else if (S.entryOpen === d.dataset.prod) S.entryOpen = null; }));
+  const find = (key) => { const i = key.indexOf("|"), mid = key.slice(0, i), raw = key.slice(i + 1); return { m: S.moves.find((x) => x.id === mid), raw }; };
+  const docOf = (m) => { const { id, ...doc } = m; return doc; };
+  const stamp = () => ({ editedAt: new Date().toISOString(), editedBy: (S.sup || "").slice(0, 60) });
+  main.querySelectorAll("[data-eedit]").forEach((b) => b.addEventListener("click", () => { S.entryEdit = { key: b.dataset.eedit }; S.entryDelLine = null; render(); }));
+  const cancel = document.getElementById("eeCancel");
+  if (cancel) cancel.addEventListener("click", () => { S.entryEdit = null; render(); });
+  // remove one product from a movement (the whole movement when it was its only product)
+  const removeLine = async (m, raw) => {
+    const rest = m.lines.filter((l) => l.sku !== raw);
+    if (!rest.some((l) => +l.qty > 0)) await S.db.doc("moves/" + m.id).delete();
+    else await S.db.doc("moves/" + m.id).set({ ...docOf(m), lines: rest, ...stamp() });
+  };
+  main.querySelectorAll("[data-edel]").forEach((b) => b.addEventListener("click", async () => {
+    const key = b.dataset.edel;
+    if (S.entryDelLine !== key) { S.entryDelLine = key; b.textContent = t("e_delConfirm"); return; }
+    S.entryDelLine = null;
+    const { m, raw } = find(key); if (!m) return;
+    try { await removeLine(m, raw); toast(t("e_lineRemoved")); } catch (err) { toast(t("err") + (err?.code || err?.message || err)); }
+  }));
+  const save = document.getElementById("eeSave");
+  if (save) save.addEventListener("click", async () => {
+    const { m, raw } = find(S.entryEdit.key); if (!m) { S.entryEdit = null; render(); return; }
+    const date = document.getElementById("eeDate").value, qty = Math.round(+document.getElementById("eeQty").value * 100) / 100;
+    const wsSel = document.getElementById("eeWs"), ws = m.kind === "out" ? (wsSel ? wsSel.value : m.ws || "") : "";
+    if (!date || date > todayISO()) { toast(t("e_badDate")); return; }
+    if (!isFinite(qty) || qty < 0) { toast(t("e_badQty")); return; }
+    if (m.kind === "out" && !ws) { toast(t("e_needWs")); return; }
+    save.disabled = true;
+    try {
+      const others = m.lines.filter((l) => l.sku !== raw && +l.qty > 0);
+      const sameHead = date === m.date && (m.kind !== "out" || ws === aliasOf(m.ws || ""));
+      if (qty === 0) await removeLine(m, raw);
+      else if (sameHead || !others.length) {
+        // the movement keeps its other products; this product's quantity (and the date or wholesaler) change
+        await S.db.doc("moves/" + m.id).set({ ...docOf(m), date, ws: m.kind === "out" ? ws : "", lines: m.lines.map((l) => (l.sku === raw ? { ...l, qty } : l)), ...stamp() });
+      } else {
+        // a new date or wholesaler for this product only: it becomes an entry of its own, the others stay as they were
+        const id = `${date}-${m.kind}-${Date.now().toString(36)}`;
+        await S.db.doc("moves/" + id).set({ ...docOf(m), date, ws: m.kind === "out" ? ws : "", lines: [{ sku: raw, qty }], savedAt: new Date().toISOString(), splitFrom: m.id, ...stamp() });
+        await S.db.doc("moves/" + m.id).set({ ...docOf(m), lines: others, ...stamp() });
+      }
+      S.entryEdit = null; toast(t("e_lineSaved")); render();
+    } catch (err) { save.disabled = false; toast(t("err") + (err?.code || err?.message || err)); }
   });
 }
 /* ---------- export ---------- */
