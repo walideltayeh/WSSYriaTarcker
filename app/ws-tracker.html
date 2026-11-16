@@ -89,6 +89,16 @@ main{max-width:1160px;margin:0 auto;padding-inline:16px;padding-block:34px 120px
 .htile{text-decoration:none;color:inherit}.htile:hover{background:var(--sunk)}.htile .h{color:var(--muted);font-size:13px}
 .hlist{list-style:none;margin:0;padding:0}.hlist a{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--hair);text-decoration:none;color:inherit}.hlist li:last-child a{border-bottom:0}.hlist a:hover .name{text-decoration:underline}
 .hqa{display:flex;gap:8px;flex-wrap:wrap}
+button.htile{font:inherit;text-align:start;border:0;border-inline-end:1px solid var(--hair);background:transparent;cursor:pointer;color:inherit}
+.htbl td{vertical-align:top}.htbl .hiss{min-width:260px}.htbl .hiss>div+div{margin-top:4px}
+.hrow.h-act td{background:var(--crit-bg)}.hrow.h-verify td{background:var(--serious-bg)}.hrow.h-watch td{background:var(--warn-bg)}.hrow.h-inactive td{color:var(--muted)}
+.hws{border-bottom:1px solid var(--hair)}.hws:last-child{border-bottom:0}.hws summary{padding:12px 20px;cursor:pointer;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}.hws summary:hover{background:var(--sunk)}
+.hws[open] summary{border-bottom:1px solid var(--hair)}.hws .hcnt{margin-inline-start:auto;color:var(--muted)}.hbody{padding:0}.hwiss{padding:10px 20px;display:grid;gap:4px}
+.hwhead{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}.tcrit{color:var(--crit)}.twarn{color:var(--warn)}
+.hstack{display:grid;gap:16px}.hstack td:last-child{min-width:220px}
+.htbl tr.hrow{cursor:pointer}.htbl tr.hrow:hover td{filter:brightness(0.97)}.htbl tr.hrow:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}.hcar{color:var(--muted);font-size:11px}
+.hhist>td{background:var(--sunk);padding:12px 16px 16px}.tl{display:grid;gap:8px}.tl table{background:var(--surface);border:1px solid var(--hair);border-radius:8px}.tl td,.tl th{padding:6px 10px}.tl-now td{color:var(--muted);font-style:italic}.tl-check td{background:var(--crit-bg)}
+tr.click[data-hi]{cursor:pointer}
 @media (max-width:860px){
   .tabs{display:none}
   .brand span{display:none}
@@ -309,7 +319,7 @@ tr.click{cursor:pointer} tr.click:hover td{background:var(--sunk)}
 /* ============================== i18n ============================== */
 const T = {
   en: {
-    brand:"WS Tracker", brandsub:"Syria · Wholesale", t_ws:"Wholesalers", t_off:"Offtake", t_an:"Analysis", t_ims:"IMS", imsTitle:"IMS · sales to wholesalers", t_home:"Home", t_sales:"Sales", t_sellout:"Sell-out", t_admin:"Admin",
+    brand:"WS Tracker", brandsub:"Syria · Wholesale", t_ws:"Wholesalers", t_off:"Offtake", t_an:"Analysis", t_ims:"IMS", imsTitle:"IMS · sales to wholesalers", sub_list_all:"List", sub_list_health:"Health", ws_health:"Health", h_title:"Wholesaler health", h_sub:"Every wholesaler, flavour by flavour and pack by pack: when he last bought, what was counted at his shop and when, and what needs attention. Red needs action now, orange means check the count first, yellow is to watch, grey rows are products he no longer buys.", h_export:"Export health (Excel)", hl_act:"Action needed", hl_watch:"Watch", hl_ok:"Healthy", h_actSub:"at least one urgent issue", h_watchSub:"something to keep an eye on", h_okSub:"nothing wrong found", h_linesAct:"Product lines needing action", h_linesOf:(n)=>`out of ${n} lines`, h_analysis:"Analysis", h_issue:"Issue", h_wsN:"Wholesalers", h_linesN:"Product lines", h_who:"Who", h_carry:"Wholesalers", h_stockNow:"Est. stock at shops (MC)", h_byWs:"By wholesaler", h_status:"Status", h_allStatus:"All statuses", h_allIssues:"All issues", h_allFlav:"All flavours", h_allFmt:"All pack sizes", h_issuesN:(n)=>`${n} issue${n === 1 ? "" : "s"}`, h_flavour:"Flavour", h_lastBuy:"Last bought", h_b90:"Bought last 90 days (MC)", h_stockAt:"Stock at count (MC)", h_since:"Bought since count (MC)", h_estNow:"Est. stock now (MC)", h_daysLeft:"Days left", h_issues:"What needs attention", h_fine:"OK", hh_bought:(d,n)=>`last bought ${d} (${n} days ago)`, h_counted:(d,s)=>`counted ${d}: ${s} MC at his shop`, h_homeTile:"Wholesalers needing action", h_homeSub:(n)=>`${n} to watch · see health`, h_rulesNote:(low,dead,od,due)=>`How issues are found: his selling pace counts only the days he had stock (a copied visit or a delivery not seen at the shop is left out). Out of stock = nothing left now at that pace (products bought in the last 90 days); runs out soon = under ${low} days left; not selling = no sales for ${dead}+ days, or under 10% of his stock sold; overstock = more than ${od} days of his sales (lines he has had for 45+ days); a count is overdue when the last real count is over ${due} days old. Est. stock now = last count + bought since − his pace since the count. Red needs action now, orange means check the count first, yellow is to watch, grey notes are for information.`, hk_out:"Out of stock", hk_low:"Runs out soon", hk_check:"Count check", hk_over:"Overstock", hk_uncounted:"Never counted", hk_since:"Bought since count", hk_stopped:"Stopped buying", hk_lapsed:"No recent order", hk_never:"Never counted", hk_due:"Count overdue", hd_out:"Nothing at his shop, nothing bought since", hd_low:"Under the low-stock days at his pace", hd_check:"A recent count higher than possible", hd_over:"Far more stock than he sells", hd_uncounted:"Bought but never counted at his shop", hd_since:"Stock not confirmed since the delivery", hd_stopped:"Stopped buying a product, and about to run out", hd_lapsed:"No order for a long time", hd_never:"Shop never counted", hd_due:"Last count older than two visit rounds", hi_out:(d)=>`Nothing at his shop since the count of ${d}, nothing bought since.`, hi_low:(n,s)=>`About ${n} days left (${s} MC) at his selling pace.`, hi_over:(v,d,r)=>`About ${v} MC now ≈ ${d} days of his sales (about ${r} MC a day).`, hi_uncounted:(q)=>`${q} MC bought, never counted at his shop.`, hi_since:(q,d)=>`${q} MC bought after the count of ${d}: stock not confirmed.`, hi_stopped:(p,d,n)=>`Bought ${p} MC before; nothing in the last 90 days (last ${d}, ${n} days ago), and he is out or about to run out.`, hw_lapsed:(n,d)=>`No order for ${n} days (last ${d}).`, hw_never:"His shop has never been counted.", hw_due:(n)=>`Last count ${n} days ago.`, h_stale:(d,n)=>`Movements are loaded up to ${d} (${n} days ago). Purchases after that date are not included yet, so days since the last order and estimated stock may be out of date.`, h_losing:"Products losing wholesalers", h_losingLine:(a,b)=>`${a} of the ${b} wholesalers who bought it have not bought it in 90 days`, h_moves:"Stock that could move", h_moveLine:(spare,short)=>`Spare at ${spare}. Out or low at ${short}.`, hk_zero:"Sudden zero", hk_transit:"Delivery not seen", hk_notlast:"Missed in last count", hk_dead:"Not selling", hk_push:"Restocked while full", hk_declining:"Buying less of it", hk_nosource:"Stock not from us", hk_dry:"Running dry", hk_overdue:"Order overdue", hk_decline:"Buying less", hk_copied:"Count looks copied", hk_unknown:"Stock not confirmed", hk_loaded:"Overloaded", hk_narrow:"Narrow range", hd_zero:"From a good stock to 0 with no delivery: check the count", hd_transit:"Bought, but not at his shop at the next count", hd_notlast:"Left out of his latest count", hd_dead:"Stock with no sales for weeks", hd_push:"Got more while already holding plenty", hd_declining:"Buying much less of a product, and running out", hd_nosource:"More stock than we ever delivered", hd_dry:"Half or more of what he sells is out or nearly out", hd_overdue:"Later than his usual order rhythm", hd_decline:"Buying far less than his earlier pace", hd_copied:"Latest count identical to the one before", hd_unknown:"Bought after his last count", hd_loaded:"Far more stock than he sells, overall", hd_narrow:"Depends on one product or one pack size", hi_check:(d,v,pv,pd,rec,x)=>`Count of ${d}: ${v} MC, but he had ${pv} on ${pd} and received ${rec} since: ${x} MC more than possible.`, hi_zero:(pv,pd,rate,usual)=>`Went from ${pv} MC on ${pd} to 0 with no delivery: ${rate} MC a day against his usual ${usual}. Check the count before ordering.`, hi_skipped:(d)=>`Left out of his last order on ${d}.`, hi_outEst:(v,d,r,s)=>`Counted ${v} MC on ${d}${s !== "0" ? ` and bought ${s} since` : ""}; at about ${r} MC a day it has run out.`, hi_transit:(q,d1,d2,v)=>`Bought ${q} MC on ${d1}, but the count of ${d2} shows ${v}: check the goods arrived.`, hi_notlast:(last,d,v)=>`Not counted on ${last}; last counted ${d}: ${v} MC.`, hi_dead:(v,d,n)=>`${v} MC with no sales since ${d} (${n} days).`, hi_deadSlow:(v,p,n)=>`${v} MC; only ${p}% of his stock sold in ${n} days.`, hi_push:(q,d1,d2,v,d)=>`Received ${q} MC between ${d1} and ${d2} while holding ${v} MC (≈ ${d} days of sales).`, hi_declining:(a,d,b)=>`Bought ${a} MC of it in the 90 days to ${d}, against an earlier ${b} per 90 days.`, hi_nosource0:(m)=>`Up to ${m} MC counted but never delivered by us: does he buy elsewhere?`, hi_nosource:(d,v,r)=>`First count (${d}) found ${v} MC against ${r} MC delivered: does he buy elsewhere?`, hw_overdue:(n,g)=>`No order for ${n} days; he usually orders every ${g} days.`, hw_decline:(a,d,b,s)=>`Bought ${a} MC in the 90 days to ${d}, against an earlier ${b} per 90 days; his shop sells about ${s} per 90 days.`, hw_unknown:(d,v)=>`Bought on ${d}, after his last count (${v}): stock not confirmed.`, hw_loaded:(s,d,r)=>`About ${s} MC at his shop now ≈ ${d} days of sales of the lines he has (about ${r} MC a day).`, hw_narrow:(p,n)=>`${n}% of everything he bought is ${p}.`, hw_narrowFmt:"Bought 250g or Kg before, but none in the last 90 days.", h_lastStock:"Stock at last count", h_in90:(n)=>`${n} MC in 90 days`, h_neverBought:"never bought from us", h_plusSince:(n)=>`+ ${n} MC bought since`, hl_verify:"Verify first", hl_inactive:"Inactive", h_verifySub:"urgent, but based on a doubtful count", hw_dryShare:(p,r)=>`${p}% of what he sells (about ${r} MC a day) is on products that are out or about to run out.`, hw_notReorder:(n)=>`No order for ${n} days.`, hw_unverified:"His latest count is doubtful: recount before ordering.", h_tlHint:"Click a product to see every purchase and every count, with the stock left after each.", h_soldRec:"Shops sold / received (MC)", h_soldRecNote:"Sold / received: between the first and the latest count at each shop. Running down = shops sell far more than they get and stock is falling; building up = they get far more than they sell.", h_state_down:"Running down", h_state_load:"Building up", h_down:"Running down at the shops", h_downLine:(o,i,s,e)=>`Shops sold ${o} MC but received ${i}; their stock fell from ${s} to ${e} MC.`, h_load:"Building up at the shops", h_loadLine:(i,o,s,e)=>`Shops received ${i} MC but sold ${o}; their stock rose from ${s} to ${e} MC.`, h_trials:"Tried once, not reordered", h_trialLine:(n)=>`${n} wholesalers bought it once and none has bought it again in 90 days.`, hk_trial:"Trial sold out", hd_trial:"A first small order has sold out", hi_trial:(q,d,n)=>`His first order of ${q} MC (${d}) has sold out: about ${n} MC would cover three weeks.`, hk_under:"Buying less than he sells", hd_under:"Orders fell while his shop keeps selling", hw_under:(a,d,b,s)=>`Bought ${a} MC in the 90 days to ${d}, against an earlier ${b} per 90 days, while his shop sells about ${s} per 90 days: he is under-supplied, not selling less.`, hk_newline:"New line not moving", hd_newline:"A big first order that is barely selling", hi_newline:(q,d,s,n)=>`First order ${q} MC on ${d}; only ${s} MC sold in ${n} days.`, hk_stuck:"Small leftovers", hd_stuck:"Small amounts not selling, grouped per wholesaler", hw_stuck:(n,s,l)=>`${n} products with a few MC not selling (${s} MC in total): ${l}.`, hk_nextconflict:"Next order doubtful", hd_nextconflict:"The next-order suggestion disagrees with his stock", hw_nextOver:(q,d)=>`Next order says ${q} MC now, but he holds about ${d} days of sales: check before selling.`, hw_nextUnder:(p)=>`${p} is out, but the next order does not say "now".`, hk_mix:"Order mix", hd_mix:"His last order went mostly to lines he had plenty of", hw_mix:(d,p,s)=>`${p}% of his order on ${d} went to products he already had plenty of, while ${s} is short.`, hk_rangegap:"Dropped long ago", hd_rangegap:"Bought before, nothing for over 6 months", hi_rangegap:(q,d)=>`Bought ${q} MC before, last on ${d}: offer it again?`, hi_late:"The delivery before only showed up at this count.", hi_checkZero:(d)=>`Either the count of ${d} missed stock, or a purchase is missing from our records.`, hi_checkLater:"Later counts agree with it: a purchase may be missing from our records.", hi_refill:(d)=>`Movements are loaded only to ${d}: he may have bought since.`, hw_unverifiedRefill:(d)=>`Movements are loaded only to ${d} and he orders often: he may have bought since. Load the latest purchases or check with him before ordering.`, hi_chronic:(n)=>`At 0 on ${n} counts in the last 60 days.`, hw_toLedger:(d)=>`(counted to ${d}, the last loaded movement)`, hw_dueReal:(d,n)=>`Last real count ${d} (${n} days ago): the visits since look copied or incomplete.`, hw_bad_frozen:(d,pd)=>`The count of ${d} repeats the count of ${pd} on almost every product: was the shop really counted?`, hw_bad_copied:(d,pd)=>`The count of ${d} is exactly the count of ${pd} plus what he bought since, so no sales at all in between: was the shop really counted?`, hw_bad_partial:(d,pd)=>`The count of ${d} covers under half the products counted on ${pd}.`, hw_narrowNever:"Buys only 50g: never bought 250g or Kg.", ev_date:"Date", ev_today:"Today", ev_bought:"Bought", ev_first:"First count", ev_count:"Stock count", ev_now:"Estimate", ev_event:"Event", ev_boughtMc:"Bought (MC)", ev_countedMc:"Counted (MC)", ev_soldMc:"Sold since last count (MC)", ev_leftMc:"Stock left (MC)", ev_perDay:(r,n)=>`≈ ${r} MC a day over ${n} days`, ev_perDayStock:(r,n,m)=>`≈ ${r} MC a day over the ${n} days he had stock (empty for the rest of the ${m} days)`, ev_sinceFirst:"since his first purchase", ev_pace:(r)=>`at about ${r} MC a day`, ev_more:"count higher than possible", ev_sum:(q,n,c,r)=>`${q} MC bought in ${n} purchases, ${c} counts, sells about ${r} MC a day when he has stock.`, ev_note:"* calculated: the last count + what he bought since (before his first count, from 0). At a count, stock left is what was counted, and sold = stock before + bought − counted.", ev_bad_frozen:"repeats the visit before", ev_bad_copied:"looks copied", ev_bad_partial:"incomplete visit", t_home:"Home", t_sales:"Sales", t_sellout:"Sell-out", t_admin:"Admin",
     sub_sales_ims:"IMS", sub_sales_ws:"By wholesaler", sub_sales_product:"By product", sub_sales_matrix:"Who buys what", sub_sellout_offtake:"Offtake", sub_sellout_counts:"Stock counts",
     sub_warehouse_stock:"Stock", sub_warehouse_inbound:"Inbound", sub_warehouse_entry:"Record movements", sub_admin_export:"Export", sub_admin_data:"Data and settings",
     ws_overview:"Overview", ws_purchases:"Purchases", ws_stock:"Stock and counts", ws_next:"Next order", ws_noNext:"No order to suggest for him right now.", ws_noPurch:"No purchases yet.",
@@ -441,7 +451,7 @@ const T = {
     adjLine:(x)=>`Stock adjustments, not sales: ${x}. They are not in Outbound and are taken off On hand.`, kOnHand:"On hand (MC)", kInMoves:"Inbound movements", lastIn:"last", inMonthly:"Inbound per month by format (MC)", inLog:"Inbound log", type:"Type", ref:"Ref", allMonths:"All months", monthShown:(m)=>`Showing ${m}`
   },
   ar: {
-    brand:"متتبع تجار الجملة", brandsub:"سوريا · الجملة", t_ws:"تجار الجملة", t_off:"التصريف", t_an:"التحليل", t_ims:"IMS", imsTitle:"IMS · المبيعات للتجار", t_home:"الرئيسية", t_sales:"المبيعات", t_sellout:"التصريف", t_admin:"الإدارة",
+    brand:"متتبع تجار الجملة", brandsub:"سوريا · الجملة", t_ws:"تجار الجملة", t_off:"التصريف", t_an:"التحليل", t_ims:"IMS", imsTitle:"IMS · المبيعات للتجار", sub_list_all:"القائمة", sub_list_health:"الصحة", ws_health:"الصحة", h_title:"صحة التجار", h_sub:"كل تاجر، نكهة بنكهة وعبوة بعبوة: متى اشترى آخر مرة، وما جُرد في محله ومتى، وما يحتاج متابعة. الأحمر يحتاج إجراء الآن، والبرتقالي يعني تحقق من الجرد أولاً، والأصفر للمتابعة، والأسطر الرمادية أصناف لم يعد يشتريها.", h_export:"تصدير الصحة (Excel)", hl_act:"يحتاج إجراء", hl_watch:"للمتابعة", hl_ok:"سليم", h_actSub:"مشكلة عاجلة واحدة على الأقل", h_watchSub:"شيء يحتاج متابعة", h_okSub:"لا مشاكل", h_linesAct:"أسطر أصناف تحتاج إجراء", h_linesOf:(n)=>`من أصل ${n} سطراً`, h_analysis:"التحليل", h_issue:"المشكلة", h_wsN:"التجار", h_linesN:"أسطر الأصناف", h_who:"من", h_carry:"التجار", h_stockNow:"المخزون المقدر في المحلات (كرتونة)", h_byWs:"حسب التاجر", h_status:"الحالة", h_allStatus:"كل الحالات", h_allIssues:"كل المشاكل", h_allFlav:"كل النكهات", h_allFmt:"كل العبوات", h_issuesN:(n)=>`${n} ${n === 1 ? "مشكلة" : "مشاكل"}`, h_flavour:"النكهة", h_lastBuy:"آخر شراء", h_b90:"المشترى آخر 90 يوماً (كرتونة)", h_stockAt:"المخزون عند الجرد (كرتونة)", h_since:"المشترى بعد الجرد (كرتونة)", h_estNow:"المخزون المقدر الآن (كرتونة)", h_daysLeft:"الأيام المتبقية", h_issues:"ما يحتاج متابعة", h_fine:"سليم", hh_bought:(d,n)=>`آخر شراء ${d} (قبل ${n} يوماً)`, h_counted:(d,s)=>`جرد ${d}: ${s} كرتونة في محله`, h_homeTile:"تجار يحتاجون إجراء", h_homeSub:(n)=>`${n} للمتابعة · عرض الصحة`, h_rulesNote:(low,dead,od,due)=>`كيف تُحدَّد المشاكل: وتيرة بيعه تُحسب فقط على الأيام التي كان لديه فيها مخزون (تُستبعد الزيارة المنسوخة والتوريد الذي لم يظهر في المحل). نفد المخزون = لم يبقَ شيء الآن بهذه الوتيرة (للأصناف المشتراة في آخر 90 يوماً)؛ ينفد قريباً = أقل من ${low} أيام متبقية؛ لا يبيع = لا مبيعات منذ ${dead} يوماً أو أكثر، أو بيع أقل من 10% من مخزونه؛ مخزون زائد = أكثر من ${od} يوماً من مبيعاته (لأصناف لديه منذ 45 يوماً أو أكثر)؛ الجرد متأخر إذا مضى على آخر جرد حقيقي أكثر من ${due} يوماً. المخزون المقدر الآن = آخر جرد + ما اشتراه بعده − وتيرة بيعه منذ الجرد. الأحمر يحتاج إجراء الآن، والبرتقالي تحقق من الجرد أولاً، والأصفر للمتابعة، والرمادي للعلم.`, hk_out:"نفد المخزون", hk_low:"ينفد قريباً", hk_check:"تحقق من الجرد", hk_over:"مخزون زائد", hk_uncounted:"لم يُجرد", hk_since:"اشترى بعد الجرد", hk_stopped:"توقف عن الشراء", hk_lapsed:"لا طلبيات حديثة", hk_never:"لم يُجرد أبداً", hk_due:"الجرد متأخر", hd_out:"لا شيء في محله ولا شراء بعد الجرد", hd_low:"أقل من أيام النقص بوتيرة بيعه", hd_check:"جرد حديث أعلى مما يمكن", hd_over:"مخزون أكبر بكثير من مبيعاته", hd_uncounted:"اشتراه ولم يُجرد في محله", hd_since:"المخزون غير مؤكد بعد التوريد", hd_stopped:"توقف عن شراء صنف وهو على وشك النفاد", hd_lapsed:"لا طلبيات منذ مدة طويلة", hd_never:"لم يُجرد محله أبداً", hd_due:"آخر جرد أقدم من جولتين", hi_out:(d)=>`لا شيء في محله منذ جرد ${d}، ولا شراء بعده.`, hi_low:(n,s)=>`نحو ${n} أيام متبقية (${s} كرتونة) بوتيرة بيعه.`, hi_over:(v,d,r)=>`نحو ${v} كرتونة الآن ≈ ${d} يوماً من مبيعاته (نحو ${r} كرتونة يومياً).`, hi_uncounted:(q)=>`اشترى ${q} كرتونة ولم تُجرد في محله.`, hi_since:(q,d)=>`اشترى ${q} كرتونة بعد جرد ${d}: المخزون غير مؤكد.`, hi_stopped:(p,d,n)=>`اشترى ${p} كرتونة سابقاً؛ لا شيء في آخر 90 يوماً (آخرها ${d}، قبل ${n} يوماً)، ومخزونه نافد أو على وشك النفاد.`, hw_lapsed:(n,d)=>`لا طلبيات منذ ${n} يوماً (آخرها ${d}).`, hw_never:"لم يُجرد محله أبداً.", hw_due:(n)=>`آخر جرد قبل ${n} يوماً.`, h_stale:(d,n)=>`الحركات محمّلة حتى ${d} (قبل ${n} يوماً). المشتريات بعد هذا التاريخ غير مشمولة بعد، لذلك قد تكون أيام آخر طلبية والمخزون المقدر غير محدّثة.`, h_losing:"أصناف تخسر تجاراً", h_losingLine:(a,b)=>`${a} من ${b} تجار اشتروه لم يشتروه منذ 90 يوماً`, h_moves:"مخزون يمكن نقله", h_moveLine:(spare,short)=>`فائض لدى ${spare}. نافد أو قليل لدى ${short}.`, hk_zero:"صفر مفاجئ", hk_transit:"توريد لم يظهر", hk_notlast:"غاب عن آخر جرد", hk_dead:"لا يبيع", hk_push:"توريد مع مخزون زائد", hk_declining:"يشتري منه أقل", hk_nosource:"مخزون ليس منا", hk_dry:"ينفد كل شيء", hk_overdue:"طلبية متأخرة", hk_decline:"يشتري أقل", hk_copied:"الجرد يبدو منسوخاً", hk_unknown:"المخزون غير مؤكد", hk_loaded:"محمّل زيادة", hk_narrow:"تشكيلة ضيقة", hd_zero:"من مخزون جيد إلى صفر دون توريد: راجع الجرد", hd_transit:"اشتراه لكنه لم يظهر في الجرد التالي", hd_notlast:"لم يُجرد في آخر جرد", hd_dead:"مخزون بلا مبيعات منذ أسابيع", hd_push:"ورد له المزيد ولديه الكثير", hd_declining:"يشتري أقل بكثير من صنف وينفد منه", hd_nosource:"مخزون أكثر مما وردنا له", hd_dry:"نصف ما يبيعه أو أكثر نافد أو شبه نافد", hd_overdue:"تأخر عن إيقاع طلبياته المعتاد", hd_decline:"يشتري أقل بكثير من وتيرته السابقة", hd_copied:"آخر جرد مطابق للذي قبله", hd_unknown:"اشترى بعد آخر جرد", hd_loaded:"مخزون أكبر بكثير من مبيعاته إجمالاً", hd_narrow:"يعتمد على صنف واحد أو عبوة واحدة", hi_check:(d,v,pv,pd,rec,x)=>`جرد ${d}: ${v} كرتونة، لكن كان لديه ${pv} في ${pd} وورد له ${rec} بعدها: أي ${x} كرتونة أكثر من الممكن.`, hi_zero:(pv,pd,rate,usual)=>`من ${pv} كرتونة في ${pd} إلى صفر دون توريد: ${rate} كرتونة يومياً مقابل ${usual} عادةً. راجع الجرد قبل الطلب.`, hi_skipped:(d)=>`لم يكن في طلبيته الأخيرة في ${d}.`, hi_outEst:(v,d,r,s)=>`جُرد ${v} كرتونة في ${d}${s !== "0" ? ` واشترى ${s} بعده` : ""}؛ بوتيرة نحو ${r} كرتونة يومياً نفد.`, hi_transit:(q,d1,d2,v)=>`اشترى ${q} كرتونة في ${d1}، لكن جرد ${d2} يظهر ${v}: تأكد من وصول البضاعة.`, hi_notlast:(last,d,v)=>`لم يُجرد في ${last}؛ آخر جرد له ${d}: ${v} كرتونة.`, hi_dead:(v,d,n)=>`${v} كرتونة بلا مبيعات منذ ${d} (${n} يوماً).`, hi_deadSlow:(v,p,n)=>`${v} كرتونة؛ بيع ${p}% فقط من مخزونه في ${n} يوماً.`, hi_push:(q,d1,d2,v,d)=>`ورد له ${q} كرتونة بين ${d1} و${d2} ولديه ${v} كرتونة (≈ ${d} يوماً من المبيعات).`, hi_declining:(a,d,b)=>`اشترى منه ${a} كرتونة في التسعين يوماً حتى ${d}، مقابل ${b} لكل 90 يوماً سابقاً.`, hi_nosource0:(m)=>`جُرد حتى ${m} كرتونة لم نوردها له أبداً: هل يشتري من مكان آخر؟`, hi_nosource:(d,v,r)=>`أول جرد (${d}) وجد ${v} كرتونة مقابل ${r} موردة: هل يشتري من مكان آخر؟`, hw_overdue:(n,g)=>`لا طلبيات منذ ${n} يوماً؛ يطلب عادةً كل ${g} يوماً.`, hw_decline:(a,d,b,s)=>`اشترى ${a} كرتونة في التسعين يوماً حتى ${d}، مقابل ${b} لكل 90 يوماً سابقاً؛ ومحله يبيع نحو ${s} لكل 90 يوماً.`, hw_unknown:(d,v)=>`اشترى في ${d} بعد آخر جرد (${v}): المخزون غير مؤكد.`, hw_loaded:(s,d,r)=>`نحو ${s} كرتونة في محله الآن ≈ ${d} يوماً من مبيعات الأصناف المتوفرة لديه (نحو ${r} كرتونة يومياً).`, hw_narrow:(p,n)=>`${n}% من كل مشترياته ${p}.`, hw_narrowFmt:"اشترى 250غ أو كيلو سابقاً، لكن لا شيء في آخر 90 يوماً.", h_lastStock:"المخزون في آخر جرد", h_in90:(n)=>`${n} كرتونة في 90 يوماً`, h_neverBought:"لم يشترِه منا", h_plusSince:(n)=>`+ ${n} كرتونة اشتراها بعده`, hl_verify:"تحقق أولاً", hl_inactive:"غير نشط", h_verifySub:"عاجل، لكنه يعتمد على جرد مشكوك فيه", hw_dryShare:(p,r)=>`${p}% مما يبيعه (نحو ${r} كرتونة يومياً) على أصناف نافدة أو على وشك النفاد.`, hw_notReorder:(n)=>`لا طلبيات منذ ${n} يوماً.`, hw_unverified:"آخر جرد له مشكوك فيه: أعد الجرد قبل الطلب.", h_tlHint:"اضغط على صنف لترى كل عملية شراء وكل جرد، والمخزون المتبقي بعد كل منها.", h_soldRec:"باعت المحلات / استلمت (كرتونة)", h_soldRecNote:"باعت / استلمت: بين أول جرد وآخر جرد في كل محل. يتناقص = المحلات تبيع أكثر بكثير مما تستلم والمخزون ينخفض؛ يتراكم = تستلم أكثر بكثير مما تبيع.", h_state_down:"يتناقص", h_state_load:"يتراكم", h_down:"مخزون يتناقص في المحلات", h_downLine:(o,i,s,e)=>`باعت المحلات ${o} كرتونة واستلمت ${i}؛ انخفض مخزونها من ${s} إلى ${e} كرتونة.`, h_load:"مخزون يتراكم في المحلات", h_loadLine:(i,o,s,e)=>`استلمت المحلات ${i} كرتونة وباعت ${o}؛ ارتفع مخزونها من ${s} إلى ${e} كرتونة.`, h_trials:"جُرِّب مرة ولم يُطلب ثانية", h_trialLine:(n)=>`اشتراه ${n} تجار مرة واحدة ولم يشترِه أحد منهم ثانية خلال 90 يوماً.`, hk_trial:"نفدت التجربة", hd_trial:"نفدت طلبية أولى صغيرة", hi_trial:(q,d,n)=>`نفدت طلبيته الأولى (${q} كرتونة، ${d}): نحو ${n} كرتونة تكفي ثلاثة أسابيع.`, hk_under:"يشتري أقل مما يبيع", hd_under:"قلّت طلبياته ومحله ما زال يبيع", hw_under:(a,d,b,s)=>`اشترى ${a} كرتونة في التسعين يوماً حتى ${d}، مقابل ${b} لكل 90 يوماً سابقاً، ومحله يبيع نحو ${s} لكل 90 يوماً: مخزونه غير كافٍ، لا أن مبيعاته قلّت.`, hk_newline:"صنف جديد لا يتحرك", hd_newline:"طلبية أولى كبيرة بالكاد تُباع", hi_newline:(q,d,s,n)=>`أول طلبية ${q} كرتونة في ${d}؛ بيع ${s} كرتونة فقط خلال ${n} يوماً.`, hk_stuck:"بواقٍ صغيرة", hd_stuck:"كميات صغيرة لا تُباع، مجمّعة لكل تاجر", hw_stuck:(n,s,l)=>`${n} أصناف بكميات صغيرة لا تُباع (${s} كرتونة إجمالاً): ${l}.`, hk_nextconflict:"الطلبية القادمة مشكوك فيها", hd_nextconflict:"اقتراح الطلبية القادمة لا يتفق مع مخزونه", hw_nextOver:(q,d)=>`الطلبية القادمة تقول ${q} كرتونة الآن، لكن لديه مبيعات نحو ${d} يوماً: تحقق قبل البيع.`, hw_nextUnder:(p)=>`${p} نافد، لكن الطلبية القادمة لا تقول «الآن».`, hk_mix:"تركيبة الطلبية", hd_mix:"ذهبت معظم طلبيته الأخيرة لأصناف لديه منها الكثير", hw_mix:(d,p,s)=>`${p}% من طلبيته في ${d} ذهبت لأصناف لديه منها الكثير، بينما ${s} ناقص.`, hk_rangegap:"توقف منذ زمن", hd_rangegap:"اشتراه سابقاً، ولا شيء منذ أكثر من 6 أشهر", hi_rangegap:(q,d)=>`اشترى ${q} كرتونة سابقاً، آخرها ${d}: نعرضه عليه مجدداً؟`, hi_late:"التوريد السابق لم يظهر إلا في هذا الجرد.", hi_checkZero:(d)=>`إما أن جرد ${d} فاته مخزون، أو أن عملية شراء ناقصة من سجلاتنا.`, hi_checkLater:"الجرود اللاحقة تتفق معه: ربما عملية شراء ناقصة من سجلاتنا.", hi_refill:(d)=>`الحركات محمّلة حتى ${d} فقط: ربما اشترى بعدها.`, hw_unverifiedRefill:(d)=>`الحركات محمّلة حتى ${d} فقط وهو يطلب كثيراً: ربما اشترى بعدها. حمّل آخر المشتريات أو تحقق منه قبل الطلب.`, hi_chronic:(n)=>`صفر في ${n} جرود خلال آخر 60 يوماً.`, hw_toLedger:(d)=>`(محسوبة حتى ${d}، آخر حركة محمّلة)`, hw_dueReal:(d,n)=>`آخر جرد حقيقي ${d} (قبل ${n} يوماً): الزيارات بعده تبدو منسوخة أو ناقصة.`, hw_bad_frozen:(d,pd)=>`جرد ${d} يكرر جرد ${pd} في كل الأصناف تقريباً: هل جُرد المحل فعلاً؟`, hw_bad_copied:(d,pd)=>`جرد ${d} يساوي تماماً جرد ${pd} مضافاً إليه ما اشتراه بعده، أي لا مبيعات إطلاقاً بينهما: هل جُرد المحل فعلاً؟`, hw_bad_partial:(d,pd)=>`جرد ${d} يغطي أقل من نصف الأصناف التي جُردت في ${pd}.`, hw_narrowNever:"يشتري 50غ فقط: لم يشترِ 250غ أو كيلو أبداً.", ev_date:"التاريخ", ev_today:"اليوم", ev_bought:"شراء", ev_first:"أول جرد", ev_count:"جرد", ev_now:"تقدير", ev_event:"الحدث", ev_boughtMc:"اشترى (كرتونة)", ev_countedMc:"الجرد (كرتونة)", ev_soldMc:"باع منذ الجرد السابق (كرتونة)", ev_leftMc:"المخزون المتبقي (كرتونة)", ev_perDay:(r,n)=>`≈ ${r} كرتونة يومياً خلال ${n} يوماً`, ev_perDayStock:(r,n,m)=>`≈ ${r} كرتونة يومياً خلال ${n} يوماً كان لديه فيها مخزون (فارغ بقية الـ${m} يوماً)`, ev_sinceFirst:"منذ أول عملية شراء", ev_pace:(r)=>`بوتيرة نحو ${r} كرتونة يومياً`, ev_more:"الجرد أعلى من الممكن", ev_sum:(q,n,c,r)=>`اشترى ${q} كرتونة في ${n} عمليات، ${c} جرود، يبيع نحو ${r} كرتونة يومياً حين يتوفر لديه مخزون.`, ev_note:"* محسوب: آخر جرد + ما اشتراه بعده (قبل أول جرد، من الصفر). عند الجرد، المتبقي هو ما جُرد، والمبيع = المخزون السابق + ما اشتراه − الجرد.", ev_bad_frozen:"يكرر الزيارة السابقة", ev_bad_copied:"يبدو منسوخاً", ev_bad_partial:"زيارة ناقصة", t_home:"الرئيسية", t_sales:"المبيعات", t_sellout:"التصريف", t_admin:"الإدارة",
     sub_sales_ims:"IMS", sub_sales_ws:"حسب التاجر", sub_sales_product:"حسب الصنف", sub_sales_matrix:"من يشتري ماذا", sub_sellout_offtake:"التصريف", sub_sellout_counts:"الجرد",
     sub_warehouse_stock:"المخزون", sub_warehouse_inbound:"الوارد", sub_warehouse_entry:"تسجيل الحركات", sub_admin_export:"التصدير", sub_admin_data:"البيانات والإعدادات",
     ws_overview:"نظرة عامة", ws_purchases:"المشتريات", ws_stock:"المخزون والجرد", ws_next:"الطلبية القادمة", ws_noNext:"لا طلبية مقترحة له الآن.", ws_noPurch:"لا مشتريات بعد.",
@@ -641,7 +651,7 @@ function withSsofSkus(L, list) {
     if (tr && have.has(tr.flavour + "|" + tr.format)) continue; // already one of the ledger's products
     const twin = all.some((o) => o !== k && o.name === k.name && o.weight === k.weight);
     const id = "ssof-" + k.id;
-    extra.push({ id, en: k.name + " " + k.weight + (twin && k.packagingType ? " (" + k.packagingType + ")" : ""), ar: "", flavour: tr ? tr.flavour : k.name, fmt: (tr && BACK[tr.format]) || fmtOfWeight(k.weight), ssofId: k.id, extra: true, active: k.active !== false });
+    extra.push({ id, en: k.name + " " + k.weight + (twin && k.packagingType ? " (" + k.packagingType + ")" : ""), ar: "", flavour: tr ? tr.flavour : ((n) => { const key = (x) => x.toLowerCase().replace(/\s*(&|\band\b)\s*/g, "&").replace(/\s+/g, " ").trim(); return [...new Set(L.skus.map(flavourOf))].find((x) => key(x) === key(n)) || n; })(k.name), fmt: (tr && BACK[tr.format]) || fmtOfWeight(k.weight), ssofId: k.id, extra: true, active: k.active !== false });
     alias.set(id, id);
   }
   return { ...L, skus: [...L.skus, ...extra], alias };
@@ -794,11 +804,12 @@ function settings() {
 
 /* ============================== routing ============================== */
 // Sections and their pages (the first page is the default). Old addresses still open the right page.
-const SECTIONS = { home: [], list: [], next: [], sales: ["ims", "ws", "product", "matrix"], sellout: ["offtake", "counts"], warehouse: ["stock", "inbound", "entry"], admin: ["export", "data"] };
+const SECTIONS = { home: [], list: ["all", "health"], next: [], sales: ["ims", "ws", "product", "matrix"], sellout: ["offtake", "counts"], warehouse: ["stock", "inbound", "entry"], admin: ["export", "data"] };
 const LEGACY = { "": ["home"], wholesalers: ["list"], ims: ["sales", "ims"], analysis: ["sales", "ws"], offtake: ["sellout", "offtake"], entry: ["warehouse", "entry"], export: ["admin", "export"], data: ["admin", "data"] };
 const route = () => {
   const h = decodeURIComponent(location.hash.replace(/^#\/?/, "")), p = h.split("/");
-  if (p[0] === "ws" && p[1]) return p[2] === "count" ? { view: "count", id: p[1], edit: p[3] || null } : { view: "ws", id: p[1], sub: ["purchases", "stock", "next"].includes(p[2]) ? p[2] : "overview" };
+  if (p[0] === "ws" && p[1]) return p[2] === "count" ? { view: "count", id: p[1], edit: p[3] || null } : { view: "ws", id: p[1], sub: ["health", "purchases", "stock", "next"].includes(p[2]) ? p[2] : "overview" };
+  if (p[0] === "wholesalers") return { view: "list", sub: SECTIONS.list.includes(p[1]) ? p[1] : "all" };
   const [view, sub] = LEGACY[p[0]] || (SECTIONS[p[0]] && p[0] !== "list" ? [p[0], p[1]] : ["home"]);
   const subs = SECTIONS[view];
   return { view, sub: subs.length ? (subs.includes(sub) ? sub : subs[0]) : null, item: LEGACY[p[0]] ? null : p[2] || null };
@@ -831,7 +842,7 @@ function renderShell(r) {
   const cur = view === "ws" || view === "count" ? "list" : view;
   const items = [["home", "#home", t("t_home")], ["list", "#wholesalers", t("t_ws")], ["next", "#next", t("t_next")], ["sales", "#sales", t("t_sales")], ["sellout", "#sellout", t("t_sellout")], ["warehouse", "#warehouse", t("t_wh")], ["admin", "#admin", t("t_admin")]];
   const subs = SECTIONS[cur] || [];
-  document.getElementById("subnav").innerHTML = subs.length > 1 ? subs.map((p) => `<a href="#${cur}/${p}" ${p === r.sub ? 'aria-current="page"' : ""}>${esc(t("sub_" + cur + "_" + p))}</a>`).join("") : "";
+  document.getElementById("subnav").innerHTML = subs.length > 1 ? subs.map((p) => `<a href="#${cur === "list" ? "wholesalers" : cur}/${p}" ${p === r.sub ? 'aria-current="page"' : ""}>${esc(t("sub_" + cur + "_" + p))}</a>`).join("") : "";
   document.getElementById("tabs").innerHTML = items.map(([k, h, l]) => `<a href="${h}" ${k === cur ? 'aria-current="page"' : ""}>${esc(l)}</a>`).join("");
   document.getElementById("bottom").innerHTML = items.map(([k, h, l]) => `<a href="${h}" ${k === cur ? 'aria-current="page"' : ""}>${ICONS[k]}<span>${esc(l)}</span></a>`).join("");
   const here = document.querySelector("#bottom a[aria-current]");
@@ -850,7 +861,7 @@ function render() {
   if (!E && !S.loaded) { main.innerHTML = `<div class="panel"><p class="muted">${esc(t("loading"))}</p><div class="skel" style="width:60%"></div><div class="skel" style="width:80%"></div><div class="skel" style="width:40%"></div></div>`; return; }
   if (!E) { if (!(r.view === "admin" && r.sub === "data")) { main.innerHTML = `<div class="notice">${esc(t("noLedger"))} <a href="#admin/data">${esc(t("goData"))}</a></div>`; return; } return viewData(main); }
   if (r.view === "home") return viewHome(main);
-  if (r.view === "list") return viewList(main);
+  if (r.view === "list") return r.sub === "health" ? viewHealth(main) : viewList(main);
   if (r.view === "ws") return viewWs(main, r.id, r.sub);
   if (r.view === "count") return viewCount(main, r.id, r.edit);
   if (r.view === "next") return viewNext(main);
@@ -869,7 +880,7 @@ function viewHome(main) {
   const inHand = E.wh.reduce((a, x) => a + Math.max(0, x.onHand), 0);
   const reorder = E.wh.filter((x) => x.perMonth > 0 && ["out", "reorder", "reorderSoon"].includes(x.status)).sort((a, b) => a.onHand / a.perMonth - b.onHand / b.perMonth);
   const due = E.wsList.filter((w) => w.totalDel > 0 && w.due).sort((a, b) => (b.daysSinceCount ?? 1e9) - (a.daysSinceCount ?? 1e9));
-  const flagged = E.wsList.filter((w) => w.flags), checks = flagged.reduce((a, w) => a + w.flags, 0);
+  const flagged = E.wsList.map((w) => ({ w, n: healthChecks(w).length })).filter((x) => x.n).map(({ w, n }) => Object.assign(Object.create(w), { flags: n })), checks = flagged.reduce((a, w) => a + w.flags, 0);
   const tile = (href, num, label, sub) => `<a class="kpi htile" href="${href}"><b class="num">${num}</b><span>${esc(label)}</span>${sub ? `<div class="h">${esc(sub)}</div>` : ""}</a>`;
   const li = (href, name, right) => `<li><a href="${href}"><span class="name" dir="auto">${esc(name)}</span><span class="small muted num">${esc(right)}</span></a></li>`;
   const card = (title, href, items) => `<section class="panel stack"><div class="head"><h3>${esc(title)}</h3><a class="small" href="${href}">${esc(t("seeAll"))}</a></div>${items.length ? `<ul class="hlist">${items.join("")}</ul>` : `<p class="small muted">${esc(t("att_none"))}</p>`}</section>`;
@@ -881,6 +892,7 @@ function viewHome(main) {
       ${tile("#next", now.length, t("h_next"), t("h_nextSub", fmt(now.reduce((a, o) => a + (o.recTotal || 0), 0))))}
       ${tile("#warehouse/stock", fmt(inHand), t("h_wh"), t("h_whSub", reorder.length))}
       ${tile("#sellout/counts", due.length, t("h_counts"), t("h_countsSub", checks))}
+      ${(() => { const H = healthAll(); return tile("#wholesalers/health", H.filter((h) => h.level === "act").length, t("h_homeTile"), t("h_homeSub", H.filter((h) => h.level === "watch").length)); })()}
     </div>
     <section class="stack"><h3>${esc(t("att_title"))}</h3><div class="grid2">
       ${card(t("att_reorder"), "#warehouse/stock", reorder.slice(0, 6).map((x) => li(`#warehouse/stock/${x.sku.id}`, skuName(x.sku), x.onHand <= 0 ? t("out") : `${fmt(x.onHand)} MC · ${t("coverM", fmt1(x.onHand / x.perMonth))}`)))}
@@ -894,7 +906,7 @@ function viewHome(main) {
 function viewCounts(main) {
   const st = settings();
   const list = E.wsList.filter((w) => w.totalDel > 0 || w.counts.length).sort((a, b) => (b.due - a.due) || ((b.daysSinceCount ?? 1e9) - (a.daysSinceCount ?? 1e9)) || b.totalDel - a.totalDel);
-  const counted = list.filter((w) => w.lastCount).length, due = list.filter((w) => w.due).length, never = list.filter((w) => !w.lastCount).length, checks = list.reduce((a, w) => a + (w.flags || 0), 0);
+  const counted = list.filter((w) => w.lastCount).length, due = list.filter((w) => w.due).length, never = list.filter((w) => !w.lastCount).length, checks = list.reduce((a, w) => a + healthChecks(w).length, 0);
   main.innerHTML = `
     <div class="head"><div><h2>${esc(t("sub_sellout_counts"))}</h2><p class="sub" style="max-width:75ch">${esc(t("countsSub", st.visitDays))}</p></div></div>
     <div class="kpis">
@@ -909,13 +921,517 @@ function viewCounts(main) {
         <td class="r num">${w.lastCount ? (w.due ? `<span class="chip c-crit">${w.daysSinceCount}</span>` : w.daysSinceCount) : "—"}</td>
         <td class="r num">${w.counts.length || "—"}</td>
         <td class="r num">${w.lastCount ? fmt(w.stock) : "—"}</td>
-        <td class="small" style="min-width:240px">${w.flags ? w.skuRows.filter((r) => r.flag).map((r) => `<div dir="auto">${esc(checkText(r))}</div>`).join("") : '<span class="muted">—</span>'}</td>
+        <td class="small" style="min-width:240px">${healthChecks(w).length ? healthChecks(w).map((c) => `<div dir="auto">${esc(c.text)}</div>`).join("") : '<span class="muted">—</span>'}</td>
         <td style="white-space:nowrap"><a class="btn ghost" href="#ws/${w.id}/count">${esc(t("countNow"))}</a></td></tr>`).join("")}</tbody></table></div>`;
 }
 // The wholesaler's own pages, under his name.
 function wsTabs(w, sub) {
-  return `<nav class="subnav in" aria-label="${esc(w.name)}">${[["overview", ""], ["purchases", "/purchases"], ["stock", "/stock"], ["next", "/next"]].map(([k, p]) => `<a href="#ws/${w.id}${p}" ${k === sub ? 'aria-current="page"' : ""}>${esc(t("ws_" + k))}</a>`).join("")}</nav>`;
+  return `<nav class="subnav in" aria-label="${esc(w.name)}">${[["overview", ""], ["health", "/health"], ["purchases", "/purchases"], ["stock", "/stock"], ["next", "/next"]].map(([k, p]) => `<a href="#ws/${w.id}${p}" ${k === sub ? 'aria-current="page"' : ""}>${esc(t("ws_" + k))}</a>`).join("")}</nav>`;
 }
+/* ---------- wholesaler health: what he bought, what he holds, and what is wrong ---------- */
+// Thresholds in MC and days, kept together so they are easy to read and change. Calibrated on the Syria data,
+// then tightened after two independent reviews and a line-by-line check for false alarms and missed issues.
+const HEALTH = {
+  CHECK_MC: 10, CHECK_DAYS: 60, CHECK_SHARE: 0.2, CHECK_MIN_BOUGHT: 50, CHECK_BIG: 100,
+  ZERO_FROM: 100, ZERO_X: 3, OUT_MC: 30, TRIAL_MC: 50,
+  MATURE: 45, DEAD_MC: 30, DEAD_DAYS: 21, DEAD_ST: 0.1, STUCK_MC: 10, OVER_MC: 50, OVER_DAYS: 45,
+  NEW_MAX: 30, NEW_MIN: 7, NEW_MC: 100, NEW_ST: 0.25, PUSH_MC: 30, PUSH_DAYS: 60,
+  STOP_MC: 100, STOP_HIGH: 300, STOP_RECENT: 180, CHRONIC: 2,
+  LAPSED: 45, LAPSED_FEW: 60, RISK_MIN: 1, RISK_HIGH: 3, ACT_RISK: 2,
+  LOADED_MIN: 50, LOADED_MC: 300, LOADED_DAYS: 60, REC_MIN: 100,
+  DECLINE: 0.5, DECLINE_PACE: 300, DECLINE_BIG: 500, DECLINE_HIST: 90, UNDER: 0.7, NOSOURCE: 5, NOSOURCE_MED: 30,
+};
+const SEV_RANK = { high: 3, medium: 2, low: 1 };
+const LEVEL_RANK = { act: 4, verify: 3, watch: 2, ok: 1, inactive: 0 };
+const maxSev = (list) => list.reduce((m, s) => ((SEV_RANK[s] || 0) > (SEV_RANK[m] || 0) ? s : m), "none");
+const daysTxt = (n) => (n == null ? "—" : !isFinite(n) || n > 365 ? "365+" : fmt(Math.round(n)));
+// Movements loaded up to a date: purchases after it are not known yet.
+const ledgerLag = () => (E.ledgerEnd ? dayDiff(E.ledgerEnd, todayISO()) : 0);
+const healthStale = () => (ledgerLag() > 7 ? `<div class="notice warn">${esc(t("h_stale", fmtDate(E.ledgerEnd), ledgerLag()))}</div>` : "");
+// His visits: a visit is "frozen" when stock repeats the previous count, "copied" when it is exactly the previous
+// count plus deliveries (no sales at all), "partial" when it covers under half the products of the visit before.
+// Such visits are not a real count: they are left out of selling paces and of "no sales" runs.
+function wsVisits(w) {
+  const pts = new Map();
+  for (const r of w.skuRows) for (const p of r.series || []) { if (!pts.has(p.date)) pts.set(p.date, []); pts.get(p.date).push(p); }
+  const dates = [...pts.keys()].sort(), bad = new Map();
+  dates.forEach((d, i) => {
+    if (!i) return;
+    const ps = pts.get(d).filter((p) => !p.base && (p.prevV > 0 || p.v > 0)), gap = dayDiff(dates[i - 1], d) >= 5; // a few days apart, a shop can sell nothing
+    const frozen = gap && ps.length >= 3 && ps.filter((p) => p.v === p.prevV).length >= 0.75 * ps.length && ps.some((p) => p.v > 0);
+    const copied = !frozen && gap && ps.length >= 3 && ps.filter((p) => Math.abs(p.off) <= 1).length >= 0.9 * ps.length;
+    const partial = pts.get(dates[i - 1]).length >= 4 && pts.get(d).length < 0.5 * pts.get(dates[i - 1]).length;
+    if (frozen || copied || partial) bad.set(d, frozen ? "frozen" : copied ? "copied" : "partial");
+  });
+  const real = dates.filter((d) => !bad.has(d));
+  return { dates, bad, lastReal: real.at(-1) || null, isBad: (d) => bad.has(d), before: (d) => dates[dates.indexOf(d) - 1] || null };
+}
+// His selling pace for one product: only over periods when he had stock (a period that started at 0 counts from the
+// delivery that refilled it), after the last count check, leaving out copied visits and deliveries not seen at the
+// shop. Falls back to the pace up to his first count.
+function stockedRate(ser, buys, V, from = 0, upto) {
+  let s0 = 0; for (let i = 1; i < ser.length; i++) if (ser[i].off < 0) s0 = i;
+  const end = upto == null ? ser.length - 1 : upto;
+  let sold = 0, days = 0;
+  for (let i = Math.max(1, s0 + 1, from); i <= end; i++) {
+    const x = ser[i], before = ser[i - 1];
+    if (V.isBad(x.date) || x.off < 0 || !x.days) continue;
+    if (x.rec > 0 && x.days <= 7 && x.v <= before.v) continue;
+    const lastIn = buys.filter((b) => b[0] > before.date && b[0] <= x.date).at(-1);
+    if (lastIn && dayDiff(lastIn[0], x.date) <= 3 && x.v < 0.5 * lastIn[1]) continue; // bought just before the count, not on the shelf yet
+    let d = x.days;
+    if (!(before.v > 0)) { if (!(x.rec > 0)) continue; const fb = buys.find((b) => b[0] > before.date && b[0] <= x.date); d = fb ? Math.max(1, dayDiff(fb[0], x.date)) : x.days; }
+    sold += x.off; days += d;
+  }
+  if (days >= 1) return { rate: sold / days, days, s0 };
+  const f = ser[0];
+  if (f && buys[0] && f.off > 0) { const d = dayDiff(buys[0][0], f.date); if (d > 0) return { rate: f.off / d, days: d, s0, first: true }; }
+  return { rate: null, days: 0, s0 };
+}
+// One wholesaler's health, product by product (flavour, then pack size), plus wholesaler-level issues.
+function wsHealth(w) {
+  if (!E._wh) E._wh = new Map();
+  const ck = w.id + "|" + LANG;
+  if (E._wh.has(ck)) return E._wh.get(ck);
+  const today = todayISO(), st = settings(), dm = E.del.get(w.id) || new Map(), H = HEALTH, V = wsVisits(w);
+  const flavOrder = [...new Set(E.wsSkus.map(flavourOf))], lastVisit = w.lastCount ? w.lastCount.date : null;
+  const ledgerEnd = E.ledgerEnd || today, lagging = ledgerLag() > st.visitDays, ref = lagging ? ledgerEnd : today;
+  const ledgerCut = addDays(ledgerEnd, -90), o = nextOrders().byId.get(w.id);
+  const b90All = [...dm.values()].flat().filter((b) => b[0] > addDays(today, -90)).reduce((a, b) => a + b[1], 0);
+  const latestBad = !!lastVisit && V.isBad(lastVisit);
+  const staleDays = V.lastReal ? dayDiff(V.lastReal, today) : null, stale = !!lastVisit && (staleDays == null || staleDays > 2 * st.visitDays);
+  // a purchase after the movement data ends may already have refilled him
+  const refillLikely = lagging && !!w.lastDel && dayDiff(w.lastDel, ledgerEnd) + ledgerLag() >= (w.avgGap || 30);
+  const stuck = [];
+  const rows = w.skuRows.filter((r) => r.everDel > 0 || (r.series || []).some((p) => p.v > 0)).map((r) => {
+    const buys = dm.get(r.sku.id) || [], last = buys.at(-1) || null, first = buys[0] || null;
+    const bought90 = buys.filter((b) => b[0] > addDays(today, -90)).reduce((a, b) => a + b[1], 0), prior = r.everDel - bought90;
+    const sinceBuy = last ? dayDiff(last[0], today) : null, active = bought90 > 0;
+    const ser = r.series || [], p = ser.at(-1) || null, prev = ser.length > 1 ? ser.at(-2) : null;
+    const inLast = !!p && p.date === lastVisit;
+    // a sudden zero: from a good stock to nothing, with no delivery, far faster than he has ever sold it. That period
+    // is left out of his pace.
+    let zeroInfo = null;
+    if (inLast && ser.length >= 3 && p.v === 0 && prev.v >= H.ZERO_FROM && p.rec === 0 && p.days > 0 && !V.isBad(p.date)) {
+      const earlier = stockedRate(ser, buys, V, 1, ser.length - 2).rate || 0;
+      const life = ser[0] && first && dayDiff(first[0], ser[0].date) > 0 ? Math.max(0, ser[0].off) / dayDiff(first[0], ser[0].date) : 0;
+      const usual = Math.max(earlier, life, bought90 / 90);
+      if (p.off / p.days >= H.ZERO_X * Math.max(usual, 0.01)) zeroInfo = { usual };
+    }
+    const zero = !!zeroInfo;
+    const R = r.counted ? stockedRate(ser, buys, V, 0, zero ? ser.length - 2 : undefined) : { rate: null, days: 0, s0: 0 };
+    // a pace measured over only a few weeks is pulled toward his long-run pace (everything sold since his first purchase)
+    const life = r.counted && first && dayDiff(first[0], p.date) >= 14 ? Math.max(0, r.delTo - p.v) / dayDiff(first[0], p.date) : null;
+    const rate = R.rate != null && life != null && R.days < 28 && !R.first ? (R.rate * R.days + life * 14) / (R.days + 14) : R.rate;
+    const estNow = r.counted ? Math.max(0, p.v + r.delSince - (rate || 0) * Math.max(0, dayDiff(p.date, today))) : null;
+    const daysLeft = r.counted && rate > 0 ? estNow / rate : null, cover = r.counted ? (rate > 0 ? estNow / rate : Infinity) : null;
+    const zeros60 = ser.filter((x) => x.date >= addDays(today, -60) && x.v === 0).length;
+    const core = (w.totalDel > 0 && r.everDel / w.totalDel >= 0.2) || (b90All > 0 && bought90 / b90All >= 0.2);
+    const isSkipped = buys.length >= 3 && !!last && !!w.lastDel && last[0] < w.lastDel;
+    const emptyish = r.counted && (estNow <= 0.5 || (daysLeft != null && daysLeft < st.lowDays));
+    const urgentDq = emptyish || (o && o.status === "now") ? "high" : "medium";
+    const pctStock = r.counted && r.delTo > 0 ? r.stock / r.delTo : null;
+    const iss = [], add = (id, sev, text) => iss.push({ id, sev, text }), tag = (ids, txt) => { const h = iss.find((i) => ids.includes(i.id)); if (h) { h.text += " " + txt; return true; } return false; };
+    // count checks over recent counts: a count higher than he could have had. Red only on his latest count; an earlier
+    // one that later counts agree with points at a purchase missing from our records.
+    const checks = ser.map((x, i) => ({ x, i })).filter(({ x, i }) => i >= 1 && x.off < 0 && x.date >= addDays(today, -H.CHECK_DAYS));
+    if (checks.length) {
+      const c = checks.reduce((a, b) => (b.x.off < a.x.off ? b : a)), gap = -c.x.off, latest = c.i === ser.length - 1;
+      const material = c.x.off <= -H.CHECK_MC && gap >= H.CHECK_SHARE * c.x.v && r.everDel >= H.CHECK_MIN_BOUGHT;
+      const late = c.i >= 2 && ser[c.i - 1].rec > 0 && ser[c.i - 1].v <= ser[c.i - 2].v; // a delivery that only showed up one count later
+      const sev = late ? "low" : material && latest ? "high" : material && gap >= H.CHECK_BIG ? "medium" : "low";
+      add("check", sev, t("hi_check", fmtDate(c.x.date), fmt(c.x.v), fmt(c.x.prevV), fmtDate(c.x.prevDate), fmt(c.x.rec), fmt(gap))
+        + (late ? " " + t("hi_late") : c.x.prevV === 0 ? " " + t("hi_checkZero", fmtDate(c.x.prevDate)) : !latest && sev !== "low" ? " " + t("hi_checkLater") : ""));
+    }
+    if (zero) add("zero", "high", t("hi_zero", fmt(prev.v), fmtDate(prev.date), fmt1(p.off / p.days), fmt1(zeroInfo.usual)));
+    // a delivery that did not show up at his shop (not when the visit itself looks copied)
+    let transit = false;
+    if (inLast && !V.isBad(p.date) && last && last[0] <= p.date && (prev ? last[0] > prev.date : true) && dayDiff(last[0], p.date) <= 3 && p.v < 0.5 * last[1]) { transit = true; add("transit", urgentDq, t("hi_transit", fmt(last[1]), fmtDate(last[0]), fmtDate(p.date), fmt(p.v))); }
+    else if (inLast && !V.isBad(p.date) && prev && p.rec > 0 && p.days <= 7 && p.v <= prev.v) { transit = true; add("transit", urgentDq, t("hi_transit", fmt(p.rec), fmtDate(prev.date), fmtDate(p.date), fmt(p.v))); }
+    // out of stock / runs out soon (products he still buys)
+    const skipped = isSkipped ? " " + t("hi_skipped", fmtDate(w.lastDel)) : "", chronic = active && zeros60 >= H.CHRONIC ? " " + t("hi_chronic", zeros60) : "";
+    const refill = refillLikely && r.counted && p.v > 0 ? " " + t("hi_refill", fmtDate(ledgerEnd)) : "";
+    if (r.counted && active && !zero && !transit && estNow <= 0.5) {
+      if (buys.length === 1 && r.everDel <= H.TRIAL_MC) add("trial", "medium", t("hi_trial", fmt(r.everDel), fmtDate(first[0]), rate > 0 ? fmt(Math.round(rate * st.targetDays)) : "—"));
+      else {
+        let k = ser.length - 1; while (k > 0 && ser[k - 1].v === 0 && !(ser[k].rec > 0)) k--;
+        const sev = (rate || 0) * st.targetDays >= H.OUT_MC ? "high" : "medium";
+        add("out", sev, (p.v === 0 && !r.delSince ? t("hi_out", fmtDate(ser[k].date)) : t("hi_outEst", fmt(p.v), fmtDate(p.date), fmt1(rate || 0), fmt(r.delSince || 0))) + skipped + chronic + refill);
+      }
+    } else if (r.counted && active && !transit && estNow > 0.5 && daysLeft != null && daysLeft < st.lowDays)
+      add("low", daysLeft < st.visitDays || (isSkipped && core) ? "high" : "medium", t("hi_low", Math.max(0, Math.round(daysLeft)), fmt(Math.round(estNow)), fmt1(rate)) + skipped + chronic + refill);
+    // counting gaps
+    if (r.counted && lastVisit && !inLast && (active || p.v > 0)) add("notlast", active ? "medium" : "low", t("hi_notlast", fmtDate(lastVisit), fmtDate(p.date), fmt(p.v)));
+    if (!r.counted && r.everDel > 0 && lastVisit) add("uncounted", active ? "medium" : "low", t("hi_uncounted", fmt(r.everDel)));
+    // stock that does not sell, or far more than he sells (lines he has had for 45+ days only)
+    const mature = !!first && r.counted && dayDiff(first[0], p.date) >= H.MATURE;
+    let dead = false;
+    if (mature && p.v >= H.STUCK_MC) {
+      let k = ser.length - 1; while (k >= 1 && ser[k].off <= 0) k--;
+      const span = k < ser.length - 1 && ser[k].v > 0 && !V.isBad(p.date) ? dayDiff(ser[k].date, p.date) : 0;
+      const had = R.days >= 30 ? ser[R.s0].v + ser.slice(R.s0 + 1).reduce((a, x) => a + x.rec, 0) : 0, soldW = had - p.v;
+      const slow = had > 0 && soldW / had < H.DEAD_ST;
+      if (span >= H.DEAD_DAYS || slow) {
+        if (p.v >= H.DEAD_MC) { dead = true; add("dead", "medium", span >= H.DEAD_DAYS ? t("hi_dead", fmt(p.v), fmtDate(ser[k].date), span) : t("hi_deadSlow", fmt(p.v), Math.round((soldW / had) * 100), R.days)); }
+        else stuck.push({ sku: r.sku, v: p.v });
+      }
+    }
+    if (!dead && mature && estNow >= H.OVER_MC && R.days >= 21 && cover > Math.max(H.OVER_DAYS, (w.avgGap || 0) + st.targetDays)) add("over", "medium", t("hi_over", fmt(Math.round(estNow)), daysTxt(cover), fmt1(rate)));
+    // an oversized first order that is not selling
+    if (first && r.counted && !mature && dayDiff(first[0], p.date) >= H.NEW_MIN && dayDiff(first[0], p.date) <= H.NEW_MAX && r.delTo >= H.NEW_MC && (r.delTo - p.v) / r.delTo < H.NEW_ST)
+      add("newline", "medium", t("hi_newline", fmt(r.delTo), fmtDate(first[0]), fmt(Math.max(0, r.delTo - p.v)), dayDiff(first[0], p.date)));
+    // restocked while already overstocked: a note on the overstock line, its own flag otherwise
+    for (let i = ser.length - 1; i >= 1; i--) {
+      const x = ser[i], before = ser[i - 1];
+      if (x.rec > 0 && x.date >= addDays(today, -H.PUSH_DAYS) && before.v >= H.PUSH_MC && rate != null && (rate <= 0 || before.v / rate > H.OVER_DAYS)) {
+        const txt = t("hi_push", fmt(x.rec), fmtDate(before.date), fmtDate(x.date), fmt(before.v), rate > 0 ? daysTxt(before.v / rate) : "365+");
+        if (!tag(["over", "dead"], txt)) add("push", "medium", txt); break;
+      }
+    }
+    // stopped (recently) or buying much less, while he is out or about to run out
+    const short = r.counted && (estNow <= 0.5 || (daysLeft != null && daysLeft < st.lowDays));
+    if (!active && last && prior >= H.STOP_MC) {
+      if (buys.length >= 2 && last[0] >= addDays(ledgerEnd, -H.STOP_RECENT) && short)
+        add("stopped", prior >= H.STOP_HIGH && (rate > 0 || core) ? "high" : "medium", t("hi_stopped", fmt(prior), fmtDate(last[0]), sinceBuy));
+      else if (last[0] < addDays(ledgerEnd, -H.STOP_RECENT)) add("rangegap", "low", t("hi_rangegap", fmt(prior), fmtDate(last[0])));
+    } else if (active && buys.length >= 3 && first && short) {
+      const histP = dayDiff(first[0], ledgerCut), b90L = buys.filter((b) => b[0] > ledgerCut).reduce((a, b) => a + b[1], 0), priorL = r.everDel - b90L;
+      if (priorL >= H.STOP_MC && histP >= H.DECLINE_HIST && b90L < 0.5 * (priorL * 90 / histP) && zeros60 < H.CHRONIC) { const txt = t("hi_declining", fmt(b90L), fmtDate(ledgerEnd), fmt(Math.round(priorL * 90 / histP))); if (!tag(["out", "low"], txt)) add("declining", "medium", txt); }
+    }
+    // stock we never delivered
+    if (r.everDel === 0 && ser.some((x) => x.v > 0)) { const mx = Math.max(...ser.map((x) => x.v)); add("nosource", mx >= H.NOSOURCE_MED ? "medium" : "low", t("hi_nosource0", fmt(mx))); }
+    else if (ser.length && ser[0].v - ser[0].rec >= H.NOSOURCE) add("nosource", ser[0].v - ser[0].rec >= H.NOSOURCE_MED ? "medium" : "low", t("hi_nosource", fmtDate(ser[0].date), fmt(ser[0].v), fmt(ser[0].rec)));
+    if (r.counted && r.delSince > 0) add("since", "low", t("hi_since", fmt(r.delSince), fmtDate(p.date)));
+    return { core, r, sku: r.sku, flavour: flavourOf(r.sku), fmt: fmtOf(r.sku), first, last, buysN: buys.length, bought90, prior, sinceBuy, active, counted: r.counted, inLast, countDate: p ? p.date : null,
+      stock: r.counted ? p.v : null, delSince: r.counted ? r.delSince : r.everDel, estNow, rate, rateDays: R.days, daysLeft, cover, pctStock, issues: iss, sev: maxSev(iss.map((i) => i.sev)), refill: !!refill };
+  }).sort((a, b) => flavOrder.indexOf(a.flavour) - flavOrder.indexOf(b.flavour) || FORMATS.indexOf(a.fmt) - FORMATS.indexOf(b.fmt));
+  // row status: red = act now, orange = check the count first, yellow = watch, grey = no longer bought. A latest
+  // visit where another line shows a sudden zero or a missing delivery makes every out/low line on it doubtful too.
+  const visitDoubt = rows.some((x) => x.inLast && x.issues.some((i) => ["zero", "transit"].includes(i.id) && i.sev === "high"));
+  const wsDoubt = stale || latestBad || visitDoubt;
+  for (const x of rows) {
+    const dq = x.issues.some((i) => ["zero", "transit", "check"].includes(i.id) && i.sev === "high");
+    x.doubt = wsDoubt || x.refill || x.issues.some((i) => ["zero", "transit"].includes(i.id));
+    const highs = x.issues.filter((i) => i.sev === "high");
+    x.level = dq ? "verify" : highs.length ? (highs.every((i) => ["out", "low"].includes(i.id)) && x.doubt ? "verify" : "act") : x.issues.some((i) => i.sev === "medium") ? "watch" : !x.active && !(x.counted && x.stock > 0) ? "inactive" : "ok";
+  }
+  // ---------- wholesaler level
+  const wi = [], addW = (id, sev, text) => wi.push({ id, sev, text });
+  const dso = w.lastDel ? dayDiff(w.lastDel, ref) : null;
+  const held = rows.filter((x) => x.counted && x.r.everDel > 0), rated = held.filter((x) => x.rate > 0);
+  const atRisk = (x) => x.estNow <= 0.5 || (x.daysLeft != null && x.daysLeft < st.lowDays);
+  const rateAll = rated.reduce((a, x) => a + x.rate, 0), riskRate = rated.filter(atRisk).reduce((a, x) => a + x.rate, 0), riskShare = rateAll > 0 ? riskRate / rateAll : null;
+  // his stock now (estimated) against the pace of the lines he can still sell from
+  const stockSum = held.reduce((a, x) => a + x.estNow, 0), rateStocked = rated.filter((x) => x.estNow > 0.5).reduce((a, x) => a + x.rate, 0);
+  const wsCover = rateStocked > 0 ? stockSum / rateStocked : stockSum > 0 ? Infinity : 0;
+  const loaded = stockSum >= H.LOADED_MIN && wsCover > H.LOADED_DAYS;
+  // running dry: half or more of what he sells is on products that are out or about to run out
+  const dryOn = riskShare != null && riskShare >= 0.5 && riskRate >= H.RISK_MIN;
+  const trusted = rated.filter((x) => !x.doubt).reduce((a, x) => a + x.rate, 0), dryUnverified = dryOn && (wsDoubt || (rateAll > 0 && trusted < 0.5 * rateAll));
+  const drySev = dryOn ? (riskRate >= H.RISK_HIGH ? "high" : "medium") : null;
+  if (dryOn) addW("dry", drySev, t("hw_dryShare", Math.round(riskShare * 100), fmt1(riskRate)) + (dso != null && dso >= st.targetDays ? " " + t("hw_notReorder", dso) : "") + (dryUnverified ? " " + (!wsDoubt && rated.some((x) => x.refill && atRisk(x)) ? t("hw_unverifiedRefill", fmtDate(ledgerEnd)) : t("hw_unverified")) : ""));
+  // not ordering: lapsed, or overdue against his own rhythm (measured to the end of the movement data)
+  const lapsed = dso != null && (w.orderDays >= 3 ? dso >= Math.max(H.LAPSED, (w.avgGap || 0) + st.targetDays) : dso >= H.LAPSED_FEW && dryOn);
+  const toLedger = lagging ? " " + t("hw_toLedger", fmtDate(ledgerEnd)) : "";
+  if (lapsed) addW("lapsed", "high", t("hw_lapsed", dso, fmtDate(w.lastDel)) + toLedger);
+  else if (dso != null && w.orderDays >= 5 && w.avgGap && dso >= 1.5 * w.avgGap && dso - w.avgGap >= 7)
+    addW("overdue", drySev === "high" && !dryUnverified && !stale ? "high" : loaded ? "low" : "medium", t("hw_overdue", dso, Math.round(w.avgGap)) + toLedger);
+  // buying much less than his earlier pace (90 days to the end of the movement data, against his history before it):
+  // under-supplied when his shop sells more than he buys, really selling less otherwise
+  const allBuys = [...dm.values()].flat(), firstOrder = allBuys.reduce((m, b) => (!m || b[0] < m ? b[0] : m), null);
+  if (firstOrder && w.orderDays >= 3) {
+    const histDays = dayDiff(firstOrder, ledgerCut), b90 = allBuys.filter((b) => b[0] > ledgerCut).reduce((a, b) => a + b[1], 0);
+    const pace = histDays >= H.DECLINE_HIST ? (w.totalDel - b90) * 90 / histDays : 0, ratio = pace > 0 ? b90 / pace : 1, sell90 = rateAll * 90;
+    if (pace >= H.DECLINE_PACE && ratio < H.DECLINE) {
+      if (sell90 > 0 && b90 < H.UNDER * sell90) addW("under", pace >= H.DECLINE_BIG ? "high" : "medium", t("hw_under", fmt(b90), fmtDate(ledgerEnd), fmt(Math.round(pace)), fmt(Math.round(sell90))));
+      else addW("decline", wsCover > H.OVER_DAYS ? "low" : "medium", t("hw_decline", fmt(b90), fmtDate(ledgerEnd), fmt(Math.round(pace)), sell90 > 0 ? fmt(Math.round(sell90)) : "—"));
+    }
+  }
+  // visits
+  if (!lastVisit) addW("never", "medium", t("hw_never"));
+  else {
+    if (stale) addW("due", "high", latestBad && V.lastReal ? t("hw_dueReal", fmtDate(V.lastReal), staleDays) : t("hw_due", w.daysSinceCount));
+    if (latestBad) addW("copied", stale ? "low" : "medium", t("hw_bad_" + V.bad.get(lastVisit), fmtDate(lastVisit), fmtDate(V.before(lastVisit))));
+    if (w.lastDel && w.lastDel > lastVisit) addW("unknown", "medium", t("hw_unknown", fmtDate(w.lastDel), fmtDate(lastVisit)));
+  }
+  if (loaded) addW("loaded", stockSum >= H.LOADED_MC ? "medium" : "low", t("hw_loaded", fmt(Math.round(stockSum)), daysTxt(wsCover), fmt1(rateStocked)) + (wsDoubt ? " " + t("hw_unverified") : ""));
+  if (stuck.length) addW("stuck", "low", t("hw_stuck", stuck.length, fmt(stuck.reduce((a, x) => a + x.v, 0)), stuck.map((x) => skuName(x.sku)).join(", ")));
+  // the next-order suggestion disagrees with his stock
+  if (o && o.status === "now" && (o.recTotal || 0) >= H.REC_MIN && wsCover > H.OVER_DAYS) addW("nextconflict", "medium", t("hw_nextOver", fmt(o.recTotal), daysTxt(wsCover)));
+  const coreOut = rows.find((x) => x.core && x.issues.some((i) => i.id === "out" && i.sev === "high"));
+  if (o && o.status !== "now" && coreOut) addW("nextconflict", "medium", t("hw_nextUnder", skuName(coreOut.sku)));
+  // the mix of his last order: much of it went to products he already had plenty of, while a core line was short
+  if (w.lastDel) {
+    const lastLines = rows.map((x) => ({ x, q: ((dm.get(x.sku.id) || []).filter((b) => b[0] === w.lastDel)).reduce((a, b) => a + b[1], 0) })).filter((y) => y.q > 0);
+    const tot = lastLines.reduce((a, y) => a + y.q, 0), full = lastLines.filter((y) => y.x.cover > H.OVER_DAYS).reduce((a, y) => a + y.q, 0);
+    const shortCore = rows.find((x) => x.core && x.issues.some((i) => i.id === "out" || i.id === "low"));
+    if (tot > 0 && shortCore && full / tot >= 0.4) addW("mix", "medium", t("hw_mix", fmtDate(w.lastDel), Math.round((full / tot) * 100), skuName(shortCore.sku)));
+  }
+  const tot = w.totalDel, top = rows.reduce((m, x) => (x.r.everDel > (m ? m.r.everDel : 0) ? x : m), null);
+  const big = rows.filter((x) => x.fmt !== "cruz"), bigEver = big.reduce((a, x) => a + x.r.everDel, 0), big90 = big.reduce((a, x) => a + x.bought90, 0);
+  if (tot >= 300 && w.orderDays >= 3 && top && top.r.everDel / tot >= 0.8) addW("narrow", "low", t("hw_narrow", skuName(top.sku), Math.round((top.r.everDel / tot) * 100)));
+  else if (tot >= 300 && w.orderDays >= 3 && b90All > 0 && big90 === 0) addW("narrow", "low", bigEver > 0 ? t("hw_narrowFmt") : t("hw_narrowNever"));
+  // status: red needs a confirmed wholesaler-level urgency, or urgent lines with real sales at risk
+  const sev = maxSev([...rows.map((x) => x.sev), ...wi.map((x) => x.sev)]), actRows = rows.filter((x) => x.level === "act"), watchRows = rows.filter((x) => x.level === "watch");
+  const wsHigh = wi.some((i) => i.sev === "high" && ((i.id === "dry" && !dryUnverified) || ["lapsed", "overdue", "under"].includes(i.id)));
+  const level = wsHigh || ((actRows.some((x) => x.core) || actRows.length >= 2) && riskRate >= H.ACT_RISK) ? "act"
+    : stale || dryUnverified || rows.some((x) => x.level === "verify") ? "verify"
+    : wi.some((i) => i.sev === "medium" || i.sev === "high") || actRows.length || watchRows.some((x) => x.core) || watchRows.length >= 3 ? "watch" : "ok";
+  const excess = rows.filter((x) => x.issues.some((i) => i.id === "over")).reduce((a, x) => a + Math.max(0, x.estNow - st.targetDays * (x.rate || 0)), 0);
+  const out = { w, rows, wsIssues: wi, sev, level, riskRate, excess, dso, wsCover, stockSum, visits: V,
+    issuesN: rows.reduce((a, x) => a + x.issues.filter((i) => i.sev !== "low").length, 0) + wi.filter((i) => i.sev !== "low").length };
+  E._wh.set(ck, out);
+  return out;
+}
+// Across wholesalers, product by product: what shops sold against what they received while counted (running down or
+// being loaded), products losing buyers (not because of one wholesaler), trials not repeated, and stock that could move.
+function healthNetwork(all) {
+  const today = todayISO(), end = E.ledgerEnd || today, ledgerCut = addDays(end, -90), prods = [], losing = [], moves = [], trials = [];
+  for (const s of E.wsSkus) {
+    const rs = all.flatMap((h) => h.rows.filter((x) => x.sku.id === s.id).map((x) => ({ h, x })));
+    if (!rs.length) continue;
+    let sellIn = 0, sellOut = 0, startStock = 0, endStock = 0;
+    for (const { x } of rs) { const ser = x.r.series || []; if (ser.length < 2) continue; startStock += ser[0].v; endStock += ser.at(-1).v; for (const p of ser.slice(1)) { sellIn += p.rec; sellOut += p.off; } }
+    const state = startStock + sellIn >= 100 && sellOut >= 1.5 * sellIn && endStock <= 0.6 * startStock ? "down" : sellIn >= 2 * Math.max(sellOut, 1) && endStock >= 1.3 * startStock && endStock - startStock >= 200 ? "load" : null;
+    prods.push({ s, rs, sellIn, sellOut, startStock, endStock, state });
+    // buyers lost: a real change only if the network is below pace even without its single biggest decline
+    const per = rs.filter(({ x }) => x.first).map(({ h, x }) => { const hist = Math.max(45, dayDiff(x.first[0], ledgerCut)), b90 = ((E.del.get(h.w.id) || new Map()).get(s.id) || []).filter((b) => b[0] > ledgerCut).reduce((a, b) => a + b[1], 0); return { h, x, pace: Math.max(0, x.r.everDel - b90) * 90 / hist, b90 }; });
+    const pace = per.reduce((a, y) => a + y.pace, 0), b90 = per.reduce((a, y) => a + y.b90, 0), priorAll = rs.reduce((a, { x }) => a + x.prior, 0);
+    if (priorAll < 300) { if (per.length >= 2 && b90 === 0 && rs.every(({ x }) => x.buysN <= 1)) trials.push({ s, n: per.length }); continue; }
+    const top = per.reduce((m, y) => (!m || y.pace - y.b90 > m.pace - m.b90 ? y : m), null);
+    const stopped = rs.filter(({ x }) => x.buysN >= 2 && !x.active && x.last && x.last[0] >= addDays(end, -180) && !(x.cover > HEALTH.OVER_DAYS));
+    if (stopped.length >= 3 && b90 < 0.85 * pace && top && b90 - top.b90 < 0.85 * (pace - top.pace)) losing.push({ s, stopped: stopped.length, before: per.filter((y) => y.pace > 0).length, names: stopped.map(({ h }) => h.w.name) });
+    // stock that could move from where it sits to where it is missing
+    const short = rs.filter(({ x }) => x.issues.some((i) => (i.id === "out" || i.id === "low") && i.sev !== "low"));
+    const spare = rs.filter(({ x }) => x.counted && x.inLast && x.estNow >= 30 && x.cover > HEALTH.OVER_DAYS).sort((a, b) => b.x.estNow - a.x.estNow);
+    if (short.length && spare.length) moves.push({ s, short: short.map(({ h }) => h.w.name), spare: spare.slice(0, 3).map(({ h, x }) => `${h.w.name} (${fmt(x.estNow)})`) });
+  }
+  return { prods, losing, moves, trials };
+}
+const healthAll = () => E.wsList.filter((w) => w.totalDel > 0 || w.counts.length).map(wsHealth).sort((a, b) => LEVEL_RANK[b.level] - LEVEL_RANK[a.level] || b.riskRate - a.riskRate || b.excess - a.excess || b.w.totalDel - a.w.totalDel);
+const HEALTH_CHIP = { act: "c-crit", verify: "c-serious", watch: "c-warn", ok: "c-good", inactive: "c-mute" };
+const HEALTH_IDS = ["out", "low", "zero", "check", "transit", "trial", "dry", "lapsed", "overdue", "under", "decline", "nextconflict", "mix", "dead", "over", "newline", "push", "stopped", "declining", "rangegap", "stuck",
+  "notlast", "uncounted", "copied", "due", "never", "unknown", "loaded", "nosource", "narrow", "since"];
+const issueChip = (i) => `<span class="chip ${i.sev === "high" ? "c-crit" : i.sev === "medium" ? "c-warn" : "c-mute"}">${esc(t("hk_" + i.id))}</span>`;
+// One product's history at one wholesaler, oldest first: every purchase and every count, with the stock left after
+// each. Before his first count the stock starts at 0 (as the offtake does); after a purchase, stock left = the last
+// count + what he bought since (calculated); at a count, stock left = what was counted and "sold" = the offtake.
+function timelineEvents(h, x) {
+  const buys = ((E.del.get(h.w.id) || new Map()).get(x.sku.id)) || [], ser = x.r.series || [];
+  const ev = [...buys.map(([d, q]) => ({ d, k: "buy", q })), ...ser.map((p) => ({ d: p.date, k: "count", p }))]
+    .sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : a.k === "buy" ? -1 : b.k === "buy" ? 1 : 0)); // a delivery on a count day is in that count
+  let left = 0, prevV = null, refillAt = null;
+  const out = ev.map((e) => {
+    if (e.k === "buy") { if (prevV === 0 && !refillAt) refillAt = e.d; left += e.q; return { d: e.d, k: "buy", q: e.q, left, calc: true }; }
+    const p = e.p; left = p.v;
+    // a period that started with an empty shop: the pace counts from the delivery that refilled it
+    const stockDays = !p.base && prevV === 0 && refillAt ? Math.max(1, dayDiff(refillAt, p.date)) : null;
+    prevV = p.v; refillAt = null;
+    return { d: e.d, k: "count", counted: p.v, sold: p.off, days: p.base ? null : p.days, stockDays, first: !!p.base, left: p.v, check: !p.base && p.off < 0, bad: h.visits.bad.get(p.date) || null };
+  });
+  if (x.counted) out.push({ d: todayISO(), k: "now", left: Math.round(x.estNow), calc: true, rate: x.rate });
+  return out;
+}
+function healthTimeline(h, x) {
+  const ev = timelineEvents(h, x); if (!ev.length) return "";
+  const dash = '<span class="muted">—</span>', buys = ev.filter((e) => e.k === "buy"), counts = ev.filter((e) => e.k === "count");
+  const rows = [...ev].reverse().map((e) => `<tr class="${e.k === "now" ? "tl-now" : e.check ? "tl-check" : ""}">
+    <td class="small num" style="white-space:nowrap">${e.k === "now" ? esc(t("ev_today")) : esc(fmtDate(e.d))}</td>
+    <td class="small">${e.k === "buy" ? `<span class="chip c-good">${esc(t("ev_bought"))}</span>` : e.k === "count" ? `<span class="chip c-acc">${esc(t(e.first ? "ev_first" : "ev_count"))}</span>${e.bad ? ` <span class="chip c-mute">${esc(t("ev_bad_" + e.bad))}</span>` : ""}` : `<span class="chip c-mute">${esc(t("ev_now"))}</span>`}</td>
+    <td class="r num">${e.k === "buy" ? `<b>+${fmt(e.q)}</b>` : dash}</td>
+    <td class="r num">${e.k === "count" ? `<b>${fmt(e.counted)}</b>` : dash}</td>
+    <td class="r num">${e.k === "count" ? `${e.check ? `<span class="tcrit">${fmt(e.sold)}</span><span class="sub2 tcrit">${esc(t("ev_more"))}</span>` : fmt(e.sold)}${e.days && !e.check ? `<span class="sub2">${esc(e.stockDays && e.stockDays < e.days ? t("ev_perDayStock", fmt1(Math.max(0, e.sold) / e.stockDays), e.stockDays, e.days) : t("ev_perDay", fmt1(Math.max(0, e.sold) / e.days), e.days))}</span>` : e.first ? `<span class="sub2">${esc(t("ev_sinceFirst"))}</span>` : ""}` : e.k === "now" && e.rate != null ? `<span class="sub2">${esc(t("ev_pace", fmt1(e.rate)))}</span>` : dash}</td>
+    <td class="r num"><b>${fmt(e.left)}</b>${e.calc ? "*" : ""}</td></tr>`).join("");
+  return `<div class="tl"><p class="small"><b>${esc(skuName(x.sku))}</b> · ${esc(t("ev_sum", fmt(buys.reduce((a, e) => a + e.q, 0)), buys.length, counts.length, x.rate != null ? fmt1(x.rate) : "—"))}</p>
+    <div class="scroll"><table><thead><tr><th>${esc(t("ev_date"))}</th><th>${esc(t("ev_event"))}</th><th class="r">${esc(t("ev_boughtMc"))}</th><th class="r">${esc(t("ev_countedMc"))}</th><th class="r">${esc(t("ev_soldMc"))}</th><th class="r">${esc(t("ev_leftMc"))}</th></tr></thead><tbody>${rows}</tbody></table></div>
+    <p class="small muted">${esc(t("ev_note"))}</p></div>`;
+}
+// The table for one wholesaler: flavour, pack size, last bought, last count, stock, what is wrong. Click a row for its history.
+function healthTable(h) {
+  let lastF = null;
+  const open = S.hHist || (S.hHist = new Set());
+  const body = h.rows.map((x) => {
+    const newF = x.flavour !== lastF; lastF = x.flavour;
+    const k = `${h.w.id}|${x.sku.id}`, isOpen = open.has(k);
+    return `<tr class="hrow h-${x.level}" data-hk="${esc(k)}" tabindex="0" aria-expanded="${isOpen}"${newF ? ' style="border-top:1px solid var(--axis)"' : ""}>
+      <td>${newF ? `<span class="name">${esc(flavourLabelOf(x.flavour))}</span>` : ""}</td><td class="small nt"><span class="hcar" aria-hidden="true">${isOpen ? "▾" : "▸"}</span> ${esc(t("f_" + x.fmt))}</td>
+      <td class="small num" style="white-space:nowrap">${x.last ? `<b>${fmt(x.last[1])} MC</b> · ${esc(fmtDate(x.last[0]))}<span class="sub2">${esc(t("daysAgo", x.sinceBuy))}${x.bought90 ? " · " + esc(t("h_in90", fmt(x.bought90))) : ""}</span>` : `<span class="muted">${esc(t("h_neverBought"))}</span>`}</td>
+      <td class="small num" style="white-space:nowrap">${x.counted ? `<b>${fmt(x.stock)} MC</b> · ${esc(fmtDate(x.countDate))}${x.delSince ? `<span class="sub2">${esc(t("h_plusSince", fmt(x.delSince)))}</span>` : ""}` : `<span class="muted">${esc(t("notCounted"))}</span>`}</td>
+      <td class="r num">${x.counted ? fmt(Math.round(x.estNow)) : "—"}</td>
+      <td class="r num">${x.counted && x.daysLeft != null ? daysTxt(x.daysLeft) : "—"}</td>
+      <td><span class="chip ${HEALTH_CHIP[x.level]}">${esc(t("hl_" + x.level))}</span></td>
+      <td class="hiss">${x.issues.length ? x.issues.map((i) => `<div>${issueChip(i)} <span class="small" dir="auto">${esc(i.text)}</span></div>`).join("") : ""}</td></tr>${isOpen ? `<tr class="hhist"><td colspan="8">${healthTimeline(h, x)}</td></tr>` : ""}`;
+  }).join("");
+  return `<table class="htbl"><thead><tr><th>${esc(t("h_flavour"))}</th><th>${esc(t("format"))}</th><th>${esc(t("h_lastBuy"))}</th><th>${esc(t("h_lastStock"))}</th><th class="r">${esc(t("h_estNow"))}</th><th class="r">${esc(t("h_daysLeft"))}</th><th>${esc(t("h_status"))}</th><th>${esc(t("h_issues"))}</th></tr></thead><tbody>${body}</tbody></table>`;
+}
+// Clicking a product row (or Enter on it) opens or closes its history, kept open across redraws.
+function bindHealthHist(root) {
+  const open = S.hHist || (S.hHist = new Set());
+  root.querySelectorAll("tr.hrow[data-hk]").forEach((tr) => {
+    const toggle = () => {
+      const k = tr.dataset.hk, [wid, sid] = k.split("|"), w = E.wsById.get(wid), next = tr.nextElementSibling, car = tr.querySelector(".hcar");
+      if (next && next.classList.contains("hhist")) { next.remove(); open.delete(k); tr.setAttribute("aria-expanded", "false"); if (car) car.textContent = "▸"; return; }
+      const h = wsHealth(w), x = h.rows.find((y) => y.sku.id === sid); if (!x) return;
+      const row = document.createElement("tr"); row.className = "hhist"; row.innerHTML = `<td colspan="${tr.children.length}">${healthTimeline(h, x)}</td>`;
+      tr.after(row); open.add(k); tr.setAttribute("aria-expanded", "true"); if (car) car.textContent = "▾";
+    };
+    tr.addEventListener("click", (e) => { if (!e.target.closest("a,button")) toggle(); });
+    tr.addEventListener("keydown", (e) => { if (e.target === tr && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); toggle(); } });
+  });
+}
+function healthHead(h, link) {
+  const w = h.w;
+  return `<span class="chip ${HEALTH_CHIP[h.level]}">${esc(t("hl_" + h.level))}</span>
+    ${link ? `<a class="name" dir="auto" href="#ws/${w.id}/health">${esc(w.name)}</a>` : `<span class="name" dir="auto">${esc(w.name)}</span>`}
+    <span class="small muted">${esc(t("hh_bought", w.lastDel ? fmtDate(w.lastDel) : "—", w.lastDel ? dayDiff(w.lastDel, todayISO()) : "—"))} · ${esc(w.lastCount ? t("h_counted", fmtDate(w.lastCount.date), fmt(w.stock)) : t("never"))}</span>`;
+}
+const healthWsIssues = (h) => (h.wsIssues.length ? `<div class="hwiss">${h.wsIssues.map((i) => `<div>${issueChip(i)} <span class="small" dir="auto">${esc(i.text)}</span></div>`).join("")}</div>` : "");
+const healthRulesNote = () => `<p class="small muted">${esc(t("h_rulesNote", settings().lowDays, HEALTH.DEAD_DAYS, HEALTH.OVER_DAYS, 2 * settings().visitDays))}</p>`;
+// The Health page: every wholesaler, an analysis of what is wrong, by product and by issue.
+function viewHealth(main) {
+  const all = healthAll(), f = S.hf || (S.hf = { level: "all", issue: "all", flavour: "all", fmt: "all", q: "" });
+  const rowOk = (x) => (f.issue === "all" || x.issues.some((i) => i.id === f.issue)) && (f.flavour === "all" || x.flavour === f.flavour) && (f.fmt === "all" || x.fmt === f.fmt);
+  const wsOk = (h) => (f.level === "all" || h.level === f.level) && (!f.q || h.w.name.toLowerCase().includes(f.q.toLowerCase()))
+    && (f.issue === "all" ? (f.flavour === "all" && f.fmt === "all") || h.rows.some(rowOk) : h.rows.some(rowOk) || h.wsIssues.some((i) => i.id === f.issue));
+  const shown = all.filter(wsOk);
+  const cnt = (lv) => all.filter((h) => h.level === lv).length;
+  // issue summary: how many wholesalers and product lines each issue hits
+  const sum = HEALTH_IDS.map((id) => { const rows = all.flatMap((h) => h.rows.filter((x) => x.issues.some((i) => i.id === id)).map((x) => ({ h, x }))); const wsHits = all.filter((h) => h.wsIssues.some((i) => i.id === id));
+    const sevs = [...rows.map((r) => r.x.issues.find((i) => i.id === id).sev), ...wsHits.map((h) => h.wsIssues.find((i) => i.id === id).sev)];
+    return { id, sev: maxSev(sevs), ws: new Set([...rows.map((r) => r.h.w.id), ...wsHits.map((h) => h.w.id)]).size, lines: rows.length, names: [...new Set([...rows.map((r) => r.h.w.name), ...wsHits.map((h) => h.w.name)])] }; })
+    .filter((x) => x.ws).sort((a, b) => (SEV_RANK[b.sev] || 0) - (SEV_RANK[a.sev] || 0) || b.ws - a.ws);
+  // by product: across wholesalers carrying it, with what their shops sold against what they received while counted
+  const N = healthNetwork(all), netBy = new Map(N.prods.map((p) => [p.s.id, p]));
+  const prods = E.wsSkus.map((s) => { const rs = all.flatMap((h) => h.rows.filter((x) => x.sku.id === s.id)); const c = (id) => rs.filter((x) => x.issues.some((i) => i.id === id)).length;
+    return { s, n: rs.length, stock: Math.round(rs.reduce((a, x) => a + (x.counted ? x.estNow : 0), 0)), net: netBy.get(s.id), out: c("out"), low: c("low"), dead: c("dead"), over: c("over"), stopped: c("stopped") }; }).filter((p) => p.n);
+  const flavs = [...new Set(E.wsSkus.map(flavourOf))];
+  const open = S.hOpen || (S.hOpen = new Set());
+  const li = (title, items) => (items.length ? `<div class="panel stack"><h3>${esc(title)}</h3><ul class="hlist">${items.join("")}</ul></div>` : "");
+  const down = N.prods.filter((p) => p.state === "down"), load = N.prods.filter((p) => p.state === "load");
+  const panels = [
+    li(t("h_down"), down.map((p) => `<li><span class="small"><b>${esc(skuName(p.s))}</b><span class="sub2">${esc(t("h_downLine", fmt(p.sellOut), fmt(p.sellIn), fmt(p.startStock), fmt(p.endStock)))}</span></span></li>`)),
+    li(t("h_load"), load.map((p) => `<li><span class="small"><b>${esc(skuName(p.s))}</b><span class="sub2">${esc(t("h_loadLine", fmt(p.sellIn), fmt(p.sellOut), fmt(p.startStock), fmt(p.endStock)))}</span></span></li>`)),
+    li(t("h_losing"), N.losing.map((x) => `<li><span class="small"><b>${esc(skuName(x.s))}</b> · ${esc(t("h_losingLine", x.stopped, x.before))}<span class="sub2" dir="auto">${esc(x.names.join("، "))}</span></span></li>`)),
+    li(t("h_moves"), N.moves.map((x) => `<li><span class="small"><b>${esc(skuName(x.s))}</b><span class="sub2" dir="auto">${esc(t("h_moveLine", x.spare.join("، "), x.short.join("، ")))}</span></span></li>`)),
+    li(t("h_trials"), N.trials.map((x) => `<li><span class="small"><b>${esc(skuName(x.s))}</b><span class="sub2">${esc(t("h_trialLine", x.n))}</span></span></li>`)),
+  ].filter(Boolean);
+  main.innerHTML = `
+    <div class="head"><div><h2>${esc(t("h_title"))}</h2><p class="sub" style="max-width:80ch">${esc(t("h_sub"))}</p></div>
+      <button class="btn" type="button" id="hExport">${esc(t("h_export"))}</button></div>
+    ${healthStale()}
+    <div class="kpis">
+      <button type="button" class="kpi htile" data-hl="act"><b class="num">${cnt("act")}</b><span>${esc(t("hl_act"))}</span><div class="h">${esc(t("h_actSub"))}</div></button>
+      <button type="button" class="kpi htile" data-hl="verify"><b class="num">${cnt("verify")}</b><span>${esc(t("hl_verify"))}</span><div class="h">${esc(t("h_verifySub"))}</div></button>
+      <button type="button" class="kpi htile" data-hl="watch"><b class="num">${cnt("watch")}</b><span>${esc(t("hl_watch"))}</span><div class="h">${esc(t("h_watchSub"))}</div></button>
+      <button type="button" class="kpi htile" data-hl="ok"><b class="num">${cnt("ok")}</b><span>${esc(t("hl_ok"))}</span><div class="h">${esc(t("h_okSub"))}</div></button>
+      <div class="kpi"><b class="num">${all.reduce((a, h) => a + h.rows.filter((x) => x.level === "act").length, 0)}</b><span>${esc(t("h_linesAct"))}</span><div class="h">${esc(t("h_linesOf", all.reduce((a, h) => a + h.rows.length, 0)))}</div></div>
+    </div>
+    <section class="stack"><h3>${esc(t("h_analysis"))}</h3><div class="hstack">
+      <div class="panel flush"><table><thead><tr><th>${esc(t("h_issue"))}</th><th class="r">${esc(t("h_wsN"))}</th><th class="r">${esc(t("h_linesN"))}</th><th>${esc(t("h_who"))}</th></tr></thead>
+        <tbody>${sum.map((x) => `<tr class="click" data-hi="${x.id}" tabindex="0"><td>${issueChip({ id: x.id, sev: x.sev })}<span class="sub2">${esc(t("hd_" + x.id))}</span></td><td class="r num"><b>${x.ws}</b></td><td class="r num">${x.lines || "—"}</td><td class="small" dir="auto">${esc(x.names.slice(0, 4).join("، "))}${x.names.length > 4 ? ` <span class="muted">+${x.names.length - 4}</span>` : ""}</td></tr>`).join("") || `<tr><td colspan="4" class="muted">${esc(t("att_none"))}</td></tr>`}</tbody></table></div>
+      <div class="panel flush scroll"><table><thead><tr><th>${esc(t("product"))}</th><th class="r">${esc(t("h_carry"))}</th><th class="r">${esc(t("h_stockNow"))}</th><th class="r">${esc(t("h_soldRec"))}</th><th class="r">${esc(t("hk_out"))}</th><th class="r">${esc(t("hk_low"))}</th><th class="r">${esc(t("hk_dead"))}</th><th class="r">${esc(t("hk_over"))}</th><th class="r">${esc(t("hk_stopped"))}</th></tr></thead>
+        <tbody>${prods.map((p) => `<tr><td><span class="name">${esc(skuName(p.s))}</span></td><td class="r num">${p.n}</td><td class="r num">${fmt(p.stock)}</td>
+          <td class="r num" style="white-space:nowrap">${p.net && (p.net.sellIn || p.net.sellOut) ? `${fmt(p.net.sellOut)} / ${fmt(p.net.sellIn)}${p.net.state ? ` <span class="chip ${p.net.state === "down" ? "c-crit" : "c-warn"}">${esc(t("h_state_" + p.net.state))}</span>` : ""}` : '<span class="muted">·</span>'}</td>
+          ${["out", "low", "dead", "over", "stopped"].map((k) => `<td class="r num">${p[k] ? `<b class="${k === "out" || k === "low" ? "tcrit" : "twarn"}">${p[k]}</b>` : '<span class="muted">·</span>'}</td>`).join("")}</tr>`).join("")}</tbody></table>
+        <p class="small muted" style="padding:8px 16px">${esc(t("h_soldRecNote"))}</p></div>
+    </div>${panels.length ? `<div class="grid2">${panels.join("")}</div>` : ""}${healthRulesNote()}</section>
+    <section class="stack"><div class="head"><h3>${esc(t("h_byWs"))} <span class="muted">· ${shown.length}</span></h3>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end">
+        <select class="inp" id="hfLevel" aria-label="${esc(t("h_status"))}"><option value="all">${esc(t("h_allStatus"))}</option>${["act", "verify", "watch", "ok"].map((k) => `<option value="${k}" ${f.level === k ? "selected" : ""}>${esc(t("hl_" + k))}</option>`).join("")}</select>
+        <select class="inp" id="hfIssue" aria-label="${esc(t("h_issue"))}"><option value="all">${esc(t("h_allIssues"))}</option>${sum.map((x) => `<option value="${x.id}" ${f.issue === x.id ? "selected" : ""}>${esc(t("hk_" + x.id))}</option>`).join("")}</select>
+        <select class="inp" id="hfFlav" aria-label="${esc(t("h_flavour"))}"><option value="all">${esc(t("h_allFlav"))}</option>${flavs.map((x) => `<option value="${esc(x)}" ${f.flavour === x ? "selected" : ""}>${esc(flavourLabelOf(x))}</option>`).join("")}</select>
+        <select class="inp" id="hfFmt" aria-label="${esc(t("format"))}"><option value="all">${esc(t("h_allFmt"))}</option>${FORMATS.map((x) => `<option value="${x}" ${f.fmt === x ? "selected" : ""}>${esc(t("f_" + x))}</option>`).join("")}</select>
+        <input class="inp search" id="hfQ" type="search" placeholder="${esc(t("search"))}" value="${esc(f.q)}" autocomplete="off">
+        <button class="btn ghost" type="button" data-hall="1">${esc(t("wsmOpenAll"))}</button><button class="btn ghost" type="button" data-hall="0">${esc(t("wsmCloseAll"))}</button></div></div>
+      <p class="small muted">${esc(t("h_tlHint"))}</p>
+      <div class="panel flush">${shown.map((h) => { const rows = h.rows.filter(rowOk); return `<details class="hws" data-hws="${h.w.id}" ${open.has(h.w.id) ? "open" : ""}>
+        <summary>${healthHead(h, true)}<span class="small hcnt">${h.issuesN ? esc(t("h_issuesN", h.issuesN)) : ""}</span></summary>
+        <div class="hbody">${healthWsIssues(h)}<div class="scroll">${healthTable({ ...h, rows })}</div></div></details>`; }).join("") || `<p style="padding:16px" class="muted">${esc(t("noSalesPer"))}</p>`}</div></section>`;
+  const set = (k, v) => { f[k] = v; render(); };
+  main.querySelectorAll("[data-hl]").forEach((b) => b.addEventListener("click", () => set("level", f.level === b.dataset.hl ? "all" : b.dataset.hl)));
+  const pickIssue = (id) => { f.issue = id; f.level = "all"; for (const h of all) if (h.rows.some((x) => x.issues.some((i) => i.id === id)) || h.wsIssues.some((i) => i.id === id)) open.add(h.w.id); render(); };
+  main.querySelectorAll("[data-hi]").forEach((tr) => { tr.addEventListener("click", () => pickIssue(tr.dataset.hi)); tr.addEventListener("keydown", (e) => { if (e.key === "Enter") pickIssue(tr.dataset.hi); }); });
+  [["hfLevel", "level"], ["hfIssue", "issue"], ["hfFlav", "flavour"], ["hfFmt", "fmt"]].forEach(([id, k]) => document.getElementById(id).addEventListener("change", (e) => set(k, e.target.value)));
+  const q = document.getElementById("hfQ"); q.addEventListener("input", (e) => { f.q = e.target.value; clearTimeout(S._hq); S._hq = setTimeout(() => { render(); const n = document.getElementById("hfQ"); if (n) { n.focus(); n.setSelectionRange(n.value.length, n.value.length); } }, 250); });
+  main.querySelectorAll("details.hws").forEach((d) => d.addEventListener("toggle", () => { if (d.open) open.add(d.dataset.hws); else open.delete(d.dataset.hws); }));
+  main.querySelectorAll("[data-hall]").forEach((b) => b.addEventListener("click", () => { main.querySelectorAll("details.hws").forEach((d) => { d.open = b.dataset.hall === "1"; }); }));
+  bindHealthHist(main);
+  document.getElementById("hExport").addEventListener("click", () => exportHealth(shown));
+}
+// One wholesaler's Health tab.
+function wsHealthSection(w) {
+  const h = wsHealth(w);
+  return `<section class="stack" id="hSec"><div class="head"><div class="hwhead">${healthHead(h, false)}</div><button class="btn" type="button" id="hExportOne">${esc(t("h_export"))}</button></div>
+    ${healthStale()}${healthWsIssues(h)}<p class="small muted">${esc(t("h_tlHint"))}</p><div class="panel flush scroll">${healthTable(h)}</div>${healthRulesNote()}</section>`;
+}
+// Excel: a coloured block per wholesaler, rows highlighted by what is wrong; a second sheet with every purchase and
+// count per product and the stock left after each.
+async function exportHealth(list) {
+  const keep = LANG;
+  if (!S.dl) { toast(t("err") + "downloads unavailable"); return; }
+  try {
+    const ExcelJS = await loadExcelJS();
+    LANG = "en"; E._wh = null;
+    const wb = new ExcelJS.Workbook(), ws = wb.addWorksheet("WS health", { views: [{ state: "frozen", ySplit: 2 }] });
+    const COLS = [["Flavour", 18], ["Format", 8], ["Last bought", 12], ["Last bought (MC)", 10], ["Days since bought", 9], ["Bought last 90 days (MC)", 11], ["Last count", 12], ["Stock at count (MC)", 10], ["Bought since count (MC)", 10], ["Est. stock now (MC)", 10], ["Days of stock left", 9], ["% of his stock", 9], ["Status", 14], ["Issues", 70]];
+    ws.columns = COLS.map(([, w]) => ({ width: w }));
+    ws.properties.outlineLevelRow = 1; ws.properties.outlineProperties = { summaryBelow: false, summaryRight: false };
+    const n = COLS.length, fill = (argb) => ({ type: "pattern", pattern: "solid", fgColor: { argb } });
+    const thin = { style: "thin", color: { argb: "FFBFBFBF" } }, box = { top: thin, left: thin, bottom: thin, right: thin };
+    const SEV = { high: ["FFF8D7DA", "FFC00000"], medium: ["FFFFF2CC", "FFBF8F00"], low: ["FFF2F2F2", "FF595959"], none: ["FFE2F0D9", "FF548235"] };
+    // row fill and status colour by row status; the wholesaler bar by his status
+    const LV = { act: ["FFF8D7DA", "FFC00000"], verify: ["FFFCE4D6", "FFC55A11"], watch: ["FFFFF2CC", "FFBF8F00"], ok: ["FFE2F0D9", "FF548235"], inactive: ["FFF2F2F2", "FF7F7F7F"] };
+    const title = ws.addRow([`Wholesaler health — ${fmtDate(todayISO())}`]); title.font = { bold: true, size: 14 }; ws.mergeCells(title.number, 1, title.number, n);
+    const note = ws.addRow([t("h_rulesNote", settings().lowDays, HEALTH.DEAD_DAYS, HEALTH.OVER_DAYS, 2 * settings().visitDays)]); note.font = { italic: true, size: 9, color: { argb: "FF595959" } }; note.alignment = { wrapText: true }; note.height = 42; ws.mergeCells(note.number, 1, note.number, n);
+    const hs = list.map((h0) => wsHealth(h0.w));
+    for (const h of hs) {
+      const w = h.w;
+      ws.addRow([]);
+      const bar = ws.addRow([`${w.name}   ·   ${t("hl_" + h.level)}   ·   ${t("hh_bought", w.lastDel || "—", w.lastDel ? dayDiff(w.lastDel, todayISO()) : "—")}   ·   ${w.lastCount ? t("h_counted", w.lastCount.date, fmt(w.stock)) : t("never")}`]);
+      ws.mergeCells(bar.number, 1, bar.number, n); bar.height = 22; bar.font = { bold: true, size: 12, color: { argb: "FFFFFFFF" } }; bar.alignment = { vertical: "middle", readingOrder: "rtl" };
+      for (let c = 1; c <= n; c++) bar.getCell(c).fill = fill(LV[h.level][1]);
+      for (const i of h.wsIssues) { const r = ws.addRow([`${t("hk_" + i.id)}: ${i.text}`]); ws.mergeCells(r.number, 1, r.number, n); r.font = { italic: true, color: { argb: SEV[i.sev][1] } }; r.outlineLevel = 1; }
+      const head = ws.addRow(COLS.map(([x]) => x)); head.font = { bold: true, size: 10 }; head.alignment = { wrapText: true, vertical: "middle" }; head.height = 30; head.outlineLevel = 1;
+      head.eachCell((c) => { c.fill = fill("FFD9E1F2"); c.border = box; });
+      for (const x of h.rows) {
+        const S2 = LV[x.level];
+        const r = ws.addRow([x.flavour, FMT_EN[x.fmt], x.last ? x.last[0] : "", x.last ? x.last[1] : "", x.sinceBuy ?? "", x.bought90 || "", x.counted ? x.countDate : "not counted", x.counted ? x.stock : "", x.delSince || "", x.counted ? Math.round(x.estNow * 10) / 10 : "", x.counted && x.daysLeft != null ? Math.min(999, Math.round(x.daysLeft)) : "", x.pctStock == null ? "" : x.pctStock, t("hl_" + x.level), x.issues.map((i) => `${t("hk_" + i.id)}: ${i.text}`).join("\n")]);
+        r.outlineLevel = 1; r.alignment = { vertical: "top", wrapText: true };
+        r.eachCell({ includeEmpty: true }, (c) => { c.fill = fill(S2[0]); c.border = box; });
+        [4, 6, 8, 9].forEach((k) => { r.getCell(k).numFmt = "#,##0"; });
+        r.getCell(10).numFmt = "#,##0.0";
+        r.getCell(12).numFmt = "0%";
+        const sc = r.getCell(13); sc.font = { bold: true, color: { argb: S2[1] } };
+      }
+    }
+    // second sheet: bought, counted, stock left, one line per event
+    const tl = wb.addWorksheet("Bought & counts", { views: [{ state: "frozen", ySplit: 1 }] });
+    const TC = [["Wholesaler", 24], ["Flavour", 18], ["Format", 8], ["Date", 12], ["Event", 13], ["Bought (MC)", 11], ["Counted (MC)", 11], ["Sold since last count (MC)", 13], ["Days since last count", 10], ["Stock left (MC)", 11], ["Calculated?", 10], ["Note", 26]];
+    tl.columns = TC.map(([, w]) => ({ width: w }));
+    const th = tl.addRow(TC.map(([x]) => x)); th.font = { bold: true, size: 10 }; th.alignment = { wrapText: true, vertical: "middle" }; th.height = 30;
+    th.eachCell((c) => { c.fill = fill("FFD9E1F2"); c.border = box; });
+    const EVF = { buy: "FFE2F0D9", count: "FFFFFFFF", now: "FFF2F2F2" };
+    for (const h of hs) for (const x of h.rows) {
+      const ev = timelineEvents(h, x);
+      ev.forEach((e, i) => {
+        const r = tl.addRow([h.w.name, x.flavour, FMT_EN[x.fmt], e.d, e.k === "buy" ? "Bought" : e.k === "now" ? "Today (est.)" : e.first ? "First count" : "Stock count",
+          e.k === "buy" ? e.q : "", e.k === "count" ? e.counted : "", e.k === "count" ? e.sold : "", e.k === "count" && e.days ? e.days : "", e.left, e.calc ? "yes" : "",
+          e.k === "now" && e.rate != null ? `about ${fmt1(e.rate)} MC a day` : e.check ? "count higher than possible" : e.bad ? `visit looks ${e.bad}` : e.first ? "sold since first purchase" : e.stockDays && e.stockDays < e.days ? `had stock ${e.stockDays} of the ${e.days} days` : ""]);
+        r.eachCell({ includeEmpty: true }, (c) => { c.fill = fill(e.check ? "FFF8D7DA" : EVF[e.k]); c.border = box; });
+        [6, 7, 8, 10].forEach((k) => { r.getCell(k).numFmt = "#,##0"; });
+        if (e.k !== "buy" && e.k !== "now") r.getCell(10).font = { bold: true };
+        if (i === 0) r.getCell(1).font = { bold: true };
+      });
+    }
+    tl.autoFilter = { from: { row: 1, column: 1 }, to: { row: 1, column: TC.length } };
+    LANG = keep; E._wh = null;
+    const buf = await wb.xlsx.writeBuffer();
+    await S.dl.save({ filename: `WS health ${todayISO()}.xlsx`, data: new Blob([buf]) });
+    toast(t("exported"));
+  } catch (err) { LANG = keep; E._wh = null; if (err?.code !== "declined") toast(t("err") + (err?.code || err?.message || err)); }
+}
+// Count checks for one wholesaler over recent counts (from the health rules): [{ sku, text }]
+const healthChecks = (w) => wsHealth(w).rows.flatMap((x) => x.issues.filter((i) => i.id === "check" && i.sev !== "low").map((i) => ({ sku: x.sku, text: `${skuName(x.sku)}: ${i.text}` })));
 /* ---------- wholesaler list ---------- */
 function statusChip(w) {
   if (!w.lastCount) return `<span class="chip c-serious">${esc(t("never"))}</span>`;
@@ -1158,6 +1674,7 @@ function viewWs(main, id, sub = "overview") {
       <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button class="btn" type="button" id="wsExport">${esc(t("wsExportBtn"))}</button><a class="btn pri big" href="#ws/${w.id}/count">${esc(t("countNow"))}</a></div></div>
     ${wsTabs(w, sub)}
     ${sub === "overview" ? wsAnalysisSection(w) : ""}
+    ${sub === "health" ? wsHealthSection(w) : ""}
     ${sub === "next" ? nextBlock(w) || `<div class="notice">${esc(t("ws_noNext"))}</div>` : ""}
     ${sub === "purchases" ? purchaseSection(w) || `<div class="notice">${esc(t("ws_noPurch"))}</div>` : ""}
     ${sub === "stock" ? `${w.lastCount ? `<section class="stack"><h3>${esc(t("stockSec"))}</h3>
@@ -1168,11 +1685,12 @@ function viewWs(main, id, sub = "overview") {
         <div class="kpi"><b class="num">${pct(w.delTo ? w.offToDate / w.delTo : null)}</b><span>${esc(t("sellThrough"))}</span></div>
         <div class="kpi"><b class="num">${fmt1(w.rate)}</b><span>${esc(t("perDay"))}</span></div></div>
       ${w.uncounted ? `<p class="small muted">${esc(t("partial", w.uncounted))}</p>` : ""}
-      ${w.flags ? `<div class="notice warn"><b>${esc(t("flags"))}: ${w.flags}</b>${w.skuRows.filter((r) => r.flag).map((r) => `<div style="margin-top:6px" dir="auto">${esc(checkText(r))}</div>`).join("")}<div class="small" style="margin-top:6px">${esc(t("checkHow"))}</div></div>` : ""}
+      ${healthChecks(w).length ? `<div class="notice warn"><b>${esc(t("flags"))}: ${healthChecks(w).length}</b>${healthChecks(w).map((c) => `<div style="margin-top:6px" dir="auto">${esc(c.text)}</div>`).join("")}<div class="small" style="margin-top:6px">${esc(t("checkHow"))}</div></div>` : ""}
       ${fmtTiles.length ? `<h3>${esc(t("byFmtWs"))}</h3><div class="kpis">${fmtTiles.map((x) => `<div class="kpi"><b class="num">${fmt(x.a.off)}</b><span><span class="nt">${esc(t("f_" + x.f))}</span> · ${esc(t("stock"))} ${fmt(x.a.stock)} · ${pct(x.a.delTo ? x.a.off / x.a.delTo : null)}</span></div>`).join("")}</div>` : ""}
       <h3>${esc(t("byProduct"))}</h3><div class="panel flush scroll">${skuTable(w, counted)}</div><p class="small muted">${esc(t("estNote"))}</p></section>` : ""}
     <section class="stack"><h3>${esc(t("history"))}</h3><div class="panel flush hist" id="hist">${histHTML(w)}</div></section>` : ""}`;
   document.getElementById("wsExport").addEventListener("click", () => exportWsAnalysis([w.id]));
+  const he = document.getElementById("hExportOne"); if (he) he.addEventListener("click", () => exportHealth([wsHealth(w)])); const hsec = document.getElementById("hSec"); if (hsec) bindHealthHist(hsec);
   bindPurchases(w);
   if (document.getElementById("hist")) bindHistory(w);
 }
@@ -2676,6 +3194,11 @@ function exportSheets() {
   { const L = wsMonthly(M), aoa = [["Wholesaler", "Product (EN)", "Product (AR)", "Format", ...M, "Total (MC)"]];
     for (const x of L) { aoa.push([x.name, "ALL PRODUCTS", "", "", ...x.values, x.total]); for (const p of x.prods) aoa.push([x.name, p.sku.en, p.sku.ar, FMT_EN[fmtOf(p.sku)], ...p.values, p.total]); }
     aoa.push(["TOTAL", "", "", "", ...M.map((_, i) => L.reduce((a, x) => a + x.values[i], 0)), L.reduce((a, x) => a + x.total, 0)]);
+    { const keepL = LANG; LANG = "en"; E._wh = null; const aoa = [["Wholesaler", "Status", "Flavour", "Format", "Last bought", "Last bought (MC)", "Days since bought", "Bought last 90 days (MC)", "Last count", "Stock at count (MC)", "Bought since count (MC)", "Est. stock now (MC)", "Days of stock left", "% of his stock", "Row status", "Issues"]];
+      for (const h of healthAll()) { for (const i of h.wsIssues) aoa.push([h.w.name, t("hl_" + h.level), "", "", "", "", "", "", "", "", "", "", "", "", i.sev, `${t("hk_" + i.id)}: ${i.text}`]);
+        for (const x of h.rows) aoa.push([h.w.name, t("hl_" + h.level), x.flavour, FMT_EN[x.fmt], x.last ? x.last[0] : "", x.last ? x.last[1] : "", x.sinceBuy ?? "", x.bought90 || 0, x.counted ? x.countDate : "not counted", x.counted ? x.stock : "", x.delSince || 0, x.counted ? Math.round(x.estNow * 10) / 10 : "", x.counted && x.daysLeft != null ? Math.round(x.daysLeft) : "", x.pctStock == null ? "" : Math.round(x.pctStock * 100) + "%", t("hl_" + x.level), x.issues.map((i) => `${t("hk_" + i.id)}: ${i.text}`).join(" | ")]); }
+      LANG = keepL; E._wh = null;
+      out.push(sheet("wsHealth", "offtake", "WS health", { en: "Wholesaler health", ar: "صحة التجار" }, { en: "Every wholesaler, flavour and pack size: last purchase, last count and stock, and what needs attention.", ar: "كل تاجر ونكهة وعبوة: آخر شراء وآخر جرد والمخزون وما يحتاج متابعة." }, aoa)); }
     out.push(sheet("sWsSkuMonth", "sales", "Sales WS x product x month", { en: "Sales by wholesaler, product and month", ar: "المبيعات حسب التاجر والصنف والشهر" },
       { en: "Mastercases sold to each wholesaler per month: a line for his total, then one per product.", ar: "الكراتين المباعة لكل تاجر شهرياً: سطر لمجموعه ثم سطر لكل صنف." }, aoa)); }
 
