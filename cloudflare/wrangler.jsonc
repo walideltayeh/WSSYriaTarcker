@@ -1,0 +1,15 @@
+{
+  // WS Tracker Syria on Cloudflare: one Worker (src/worker.js), the tracker page as a static asset, one D1 database.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ws-tracker-syria",
+  "main": "src/worker.js",
+  "compatibility_date": "2025-05-01",
+  "workers_dev": true,
+  "preview_urls": false,
+  "observability": { "enabled": true },
+  "assets": { "directory": "./public", "binding": "ASSETS", "html_handling": "none", "not_found_handling": "none" },
+  "d1_databases": [
+    // database_id is filled in after `wrangler d1 create ws-tracker` on the owner's account
+    { "binding": "DB", "database_name": "ws-tracker", "database_id": "00000000-0000-0000-0000-000000000000", "migrations_dir": "migrations" }
+  ]
+}

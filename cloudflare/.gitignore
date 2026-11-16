@@ -1,0 +1,7 @@
+node_modules/
+.wrangler/
+secrets/
+import/
+local-test/
+.t/
+.dev.vars
